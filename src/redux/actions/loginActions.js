@@ -1,16 +1,20 @@
 import {LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_LOGOUT} from '../types';
-
+import {LOGIN_URL} from '../../extras/urls';
 
 //start login of user
-export const loginUser = (email, password, successful) => {
+export const loginUser = (username, password) => {
   return (dispatch) => {
     dispatch({ type: LOGIN_START });
-      if(successful){
-        loginUserSuccess(dispatch, user={name:'Jaroslav'});
-      }
-      else{
+    fetch(LOGIN_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `username=${username}&password=${password}`
+      }).then(function (response) {
+        response.json().then(loginUserSuccess(dispatch, {user:{name:username,token:response.token}}));
+      })
+      .catch(function (error) {
         loginUserFail(dispatch);
-      }
+      });
   };
 };
 

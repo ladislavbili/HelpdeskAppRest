@@ -8,7 +8,7 @@ class Login extends Component {
   constructor(props){
     super(props);
     this.state={
-      username:'admi',
+      username:'admin',
       password:'admin',
     }
   }
@@ -42,7 +42,7 @@ class Login extends Component {
             <Button
               block
               primary
-              onPress={()=>this.props.loginUser(this.state.username,this.state.password,true)}
+              onPress={()=>this.props.loginUser(this.state.username,this.state.password)}
               disabled={this.props.loading}
             >
             {
@@ -54,8 +54,6 @@ class Login extends Component {
             }
             </Button>
               <Text style={styles.errorMessage}>{this.props.error}</Text>
-              <Text style={styles.errorMessage}>{this.props.user?this.props.user.name:'Not logged in'}</Text>
-              <Text style={styles.errorMessage}>{this.props.authenticated?'Logged in':'not logged in'}</Text>
           </View>
         </Content>
       </Container>
@@ -65,8 +63,8 @@ class Login extends Component {
 
 
 const mapStateToProps = ({ login }) => {
-  const { error, loading, authenticated, user } = login;
-  return { error, loading, authenticated, user };
+  const { error, loading, authenticated } = login;
+  return { error, loading, authenticated };
 };
 
 export default connect(mapStateToProps,{loginUser})(Login);

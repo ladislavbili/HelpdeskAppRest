@@ -14,7 +14,7 @@ export default function loginReducer(state = defaultState, action) {
     case LOGIN_SUCCESS:
       return {
         authenticated: true,
-        user: action.payload,
+        user: action.payload.user,
         error: '',
         loading:false,
       };
