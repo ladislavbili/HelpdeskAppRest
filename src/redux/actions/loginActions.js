@@ -9,8 +9,15 @@ export const loginUser = (username, password) => {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: `username=${username}&password=${password}`
-      }).then(function (response) {
-        response.json().then(loginUserSuccess(dispatch, {user:{name:username,token:response.token}}));
+      }).then((response) => {
+        response.json().then((response)=>{
+          if(response.token){
+            loginUserSuccess(dispatch, {user:{name:username,token:response.token}});
+          }
+          else{
+            loginUserFail(dispatch);
+          }
+        });
       })
       .catch(function (error) {
         loginUserFail(dispatch);
