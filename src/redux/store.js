@@ -1,11 +1,12 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
-import Login from './reducers';
-
+import loginReducer from './reducers/loginReducer';
+import ReduxThunk from 'redux-thunk';
 const reducers = combineReducers({
-    reducers.login
+    login:loginReducer,
   });
 
 const enhancers = compose(
+  applyMiddleware(ReduxThunk),
 );
 
 export default () => createStore(reducers, {}, enhancers);

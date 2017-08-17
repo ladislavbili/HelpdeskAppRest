@@ -3,29 +3,15 @@ import { View,ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { Container, Button, Text, Content, Item, Form, Input, Label, Header, Body, Title } from 'native-base';
 import styles from './styles';
-
+import {loginUser} from '../../redux/actions';
 class Login extends Component {
-
   constructor(props){
     super(props);
     this.state={
-      username:'admin',
+      username:'admi',
       password:'admin',
-      errorMessage:'',
-      loading:false,
     }
   }
-  async submitLogin(){
-    this.setState(
-      {working:true}
-    );
-    let username=this.state.username;
-    let password = this.state.pass;
-    this.setState(
-      {working:false}
-    );
-  }
-
   render() {
       return (
       <Container>
@@ -56,18 +42,20 @@ class Login extends Component {
             <Button
               block
               primary
-              onPress={this.submitLogin.bind(this)}
-              disabled={this.state.loading}
+              onPress={()=>this.props.loginUser(this.state.username,this.state.password,true)}
+              disabled={this.props.loading}
             >
             {
-              this.state.loading?
+              this.props.loading?
               <ActivityIndicator
               animating size={ 'large' }
               color='#007299' /> :
               <Text>Login</Text>
             }
             </Button>
-          <Text style={styles.errorMessage}>{this.state.errorMessage}</Text>
+              <Text style={styles.errorMessage}>{this.props.error}</Text>
+              <Text style={styles.errorMessage}>{this.props.user?this.props.user.name:'Not logged in'}</Text>
+              <Text style={styles.errorMessage}>{this.props.authenticated?'Logged in':'not logged in'}</Text>
           </View>
         </Content>
       </Container>
@@ -75,12 +63,10 @@ class Login extends Component {
   }
 }
 
-function bindActions(dispatch) {
-  return {
-  };
-}
 
-const mapStateToProps = state => ({
-});
+const mapStateToProps = ({ login }) => {
+  const { error, loading, authenticated, user } = login;
+  return { error, loading, authenticated, user };
+};
 
-export default Login;
+export default connect(mapStateToProps,{loginUser})(Login);
