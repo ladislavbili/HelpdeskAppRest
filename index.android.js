@@ -1,11 +1,8 @@
-import { AppRegistry, StatusBar } from 'react-native'
-import React, {Component} from 'react'
-import { Provider } from 'react-redux'
-import { StyleProvider } from 'native-base'
-import material from './native-base-theme/variables/material'
-import getTheme from './native-base-theme/components'
-import createStore from './src/redux/store'
-import Login from './src/components/login'
+import { AppRegistry, StatusBar } from 'react-native';
+import React, {Component} from 'react';
+import { Provider } from 'react-redux';
+import createStore from './src/redux/store';
+import Navigation from './src/navigation';
 
 const store=createStore();
 
@@ -13,9 +10,7 @@ export default class HelpdeskAppRest extends Component {
   render() {
     return (
       <Provider store={store} >
-        <StyleProvider style={getTheme(material)}>
-          <Login />
-        </StyleProvider>
+        <Navigation />
       </Provider>
     );
   }

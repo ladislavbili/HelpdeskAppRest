@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { StyleProvider, Drawer } from 'native-base';
-import { actions } from 'react-native-navigation-redux-helpers';
 import { Router, Scene } from 'react-native-router-flux';
-import { closeDrawer } from './actions/drawer';
-import statusBarColor from './themes/variables';
+
+import { closeDrawer } from './redux/actions';
+import material from '../native-base-theme/variables/material';
+import getTheme from '../native-base-theme/components';
 
 import Login from './components/login';
+import TaskList from './components/taskList';
 
 const RouterWithRedux = connect()(Router);
-
 
 class AppNavigator extends Component {
 
@@ -38,11 +39,13 @@ class AppNavigator extends Component {
       <StyleProvider style={getTheme((this.props.themeState === 'material') ? material : undefined)}>
         <Drawer
           ref={(ref) => { this._drawer = ref; }}
-          content={<SideBar navigator={this._navigator} />}
+          content={<Login navigator={this._navigator} />}
           onClose={() => this.closeDrawer()}
         >
           <RouterWithRedux>
-            <Scene key="login" component={Login} hideNavBar initial={true} />
+            <Scene key="root">
+              <Scene key="login" component={Login} hideNavBar initial={true} />
+              <Scene key="taskList" component={TaskList} />
             </Scene>
           </RouterWithRedux>
         </Drawer>
@@ -51,13 +54,9 @@ class AppNavigator extends Component {
   }
 }
 
-const bindAction = dispatch => ({
-  closeDrawer: () => dispatch(closeDrawer()),
-});
+const mapStateToProps = ({ drawer, navigation }) => {
+  return { drawerState: drawer.drawerState, themeState:drawer.themeState, navigation };
+};
 
-const mapStateToProps = state => ({
-  drawerState: state.drawer.drawerState,
-  navigation: state.cardNavigation,
-});
 
-export default connect(mapStateToProps, bindAction)(AppNavigator);
+export default connect(mapStateToProps, {closeDrawer})(AppNavigator);

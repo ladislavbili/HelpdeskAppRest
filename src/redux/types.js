@@ -2,3 +2,11 @@ export const LOGIN_START = 'AUTH_LOGIN_START';
 export const LOGIN_SUCCESS = 'AUTH_LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'AUTH_LOGIN_FAIL';
 export const LOGIN_LOGOUT = 'AUTH_LOGOUT';
+
+export const OPEN_DRAWER = 'OPEN_DRAWER';
+export const CLOSE_DRAWER = 'CLOSE_DRAWER';
+export const CHANGE_MATERIAL = 'CHANGE_MATERIAL';
+export const CHANGE_PLATFORM = 'CHANGE_PLATFORM';
+
+export const SET_TASKS = 'SET_TASKS';
+export const SET_PROJECTS = 'SET_PROJECTS';
