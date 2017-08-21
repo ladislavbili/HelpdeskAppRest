@@ -1,5 +1,6 @@
-import {LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_LOGOUT, SET_TASKS} from '../types';
-import {LOGIN_URL,TASK_LIST} from '../urls';
+import {LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_LOGOUT,
+  SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_CUSTOM_ATTRIBUTES } from '../types';
+import {LOGIN_URL,TASK_LIST, PROJECT_LIST,COMPANIES_LIST} from '../urls';
 import { Actions } from 'react-native-router-flux';
 import { AsyncStorage } from 'react-native';
 
@@ -14,8 +15,8 @@ export const loginUser = (username, password) => {
       }).then((response) => {
         response.json().then((response)=>{
           if(response.token){
+            getDataFromREST(dispatch, response.token);
             loginUserSuccess(dispatch, {user:{name:username,token:response.token}});
-            getDataFromREST(response.token,dispatch);
           }
           else{
             loginUserFail(dispatch);
@@ -39,19 +40,38 @@ export const logoutUser = () => {
 //functions used by actions
 
 //preload all tasks and projects
-const getDataFromREST = (token,dispatch) => {
+const getDataFromREST = (dispatch,token) => {
+
   fetch(TASK_LIST, {
     method: 'GET',
     headers: {'Authorization': 'Bearer ' + token}
   }).then((response)=> response.json().then(response => {
-    console.log(response.data[0]);
-    dispatch({type: SET_TASKS, payload:{tasks:response.data}})
-    Actions.taskList();
+    dispatch({type: SET_TASKS, payload:{tasks:response.data}});
   }))
-  .catch(
-    (error) => {
-      console.log(error);
-    });
+  .catch(function (error) {
+    console.log(error);
+    loginUserFail(dispatch);
+  });
+
+  fetch(PROJECT_LIST, {
+    method: 'GET',
+    headers: {'Authorization': 'Bearer ' + token}
+  }).then((response)=> response.json().then(response => {console.log('DONE BUT PAGING')}))
+  .catch(function (error) {
+    console.log(error);
+    loginUserFail(dispatch);
+  });
+
+  fetch(COMPANIES_LIST, {
+    method: 'GET',
+    headers: {'Authorization': 'Bearer ' + token}
+  }).then((response)=> response.json().then(response => {console.log('DONE BUT PAGING')}))
+  .catch(function (error) {
+    console.log(error);
+    loginUserFail(dispatch);
+  });
+
+
 }
 
 //on failed login
@@ -66,6 +86,7 @@ const loginUserSuccess = (dispatch, user) => {
       payload: user
   });
   storeTokenToAsyncStorage(user.token);
+  Actions.taskList();
 };
 
 export const storeTokenToAsyncStorage = (token) =>

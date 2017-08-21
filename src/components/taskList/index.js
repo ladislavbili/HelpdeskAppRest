@@ -1,70 +1,45 @@
+
 import React, { Component } from 'react';
-import { View,ActivityIndicator } from 'react-native';
+import { Container, Header, Title, Button, Icon, Left, Right, Body } from 'native-base';
 import { connect } from 'react-redux';
-import { Container, Button, Text, Content, Item, Form, Input, Label, Header, Body, Title } from 'native-base';
+import { Actions } from 'react-native-router-flux';
+
+import TaskList from './taskList';
 import styles from './styles';
-import {loginUser} from '../../redux/actions';
-class Login extends Component {
-  constructor(props){
-    super(props);
-    this.state={
-      username:'admin',
-      password:'admin',
-    }
-  }
+import { openDrawer, closeDrawer } from '../../redux/actions/drawerActions';
+class TaskListLoader extends Component {
   render() {
       return (
-      <Container>
-        <Content padder style={{ backgroundColor: '#FFF', padding: 20 }}>
+        <Container style={styles.container}>
           <Header>
+            <Left>
+              <Button transparent onPress={this.props.openDrawer}>
+                <Icon name="menu" />
+              </Button>
+            </Left>
             <Body>
-              <Title>HelpdeskApp</Title>
+              <Title>TaskList</Title>
             </Body>
+            <Right>
+              <Button transparent style={{ marginTop: 8 }} onPress={Actions.search}>
+                <Icon name="search" style={{ color: 'white' }} />
+              </Button>
+              <Button transparent style={{ marginTop: 8 }} onPress={Actions.messages}>
+                <Icon name="mail" style={{ color: 'white' }} />
+              </Button>
+              <Button transparent style={{ marginTop: 8 }} onPress={Actions.settings}>
+                <Icon name="settings" style={{ color: 'white' }} />
+              </Button>
+            </Right>
           </Header>
-          <Form>
-            <Item inlineLabel>
-              <Input
-                placeholder="Username"
-                value={this.state.username}
-                 onChangeText={(value)=>this.setState({username:value})}
-              />
-            </Item>
-            <Item inlineLabel last>
-              <Input
-                secureTextEntry={true}
-                placeholder="Password"
-                value={this.state.password}
-                onChangeText={(value)=>this.setState({password:value})}
-              />
-            </Item>
-          </Form>
-          <View style={{ marginBottom: 80, marginTop: 20 }}>
-            <Button
-              block
-              primary
-              onPress={()=>this.props.loginUser(this.state.username,this.state.password)}
-              disabled={this.props.loading}
-            >
-            {
-              this.props.loading?
-              <ActivityIndicator
-              animating size={ 'large' }
-              color='#007299' /> :
-              <Text>Login</Text>
-            }
-            </Button>
-              <Text style={styles.errorMessage}>{this.props.error}</Text>
-          </View>
-        </Content>
-      </Container>
-    );
+           <TaskList/>
+        </Container>
+      );
   }
 }
 
-
-const mapStateToProps = ({ login }) => {
-  const { error, loading, authenticated } = login;
-  return { error, loading, authenticated };
+const mapStateToProps = (state) => {
+  return { };
 };
 
-export default connect(mapStateToProps,{loginUser})(Login);
+export default connect(mapStateToProps,{openDrawer})(TaskListLoader);

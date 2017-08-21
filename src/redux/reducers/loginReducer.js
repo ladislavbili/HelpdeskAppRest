@@ -1,13 +1,13 @@
 import {LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_LOGOUT} from '../types'
 
-const defaultState = {
+const initialState = {
   authenticated: false,
   user: null,
   error: '',
   loading:false,
 };
 
-export default function loginReducer(state = defaultState, action) {
+export default function loginReducer(state = initialState, action) {
   switch (action.type) {
     case LOGIN_START:
       return { ...state, loading: true, error: '' };

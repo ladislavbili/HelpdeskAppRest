@@ -4,13 +4,13 @@ import ReduxThunk from 'redux-thunk';
 import loginReducer from './reducers/loginReducer';
 import drawerReducer from './reducers/drawerReducer';
 import navigationReducer from './reducers/navigationReducer';
-import taskListReducer from './reducers/taskListReducer';
+import taskReducer from './reducers/taskReducer';
 
 const reducers = combineReducers({
     login:loginReducer,
     drawer:drawerReducer,
     navigation:navigationReducer,
-    taskList:taskListReducer,
+    task:taskReducer,
   });
 
 const enhancers = compose(

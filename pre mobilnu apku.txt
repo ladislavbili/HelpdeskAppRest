@@ -1,0 +1,154 @@
+update pagination filter order Subscription/porovnavanie dat/ dostat zmeny od datumu X
+ziskat vsetky
+assigned podla projektov
+čas je len nejaky druh timespampu, idealne kedze sa použiva react s JS nejaky ktory vracia trieda Date()
+filter taskov podla všetkych atributov, s pagination
+
+Idealne data:
+
+Pri logine sa nacitaju jednoduche data ktore app vyuziva stale dokola:
+  Login{
+    token,
+    email,
+    firstName,
+    surName
+  }
+
+  bez pagination: projects[{
+    name,
+    numberOfTasks,
+    id
+  },...]
+
+  s pagination tasks[{
+    id,
+    name/title,
+    assignedTo{
+      name,
+      id
+    },
+    requester{
+    name,
+    id
+    },
+    project{
+    id,
+    name
+    }
+    deadline,
+    status{
+      color,
+      name
+    }
+  },...]
+
+  bez pagination: users[{
+    id,
+    firstName,
+    surName,
+    login,
+    email
+  },...]
+
+  bez pagination: companies [{
+    name,
+    id
+  },...]
+
+  bez pagination: units [{
+    name,
+    id
+  },...]
+
+  bez pagination: statuses [{
+    color,
+    name,
+    id
+  },...]
+
+Zvlast pri kazdom okne tasku, ziskavane podla jeho ID:
+
+    attributy ako task{
+      id,
+      name/title,
+      description,
+      workDone,
+      workTime,
+      status{
+        id,
+        color
+      },
+      project{
+        id,
+        name
+      }
+      requester{
+        id,
+        name
+      },
+      company{
+        id,
+        name
+      },
+      assigned{
+        id,
+        name
+      },
+      startAt,
+      deadline,
+      closedAt, - pri ymene statusu na closed
+      tags[{
+        id,
+        name
+      },...],
+    } !!! missing pending time oproti appke
+
+    items[{
+      id,
+      name,
+      quantity,
+      unit{
+        id,
+        name
+      },
+      price
+    },...]
+
+  s pagination comments[{
+      id,
+      time,
+      user{
+        id,
+        name
+      },
+      message
+    },...]
+
+    customAttributes{
+      vsetko...
+    }
+
+    user{
+      id,
+      login,
+      userPosition,
+      firstName,
+      surName,
+      company{
+        id,
+        name
+      },
+      role{
+        id,
+        name
+      },
+      signature,
+      [languages],
+      email,
+      phone,
+      facebook,
+      twitter,
+      linkedin,
+      google,
+      active,
+    }

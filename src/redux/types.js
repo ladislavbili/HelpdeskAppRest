@@ -10,3 +10,7 @@ export const CHANGE_PLATFORM = 'CHANGE_PLATFORM';
 
 export const SET_TASKS = 'SET_TASKS';
 export const SET_PROJECTS = 'SET_PROJECTS';
+export const SET_COMPANIES = 'SET_COMPANIES';
+export const SET_STATUSES = 'SET_STATUSES';
+export const SET_USERS = 'SET_USERS';
+export const SET_CUSTOM_ATTRIBUTES = 'SET_CUSTOM_ATTRIBUTES';

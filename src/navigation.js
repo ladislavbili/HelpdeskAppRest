@@ -9,6 +9,7 @@ import getTheme from '../native-base-theme/components';
 
 import Login from './components/login';
 import TaskList from './components/taskList';
+import TaskEdit from './components/taskEdit';
 
 const RouterWithRedux = connect()(Router);
 
@@ -43,9 +44,10 @@ class AppNavigator extends Component {
           onClose={() => this.closeDrawer()}
         >
           <RouterWithRedux>
-            <Scene key="root">
-              <Scene key="login" component={Login} hideNavBar initial={true} />
+            <Scene key="root" hideNavBar>
+              <Scene key="login" component={Login} initial={true} />
               <Scene key="taskList" component={TaskList} />
+              <Scene key="taskEdit" component={TaskEdit} />
             </Scene>
           </RouterWithRedux>
         </Drawer>
