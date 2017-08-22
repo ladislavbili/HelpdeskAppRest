@@ -1,21 +1,19 @@
-export function updateTask(taskId, data) {
-    let config = {
-        method: 'PATCH',
-        body: queryString.stringify(data),
-        headers: {
-            'Authorization': 'Bearer ' + getFromStorage(TOKEN_KEY),
-            'Accept': 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    };
-    return fetch(TASK_LIST + '/' + taskId, config)
-        .then(response =>
-            response.json().then(tasks => ({tasks, response}))
-        ).then(({tasks, response}) => {
-            if (!response.ok) {
-                return Promise.reject(buildError(response, tasks))
-            } else {
-                return Promise.resolve(tasks);
-            }
-        });
-}
+import {SET_TASK } from '../types';
+import {TASK} from '../urls';
+import { Actions } from 'react-native-router-flux';
+
+
+export const getTask = (id) => {
+  return (dispatch) => {
+    fetch(TASK+id, {
+      method: 'GET',
+    }).then((response) =>response.json().then((response) => {
+      dispatch({type: SET_TASK, payload:{task:response}});
+      console.log(response);
+      Actions.taskEdit();
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};

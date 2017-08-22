@@ -1,8 +1,11 @@
 update pagination filter order Subscription/porovnavanie dat/ dostat zmeny od datumu X
-ziskat vsetky
-assigned podla projektov
-čas je len nejaky druh timespampu, idealne kedze sa použiva react s JS nejaky ktory vracia trieda Date()
-filter taskov podla všetkych atributov, s pagination
+-ziskat vsetky
+-assigned podla projektov
+-čas je len nejaky druh timespampu, idealne kedze sa použiva react s JS nejaky ktory vracia trieda Date()
+-filter taskov podla všetkych atributov, s pagination
+-ci sa requester,company nacitavaju pri kaydom otvoreni ANO
+-tokeny
+-STATUSY - order cisla
 
 Idealne data:
 
@@ -152,3 +155,12 @@ Zvlast pri kazdom okne tasku, ziskavane podla jeho ID:
       google,
       active,
     }
+
+
+
+    refresh token,
+    ulohy:
+    @Brano vymysliet ako menit order cislo, napisat Jurovi ako vytvorit pridavanie filtrov, prerobit cas na milisekundovy (linux cas, v javascripte new Date() .getTime())
+    @Martina do taskOption pridat statusom order, zoradenie podla orderu, otazka:pocet pagov na stranku ako option, default 10 , 0 vsetky, priklad zlozitejsieho orderBy napriklad taskov, ako ma vyzerat ten array, pri vytvarani projektu sa nema pridat do ACL vzdy admin ale len pouzivatel ktory dany projekt vytvoril, jeden pouzivatel nemoze mat 2x ACL v jednom projekte, ak pridava admin projekt, tak ho prida momentalne 2x
+    @Juro pridat editaciu do stastusov order, opravit datum
+    @Laco spytat sa na timezones, vybrat typ času

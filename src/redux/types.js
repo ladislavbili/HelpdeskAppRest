@@ -14,3 +14,5 @@ export const SET_COMPANIES = 'SET_COMPANIES';
 export const SET_STATUSES = 'SET_STATUSES';
 export const SET_USERS = 'SET_USERS';
 export const SET_CUSTOM_ATTRIBUTES = 'SET_CUSTOM_ATTRIBUTES';
+export const SET_UNITS = 'SET_UNITS';
+export const SET_TASK = 'SET_TASK';
