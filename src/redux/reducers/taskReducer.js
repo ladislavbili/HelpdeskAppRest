@@ -1,5 +1,4 @@
-
-import { SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_CUSTOM_ATTRIBUTES, SET_UNITS, SET_TASK } from '../types';
+import { SET_TASKS, SET_PROJECTS, SET_LOADING, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_CUSTOM_ATTRIBUTES, SET_UNITS, SET_TASK, ADD_TASKS } from '../types';
 
 const initialState = {
   tasks:[],
@@ -9,6 +8,9 @@ const initialState = {
   units:[],
   statuses:[],
   customAttributes:[],
+  tasksMeta:null,
+  projectsMeta:null,
+  loading:false,
   task:null,
 };
 
@@ -18,6 +20,20 @@ export default function taskReducer (state = initialState, action) {
       return {
         ...state,
         tasks: action.payload.tasks,
+        projects: action.payload.projects,
+        projectsMeta: action.payload.projectsMeta,
+        tasksMeta: action.payload.tasksMeta,
+        loading:false,
+      };
+    case SET_LOADING:
+      return {
+        ...state,
+        loading:true,
+      };
+    case ADD_TASKS:
+      return {
+        ...state,
+        tasks: [...state.tasks,...action.payload.tasks],
       };
     case SET_PROJECTS:
       return {

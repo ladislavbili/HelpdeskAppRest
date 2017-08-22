@@ -9,12 +9,13 @@ import styles from './styles';
 
 class TaskList extends Component {
   render() {
+    console.log(this.props.tasks);
     return (
       <Container style={styles.container}>
         <Content>
           <List>
           {
-            this.props.allTasks.map((data) => <TaskListRow data={data} key={data.id} />)
+            this.props.tasks.map((data) => <TaskListRow data={data} key={data.id} />)
           }
           </List>
         </Content>
@@ -39,7 +40,7 @@ class TaskList extends Component {
 }
 
 const mapStateToProps = ({ task }) => {
-  return { allTasks:task.tasks};
+  return { tasks } = task;
 };
 
 export default connect(mapStateToProps, {})(TaskList);
