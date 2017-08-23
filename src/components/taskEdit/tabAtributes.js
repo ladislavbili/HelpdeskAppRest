@@ -3,22 +3,25 @@ import { Modal } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { View, Body, Container, Content, Icon, Input, Item, Label, Text, Footer, FooterTab, Button, Picker,  ListItem, Header,Title , Left, Right, List } from 'native-base';
-import styles from './styles';
+
 import I18n from '../../translations';
+import styles from './styles';
+
 class TabAtributes extends Component {
   constructor(props) {
     super(props);
+    console.log(this.props.task);
     this.state = {
-      taskName:this.props.task.name,
-      taskDescription:this.props.task.description,
-      assignedTo:this.props.task.assignedTo?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.data.assignedTo.id)]:null,
-      requester:this.props.task.requestedBy?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.data.requestedBy.id)]:null,
-      status:this.props.task.status?this.props.status.status:this.props.statuses[0],
-      duration:this.props.data.duration?this.props.data.duration.toString():'0',
+      taskName:this.props.task.title?this.props.task.title:'',
+      taskDescription:this.props.task.description?this.props.task.description:'',
+      assignedTo:this.props.task.assignedTo?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.task.assignedTo.id)]:null,
+      requester:this.props.task.requestedBy?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.task.requestedBy.id)]:null,
+      status:this.props.task.status?this.props.statuses[this.props.statuses.findIndex((item)=>item.id==this.props.task.id)]:this.props.statuses[0],
+      duration:this.props.task.work_time?this.props.task.work_time.toString():'0',
       descriptionHeight:100,
-      company:this.props.data.company?this.props.companies[this.props.companies.findIndex((item)=>item.id==this.props.data.company.id)]:null,
-      project:this.props.data.project?this.props.data.project.id:this.props.projects[0].id,
-      statusChangedAt:this.props.data.statusChangedAt?this.props.data.statusChangedAt.toString():'',
+      company:this.props.task.company?this.props.companies[this.props.companies.findIndex((item)=>item.id==this.props.task.company.id)]:null,
+      project:this.props.task.project?this.props.task.project.id:this.props.projects[0].id,
+      statusChangedAt:this.props.task.statusChangedAt?this.props.task.statusChangedAt.toString():'',
       selectingCompany:false,
       filterWord:'',
       selectingRequester:false,
@@ -28,6 +31,8 @@ class TabAtributes extends Component {
     }
     this.setWorkTime.bind(this);
   }
+
+
 
   setWorkTime(input) {
     if(!/^\d*$/.test(input)){
@@ -46,7 +51,6 @@ class TabAtributes extends Component {
   }
 
   render() {
-
     let statusButtonStyle={backgroundColor:this.state.status.color,flex:1};
     return (
       <Container>
@@ -79,7 +83,8 @@ class TabAtributes extends Component {
             <Input
               style={{height:Math.max(35, this.state.descriptionHeight)}}
               multiline={true}
-              onChange={ event => this.setState({taskDescription:event.nativeEvent.text,descriptionHeight:event.nativeEvent.contentSize.height}) }
+              onChange={ event => this.setState({taskDescription:event.nativeEvent.text}) }
+              onContentSizeChange={(event) => this.setState({ descriptionHeight: event.nativeEvent.contentSize.height })}
               value={ this.state.taskDescription }
               placeholder={I18n.t('taskAddDescriptionLabel')}
             />
@@ -95,7 +100,7 @@ class TabAtributes extends Component {
               onValueChange={(value)=>{this.setState({project : value})}}>
               {
                 this.props.projects.map((project)=>
-                    (<Item label={project.name?project.name:''} key={project.id} value={project.id} />)
+                    (<Item label={project.title?project.title:''} key={project.id} value={project.id} />)
                   )
               }
             </Picker>
@@ -106,11 +111,11 @@ class TabAtributes extends Component {
             <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingRequester:true})}>
               <Left>
                 <Text style={{textAlign:'left',color:'black'}}>{this.state.requester==null ? I18n.t('taskAddSelectUser') : (
-                  (this.state.requester.firstName||this.state.requester.surName)?<Text>
+                  (this.state.requester.name||this.state.requester.surname)?<Text>
                     {
-                    (this.state.requester.firstName?
-                    this.state.requester.firstName+' ':
-                    '')+(this.state.requester.surName?this.state.requester.surName:'')
+                    (this.state.requester.name?
+                    this.state.requester.name+' ':
+                    '')+(this.state.requester.surname?this.state.requester.surname:'')
                   }</Text>:
                 <Text>{this.state.requester.email}</Text>
 
@@ -123,7 +128,7 @@ class TabAtributes extends Component {
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingCompany:true})}>
           <Left>
-          <Text style={{textAlign:'left',color:'black'}}>{this.state.company==null ? I18n.t('taskAddCompanySelect') : this.state.company.name}</Text>
+          <Text style={{textAlign:'left',color:'black'}}>{this.state.company==null ? I18n.t('taskAddCompanySelect') : this.state.company.title}</Text>
           </Left>
           </Button>
           </View>
@@ -133,11 +138,11 @@ class TabAtributes extends Component {
             <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingAssignedTo:true})}>
             <Left>
               <Text style={{textAlign:'left',color:'black'}}>{this.state.assignedTo==null ? I18n.t('taskAddSelectUser') : (
-                (this.state.assignedTo.firstName||this.state.assignedTo.surName)?<Text>
+                (this.state.assignedTo.name||this.state.assignedTo.surName)?<Text>
                   {
-                  (this.state.assignedTo.firstName?
-                  this.state.assignedTo.firstName+' ':
-                  '')+(this.state.assignedTo.surName?this.state.assignedTo.surName:'')
+                  (this.state.assignedTo.name?
+                  this.state.assignedTo.name+' ':
+                  '')+(this.state.assignedTo.surname?this.state.assignedTo.surname:'')
                 }</Text>:
               <Text>{this.state.assignedTo.email}</Text>
 
@@ -187,9 +192,9 @@ class TabAtributes extends Component {
             <List>
             {
               this.props.companies.map((company) =>
-              company.name.toLowerCase().includes(this.state.filterWord.toLowerCase()) && <ListItem button key={company.id} onPress={()=>this.setState({company:company,selectingCompany:false})} >
+              company.title.toLowerCase().includes(this.state.filterWord.toLowerCase()) && <ListItem button key={company.id} onPress={()=>this.setState({company:company,selectingCompany:false})} >
                 <Body>
-                  <Text>{company.name}</Text>
+                  <Text>{company.title}</Text>
                 </Body>
                 <Right>
                   <Icon name="arrow-forward" />
@@ -223,12 +228,12 @@ class TabAtributes extends Component {
 
             <List>
             {
-              (([{id:null,firstName:I18n.t('nobody'), email:I18n.t('none')}]).concat(this.props.users)).map((user) =>
-              (user.email+user.firstName+' '+user.surName+' '+user.firstName).toLowerCase().includes(this.state.filterWordRequester.toLowerCase()) &&
+              (([{id:null,name:I18n.t('nobody'), email:I18n.t('none')}]).concat(this.props.users)).map((user) =>
+              (user.email+user.name+' '+user.surname+' '+user.name).toLowerCase().includes(this.state.filterWordRequester.toLowerCase()) &&
               <ListItem button key={user.id} onPress={()=>this.setState({requester:user,selectingRequester:false})} >
                 <Body>
                 {
-                  (user.firstName || user.surName)?<Text>{((user.firstName?(user.firstName+' '):'')+ (user.surName?user.surName:''))}</Text>:null
+                  (user.name || user.surname)?<Text>{((user.name?(user.name+' '):'')+ (user.surname?user.surname:''))}</Text>:null
                 }
                 <Text note>{user.email}</Text>
                 </Body>
@@ -264,12 +269,12 @@ class TabAtributes extends Component {
 
             <List>
             {
-              (([{id:null,firstName:I18n.t('nobody'), email:I18n.t('none')}]).concat(this.props.users)).map((user) =>
-              (user.email+user.firstName+' '+user.surName+' '+user.firstName).toLowerCase().includes(this.state.filterWordAssignedTo.toLowerCase()) &&
+              (([{id:null,name:I18n.t('nobody'), email:I18n.t('none')}]).concat(this.props.users)).map((user) =>
+              (user.email+user.name+' '+user.surname+' '+user.name).toLowerCase().includes(this.state.filterWordAssignedTo.toLowerCase()) &&
               <ListItem button key={user.id} onPress={()=>this.setState({assignedTo:user,selectingAssignedTo:false})} >
                 <Body>
                 {
-                  (user.firstName || user.surName)?<Text>{((user.firstName?(user.firstName+' '):'')+ (user.surName?user.surName:''))}</Text>:null
+                  (user.name || user.surname)?<Text>{((user.name?(user.name+' '):'')+ (user.name?user.surname:''))}</Text>:null
                 }
                 <Text note>{user.email}</Text>
                 </Body>
@@ -284,30 +289,30 @@ class TabAtributes extends Component {
           </Modal>
 
         </Content>
-      <Footer>
-        <FooterTab>
-          <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }} onPress={Actions.pop}>
-            <Icon active style={{ color: 'white' }} name="md-add" />
-            <Text style={{ color: 'white' }} >{I18n.t('cancel')}</Text>
-          </Button>
-        </FooterTab>
+        <Footer>
+          <FooterTab>
+            <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }} onPress={Actions.pop}>
+              <Icon active style={{ color: 'white' }} name="md-add" />
+              <Text style={{ color: 'white' }} >{I18n.t('cancel')}</Text>
+            </Button>
+          </FooterTab>
 
-        <FooterTab>
-          <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
-          onPress={this.submitForm.bind(this)}
-          >
-            <Icon active name="md-add" style={{ color: 'white' }} />
-            <Text style={{ color: 'white' }} >{I18n.t('save')}</Text>
-          </Button>
-        </FooterTab>
-    </Footer>
-    </Container>
+          <FooterTab>
+            <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
+            onPress={this.submitForm.bind(this)}
+            >
+              <Icon active name="md-add" style={{ color: 'white' }} />
+              <Text style={{ color: 'white' }} >{I18n.t('save')}</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
+      </Container>
     );
   }
 }
 
 const mapStateToProps = ({ task }) => {
-  return { users, companies,statuses, projects} = task;
+  return { users, companies,statuses, projects, task} = task;
 };
 
 export default connect(mapStateToProps,{})(TabAtributes);

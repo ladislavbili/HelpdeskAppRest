@@ -1,5 +1,5 @@
 import {LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_LOGOUT,
-  SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_UNITS } from '../types';
+  SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_UNITS, START_LOADING } from '../types';
 import {LOGIN_URL,TASK_LIST, PROJECT_LIST,COMPANIES_LIST,STATUSES_LIST,USERS_LIST,UNITS_LIST} from '../urls';
 import { Actions } from 'react-native-router-flux';
 import { AsyncStorage } from 'react-native';
@@ -15,8 +15,8 @@ export const loginUser = (username, password) => {
       }).then((JSONresponse) => {
         JSONresponse.json().then((response)=>{
           if(JSONresponse.ok){
-            getTasks(dispatch, response.token);
             loginUserSuccess(dispatch, {user:{name:username,token:response.token}});
+            Actions.taskList();
           }
           else{
             loginUserFail(dispatch);
@@ -41,93 +41,6 @@ export const logoutUser = () => {
 
 //functions used by actions
 
-//preload all tasks and projects
-
-const getTasks = (dispatch,token) => {
-  fetch(TASK_LIST, {
-    method: 'GET',
-  }).then((response) =>response.json().then((response) => {
-    dispatch({type: SET_TASKS, payload:{tasks:response}});
-    getProjects(dispatch, response.token);
-  }))
-  .catch(function (error) {
-    console.log('1');
-    console.log(error);
-    loginUserFail(dispatch);
-  });
-}
-
-const getProjects = (dispatch,token) => {
-  fetch(PROJECT_LIST, {
-    method: 'GET',
-  }).then((response)=> response.json().then(response => {
-    dispatch({type: SET_PROJECTS, payload:{projects:response}});
-    getCompanies(dispatch, response.token);
-  }))
-  .catch(function (error) {
-    console.log('2');
-    console.log(error);
-    loginUserFail(dispatch);
-  });
-}
-
-const getCompanies = (dispatch,token) => {
-  fetch(COMPANIES_LIST, {
-    method: 'GET',
-  }).then((response)=> response.json().then(response => {
-    dispatch({type: SET_COMPANIES, payload:{companies:response}});
-    getStatuses(dispatch, response.token);
-  }))
-  .catch(function (error) {
-    console.log('3');
-    console.log(error);
-    loginUserFail(dispatch);
-  });
-}
-
-const getStatuses = (dispatch,token) => {
-  fetch(STATUSES_LIST, {
-    method: 'GET',
-  }).then((response)=> response.json().then(response => {
-    dispatch({type: SET_STATUSES, payload:{statuses:response}});
-    getUsers(dispatch, response.token);
-  }))
-  .catch(function (error) {
-    console.log('4');
-    console.log(error);
-    loginUserFail(dispatch);
-  });
-}
-
-const getUsers = (dispatch,token) => {
-  fetch(USERS_LIST, {
-    method: 'GET',
-  }).then((response)=> response.json().then(response => {
-    dispatch({type: SET_USERS, payload:{users:response}});
-    getUnits(dispatch, response.token);
-  }))
-  .catch(function (error) {
-    console.log('5');
-    console.log(error);
-    loginUserFail(dispatch);
-  });
-}
-
-const getUnits = (dispatch,token) => {
-  fetch(UNITS_LIST, {
-    method: 'GET',
-  }).then((response)=> response.json().then(response => {
-    dispatch({type: SET_UNITS, payload:{units:response}});
-    Actions.taskList();
-  }))
-  .catch(function (error) {
-    console.log('6');
-    console.log(error);
-    loginUserFail(dispatch);
-  });
-}
-
-
 //on failed login
 const loginUserFail = (dispatch) => {
   dispatch({ type: LOGIN_FAIL });
@@ -138,6 +51,9 @@ const loginUserSuccess = (dispatch, user) => {
   dispatch({
       type: LOGIN_SUCCESS,
       payload: user
+  });
+  dispatch({
+      type: START_LOADING,
   });
   storeTokenToAsyncStorage(user.token);
   //Actions.taskList();

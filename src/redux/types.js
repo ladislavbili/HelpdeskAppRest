@@ -8,6 +8,7 @@ export const CLOSE_DRAWER = 'CLOSE_DRAWER';
 export const CHANGE_MATERIAL = 'CHANGE_MATERIAL';
 export const CHANGE_PLATFORM = 'CHANGE_PLATFORM';
 
+export const SET_TASKS_AND_PROJECTS = 'SET_TASKS_AND_PROJECTS';
 export const SET_TASKS = 'SET_TASKS';
 export const SET_PROJECTS = 'SET_PROJECTS';
 export const SET_COMPANIES = 'SET_COMPANIES';
@@ -16,3 +17,5 @@ export const SET_USERS = 'SET_USERS';
 export const SET_CUSTOM_ATTRIBUTES = 'SET_CUSTOM_ATTRIBUTES';
 export const SET_UNITS = 'SET_UNITS';
 export const SET_TASK = 'SET_TASK';
+export const START_LOADING = 'START_LOADING';
+export const SET_TASK_ATTRIBUTES = 'SET_TASK_ATTRIBUTES';
