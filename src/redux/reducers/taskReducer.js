@@ -1,5 +1,6 @@
 
-import { SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_CUSTOM_ATTRIBUTES, SET_UNITS, SET_TASK,SET_TASKS_AND_PROJECTS,START_LOADING, SET_TASK_ATTRIBUTES } from '../types';
+import { SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_CUSTOM_ATTRIBUTES, SET_UNITS, SET_TASK,SET_TASKS_AND_PROJECTS,START_LOADING,
+  SET_TASK_ATTRIBUTES, EDIT_TASK_LIST, ADD_TO_TASK_LIST, SET_COMMENTS, START_LOADING_COMMENTS,ADD_NEW_COMMENT} from '../types';
 
 const initialState = {
   tasks:[],
@@ -12,14 +13,48 @@ const initialState = {
   task:null,
   project:null,
   loadingData:false,
+  loadingComments:false,
+  comments:[],
 };
 
 export default function taskReducer (state = initialState, action) {
   switch (action.type) {
+    case ADD_NEW_COMMENT:{
+      return {
+        ...state,
+        comments:[action.payload.comment,...state.comments],
+      };
+      }
+    case SET_COMMENTS:{
+      return {
+        ...state,
+        comments:action.payload.comments,
+        loadingComments:false,
+      };
+      }
+    case EDIT_TASK_LIST:{
+      let newTasks= [...state.tasks];
+      newTasks.splice(newTasks.findIndex((task)=>task.id==action.payload.taskInList.id),1,action.payload.taskInList);
+      return {
+        ...state,
+        tasks:newTasks
+      };
+      }
+    case ADD_TO_TASK_LIST:{
+      return {
+        ...state,
+        tasks:[action.payload.taskInList,...state.tasks]
+      };
+    }
     case START_LOADING:
       return {
         ...state,
         loadingData: true,
+      };
+    case START_LOADING_COMMENTS:
+      return {
+        ...state,
+        loadingComments: true,
       };
     case SET_TASK_ATTRIBUTES:
       return {

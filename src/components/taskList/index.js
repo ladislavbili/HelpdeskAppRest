@@ -49,8 +49,8 @@ class TaskListLoader extends Component {
   }
 }
 
-const mapStateToProps = ({task}) => {
-  return {loadingData,tasks,projects} = task;
+const mapStateToProps = ({taskData}) => {
+  return {loadingData,tasks,projects} = taskData;
 };
 
 export default connect(mapStateToProps,{openDrawer,getTasksAndProjects})(TaskListLoader);

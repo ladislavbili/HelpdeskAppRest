@@ -1,64 +1,56 @@
-
+import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import { Input, Label, Button, Icon, Item, Footer, FooterTab, Thumbnail, Container, Content, Card, CardItem, Text, ListItem, List,  Left, Body, Right } from 'native-base';
+import { Input, Label, Button, Icon, Item, Footer, FooterTab,View, Thumbnail, Container, Content, Card, CardItem, Text, ListItem, List,  Left, Body, Right } from 'native-base';
 import { Actions } from 'react-native-router-flux';
+import {ActivityIndicator} from 'react-native';
 import styles from './styles';
-import { ActivityIndicator } from 'react-native';
-import { addedCommentsSubscription } from './taskEdit.gquery';
 import I18n from '../../translations/';
+import {startLoadingComments, getComments} from '../../redux/actions';
+import {formatDate} from '../../helperFunctions';
 
-
-class TabComments extends Component { // eslint-disable-line
-  constructor(props){
-    super(props);
-    this.state={items:10}
-
+class TabComments extends Component {
+  componentDidMount(){
+    this.props.startLoadingComments();
+    this.props.getComments();
   }
-  componentWillMount(){
-    this.props.subscribeToMore({
-      document: addedCommentsSubscription,
-      updateQuery: () => {
-        this.props.refetch();
-        return;
-      },
-    });
-
-  }
-  render() { // eslint-disable-line
-    if(this.props.loading){
-      return (<ActivityIndicator animating size={ 'large' } color='#007299' />);
+  render() {
+    if(this.props.loadingComments){
+      return (
+        <ActivityIndicator
+        animating size={ 'large' }
+        color='#007299' />
+      )
     }
     return (
       <Container>
         <Content padder style={{ marginTop: 0 }}>
           <List
-          dataArray={this.props.allComments}
+          dataArray={this.props.comments}
           renderRow={data =>
-            <ListItem avatar>
-                    <Left>
-                       <Thumbnail/>
-                   </Left>
+            <ListItem avatar key={data.id}>
                    <Body>
-                       <Text note>{data.user?data.user.firstName:'Nikto'}</Text>
-                       <Text>{data.content}</Text>
+                     <Text note>{data.createdBy?(data.createdBy.name||data.createdBy.surname?((data.createdBy.name?(data.createdBy.name+' '):'')+(data.createdBy.surname?data.createdBy.surname:'')):data.createdBy.username):I18n.t('nobody')}</Text>
+                     {data.email_to &&
+                       <Text>Mailed to:</Text>
+                     }
+                     {data.email_to &&
+                       <List
+                        dataArray={data.email_to}
+                        renderRow={mail=>
+                            <Text note>{mail}</Text>
+                        }
+                       />
+                      }
+                     <Text>Title: <Text style={{color:'#007299'}}> {data.title?data.title:''}</Text></Text>
+                     <Text>Message: {data.body}</Text>
                    </Body>
                    <Right>
-                       <Text note>{data.createdAt}</Text>
+                     <Text note>{formatDate(data.createdAt)}</Text>
+                     {data.internal?<Text style={{color:'red'}}>Internal</Text>:null}
                    </Right>
                </ListItem>
           }
-          >
-        </List>
-        {
-          this.state.items==this.props.allComments.length &&
-        <Button
-          block
-          primary
-          style={styles.mb15}
-          onPress={this.props.getMore}>
-          <Text>Load more...</Text>
-          </Button>
-        }
+          />
       </Content>
 
       <Footer>
@@ -75,4 +67,10 @@ class TabComments extends Component { // eslint-disable-line
     );
   }
 }
-export default TabComments;
+const mapStateToProps = ({ taskData, login }) => {
+  const { comments, loadingComments } = taskData;
+  const {ACL} = login;
+  return { comments,loadingComments, ACL};
+};
+
+export default connect(mapStateToProps,{startLoadingComments,getComments})(TabComments);

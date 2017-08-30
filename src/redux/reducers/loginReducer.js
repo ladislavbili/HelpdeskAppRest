@@ -3,6 +3,13 @@ import {LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_LOGOUT} from '../types'
 const initialState = {
   authenticated: false,
   user: null,
+  userData: {
+    "id": 1,
+    "username": "mk",
+    "name": "Matej",
+    "surname": "Kurka",
+    "email": "mk@email.sk"
+  },
   error: '',
   loading:false,
   ACL:{

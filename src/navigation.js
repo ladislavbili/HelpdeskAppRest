@@ -10,6 +10,8 @@ import getTheme from '../native-base-theme/components';
 import Login from './components/login';
 import TaskList from './components/taskList';
 import TaskEdit from './components/taskEdit';
+import TaskAdd from './components/taskAdd';
+import CommentAdd from './components/commentAdd';
 
 const RouterWithRedux = connect()(Router);
 
@@ -48,6 +50,8 @@ class AppNavigator extends Component {
               <Scene key="login" component={Login} initial={true} />
               <Scene key="taskList" component={TaskList} />
               <Scene key="taskEdit" component={TaskEdit} />
+              <Scene key="taskAdd" component={TaskAdd} />
+              <Scene key="commentAdd" component={CommentAdd} />
             </Scene>
           </RouterWithRedux>
         </Drawer>

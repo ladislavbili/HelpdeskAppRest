@@ -6,27 +6,25 @@ import { View, Body, Container, Content, Icon, Input, Item, Label, Text, Footer,
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
 import I18n from '../../translations';
-import {saveEdit} from '../../redux/actions';
+import {addTask} from '../../redux/actions';
 import {formatDate} from '../../helperFunctions';
 
 class TabAtributes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      title:this.props.task.title?this.props.task.title:'',
-      assignedTo:this.props.task.assignedTo?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.task.assignedTo.id)]:{id:null,name:I18n.t('nobody'), email:I18n.t('none')},
-      requestedBy:this.props.task.requestedBy?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.task.requestedBy.id)]:{id:null,name:I18n.t('nobody'), email:I18n.t('none')},
-      status:this.props.task.status?this.props.statuses[this.props.statuses.findIndex((item)=>item.id==this.props.task.status.id)]:this.props.statuses[0],
-      work_time:this.props.task.work_time?this.props.task.work_time.toString():'0',
-      description:this.props.task.description?this.props.task.description:'',
+      title:'',
+      assignedTo:{id:null,name:I18n.t('nobody'), email:I18n.t('none')},
+      requestedBy:this.props.users[this.props.users.findIndex((user)=>user.id==this.props.userData.id)],
+      status:this.props.statuses[0],
+      work_time:'0',
+      description:'',
       descriptionHeight:100,
-      work:this.props.task.work?this.props.task.work:'',
+      work:'',
       workHeight:100,
-      company:this.props.task.company?this.props.companies[this.props.companies.findIndex((item)=>item.id==this.props.task.company.id)]:null,
-      project:this.props.task.project?this.props.task.project.id:this.props.projects[0].id,
-      statusChangedAt:this.props.task.statusChangedAt?formatDate(this.props.task.statusChangedAt):'',
-      disabled:!(this.props.task.canEdit||this.props.ACL.update_all_tasks),
-      important:this.props.task.important?true:false,
+      company:null,
+      project:this.props.projectId?this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.props.projectId)]:this.props.projects[0].id,
+      important:false,
       selectingCompany:false,
       filterWord:'',
       selectingRequester:false,
@@ -34,9 +32,9 @@ class TabAtributes extends Component {
       selectingAssignedTo:false,
       filterWordAssignedTo:'',
       selectingDeadline:false,
-      deadline:this.props.task.deadline?this.props.task.deadline:null,
+      deadline:null,
       selectingStartedAt:false,
-      startedAt:this.props.task.startedAt?this.props.task.startedAt:null,
+      startedAt:null,
     }
     this.setWorkTime.bind(this);
   }
@@ -45,7 +43,7 @@ class TabAtributes extends Component {
     if(!/^\d*$/.test(input)){
       return;
     }
-    if(input.length==2 && input[0]=='0'){
+    if(input.length>2 && input[0]=='0'){
       this.setState({work_time:input[1]});
     }
     else{
@@ -55,22 +53,22 @@ class TabAtributes extends Component {
 
   submitForm(){
     // auto: createdAt, createdBy
-    const id = this.props.task.id;
     const {title,description,work_time,deadline,startedAt,work, important} = this.state;
     const assignedTo = this.state.assignedTo.id?{id:this.state.assignedTo.id}:null;
-    const requestedBy = this.state.requestedBy.id?{id:this.state.requestedBy.id}:null;
+    const requestedBy = this.state.requestedBy?{id:this.state.requestedBy.id}:null;
     const status = {id:this.state.status.id};
     const company = this.state.company?{id:this.state.company.id}:null;
-    const project = {id:this.state.project};
+    const project = this.state.project?{id:this.state.project.id}:null;
     const updatedAt = (new Date()).getTime();
-    const statusChangedAt = !this.props.task.status||status!=this.props.task.status.id?(new Date()).getTime():this.state.statusChangedAt;
-    const createdAt = this.props.task.createdAt;
-    const createdBy = this.props.task.createdBy;
-    this.props.saveEdit(
-      {id,title,description,deadline,startedAt,important,work,work_time,
+    const statusChangedAt = null;
+    const createdAt = (new Date()).getTime();
+    const createdBy = this.props.userData;
+    //const id = this.props.tasks.length+1;
+    this.props.addTask(
+      {title,description,deadline,startedAt,important,work,work_time,
         createdAt,updatedAt,statusChangedAt,createdBy,requestedBy,project,company,assignedTo,
-        canEdit:this.props.task.canEdit,status},this.state.assignedTo.id?this.state.assignedTo:null,
-        this.state.project?{id:this.state.project,title:this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.state.project)].title}:null,
+        canEdit:true,status},this.state.assignedTo.id?this.state.assignedTo:null,
+        {id:this.state.project,title:this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.state.project)].title},
         this.state.status
       );
     Actions.pop();
@@ -84,13 +82,12 @@ class TabAtributes extends Component {
 
           <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
             <Label>Important</Label>
-              <CheckBox checked={this.state.important} disabled={this.state.disabled} color='#3F51B5' onPress={()=>this.setState({important:!this.state.important})}/>
+              <CheckBox checked={this.state.important} color='#3F51B5' onPress={()=>this.setState({important:!this.state.important})}/>
           </Item>
 
           <Text note>{I18n.t('taskAddTaskName')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
-              disabled={this.state.disabled}
               placeholder={I18n.t('taskAddTaskNameLabel')}
               value={ this.state.title }
               onChangeText={ value => this.setState({title:value}) }
@@ -98,10 +95,9 @@ class TabAtributes extends Component {
           </View>
           <View style={{flexDirection:'row'}}>
             <Text note>{I18n.t('status')}</Text>
-            <Text note  style={{textAlign: 'right',flex:1}}>{this.state.statusChangedAt}</Text>
           </View>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button style={statusButtonStyle} disabled={this.state.disabled} onPress={()=>this.setState({pickingStatus:!this.state.pickingStatus})}><Text style={{color:'white',flex:1,textAlign:'center'}}>{this.state.status.title}</Text></Button>
+            <Button style={statusButtonStyle} onPress={()=>this.setState({pickingStatus:!this.state.pickingStatus})}><Text style={{color:'white',flex:1,textAlign:'center'}}>{this.state.status.title}</Text></Button>
               {
                   this.state.pickingStatus && this.props.statuses.map((status)=>
                       !(this.state.status.id==status.id) &&
@@ -116,7 +112,6 @@ class TabAtributes extends Component {
             <Input
               style={{height:Math.max(35, this.state.descriptionHeight)}}
               multiline={true}
-              disabled={this.state.disabled}
               onChange={ event => this.setState({description:event.nativeEvent.text}) }
               onContentSizeChange={(event) => this.setState({ descriptionHeight: event.nativeEvent.contentSize.height })}
               value={ this.state.description }
@@ -129,7 +124,6 @@ class TabAtributes extends Component {
             <Input
               style={{height:Math.max(35, this.state.workHeight)}}
               multiline={true}
-              disabled={this.state.disabled}
               onChange={ event => this.setState({work:event.nativeEvent.text}) }
               onContentSizeChange={(event) => this.setState({ workHeight: event.nativeEvent.contentSize.height })}
               value={ this.state.work }
@@ -140,7 +134,6 @@ class TabAtributes extends Component {
           <Text note>{I18n.t('project')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Picker
-              enabled={!this.state.disabled}
               supportedOrientations={['portrait', 'landscape']}
               iosHeader={I18n.t('selectOne')}
               mode="dropdown"
@@ -156,7 +149,7 @@ class TabAtributes extends Component {
 
           <Text note>{I18n.t('requester')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingRequester:true})}>
+            <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingRequester:true})}>
               <Left>
                 <Text style={{textAlign:'left',color:'black'}}>{this.state.requestedBy==null ? I18n.t('taskAddSelectUser') : (
                   (this.state.requestedBy.name||this.state.requestedBy.surname)?<Text>
@@ -174,7 +167,7 @@ class TabAtributes extends Component {
 
           <Text note>{I18n.t('company')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingCompany:true})}>
+            <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingCompany:true})}>
               <Left>
                 <Text style={{textAlign:'left',color:'black'}}>{this.state.company==null ? I18n.t('taskAddCompanySelect') : this.state.company.title}</Text>
               </Left>
@@ -183,7 +176,7 @@ class TabAtributes extends Component {
 
           <Text note>{I18n.t('assignedTo')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingAssignedTo:true})}>
+            <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingAssignedTo:true})}>
             <Left>
               <Text style={{textAlign:'left',color:'black'}}>{this.state.assignedTo==null ? I18n.t('taskAddSelectUser') : (
                 (this.state.assignedTo.name||this.state.assignedTo.surName)?<Text>
@@ -201,7 +194,7 @@ class TabAtributes extends Component {
 
           <Text note>{I18n.t('deadline')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingDeadline:true})}>
+            <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingDeadline:true})}>
               <Left>
                 <Text style={{textAlign:'left',color:'black'}}>{this.state.deadline==null ? I18n.t('taskAddDeadlineSelect') : formatDate(this.state.deadline)}</Text>
               </Left>
@@ -216,7 +209,7 @@ class TabAtributes extends Component {
 
           <Text note>{I18n.t('pendingAt')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingStartedAt:true})}>
+            <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingStartedAt:true})}>
               <Left>
                 <Text style={{textAlign:'left',color:'black'}}>{this.state.startedAt==null ? I18n.t('taskAddStartedAtSelect') : formatDate(this.state.startedAt)}</Text>
               </Left>
@@ -232,7 +225,6 @@ class TabAtributes extends Component {
           <Text note>{I18n.t('workHours')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
-              disabled={this.state.disabled}
               value={this.state.work_time}
               keyboardType='numeric'
               onChangeText={ value => this.setWorkTime(value) }
@@ -366,26 +358,24 @@ class TabAtributes extends Component {
               <Text style={{ color: 'white' }} >{I18n.t('cancel')}</Text>
             </Button>
           </FooterTab>
-          { !this.state.disabled &&
-            <FooterTab>
-              <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
-              onPress={this.submitForm.bind(this)}
-              >
-                <Icon active name="md-add" style={{ color: 'white' }} />
-                <Text style={{ color: 'white' }} >{I18n.t('save')}</Text>
-              </Button>
-            </FooterTab>
-          }
+          <FooterTab>
+            <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
+            onPress={this.submitForm.bind(this)}
+            >
+              <Icon active name="md-add" style={{ color: 'white' }} />
+              <Text style={{ color: 'white' }} >{I18n.t('add')}</Text>
+            </Button>
+          </FooterTab>
         </Footer>
       </Container>
     );
   }
 }
 
-const mapStateToProps = ({ taskData,login }) => {
-  const { users, companies,statuses, projects, task} = taskData;
-  const {ACL} = login;
-  return { users, companies,statuses, projects, task, ACL};
+const mapStateToProps = ({ taskData, login }) => {
+  const {userData} = login;
+  const { users, companies,statuses, projects} = taskData;
+  return { users, companies,statuses, projects, userData};
 };
 
-export default connect(mapStateToProps,{saveEdit})(TabAtributes);
+export default connect(mapStateToProps,{addTask})(TabAtributes);

@@ -1,59 +1,543 @@
 {
   "tasks": [
-    {"id":1, "title":"task name","assignedTo":{"id":1,"name":"Matej","surname":"Kurka","username":"mk","email":"mk@email.sk"},
-    "deadline":1503479889210, "status":{"id":1,"title":"New","color":"#2DA3EC"}, "project":{"id":1,"title":"Projekt 1"} },
-    {"id":2, "title":"task name 2","assignedTo":{"id":1,"name":"Matej","surname":"Kurka","username":"mk","email":"mk@email.sk"},
-    "deadline":1503479889210, "status":{"id":1,"title":"New","color":"#2DA3EC"}, "project":{"id":1,"title":"Projekt 1"} }
+    {
+      "id": 1,
+      "title": "task name edited",
+      "assignedTo": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      },
+      "deadline": 1501761600000,
+      "status": {
+        "id": 1,
+        "title": "New",
+        "color": "#2DA3EC"
+      },
+      "project": {
+        "id": 1,
+        "title": "Projekt 1"
+      },
+      "description": "popis penky",
+      "startedAt": 1504161000000,
+      "important": true,
+      "work": "what has been done til now now",
+      "work_time": "100",
+      "createdAt": 1503479889210,
+      "updatedAt": 1503916953055,
+      "statusChangedAt": 1503916953055,
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      },
+      "requestedBy": {
+        "id": 1
+      },
+      "company": {
+        "id": 1
+      },
+      "canEdit": true
+    },
+    {
+      "id": 2,
+      "title": "task name 2",
+      "assignedTo": {
+        "id": 1,
+        "name": "Matej",
+        "surname": "Kurka",
+        "username": "mk",
+        "email": "mk@email.sk"
+      },
+      "deadline": 1503479889210,
+      "status": {
+        "id": 1,
+        "title": "New",
+        "color": "#2DA3EC"
+      },
+      "project": {
+        "id": 1,
+        "title": "Projekt 1"
+      }
+    },
+    {
+      "title": "abc",
+      "description": "ppp",
+      "deadline": 1502282460000,
+      "startedAt": 1502239260000,
+      "important": true,
+      "work": "nci",
+      "work_time": "480",
+      "createdAt": 1503927194455,
+      "updatedAt": 1503927775636,
+      "statusChangedAt": 1503927775636,
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      },
+      "requestedBy": null,
+      "project": {
+        "id": 2,
+        "title": "Projekt 2"
+      },
+      "company": {
+        "id": 2
+      },
+      "assignedTo": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      },
+      "canEdit": true,
+      "status": {
+        "id": 4,
+        "title": "Open",
+        "color": "#68bc00"
+      },
+      "id": 3
+    },
+    {
+      "title": "novy task",
+      "description": "ppp",
+      "deadline": 1503391260000,
+      "startedAt": 1502829660000,
+      "important": false,
+      "work": "sss",
+      "work_time": "44",
+      "createdAt": 1503927849341,
+      "updatedAt": 1503927849341,
+      "statusChangedAt": null,
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      },
+      "requestedBy": {
+        "id": null
+      },
+      "project": {
+        "id": 1,
+        "title": "Projekt 1"
+      },
+      "company": {
+        "id": 1
+      },
+      "assignedTo": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      },
+      "canEdit": true,
+      "status": {
+        "id": 2,
+        "title": "Pending",
+        "color": "#ff9c00"
+      },
+      "id": 4
+    }
   ],
-  "task":[
-    {"id":1,"title":"task name","description":"popis 1","deadline":1503479889210,"startedAt":1503479889210,"closedAt":1503479889210,
-    "important":true,"work":"what has been done","work_time":10,"createdAt":1503479889210,"updatedAt":1503479889210,
-    "createdBy":{"id":1,"username":"mk","name":"Matej","surname":"Kurka","email":"mk@email.sk"},"requestedBy":{"id":1},
-    "project":{"id":1},"company":{"id":1},"assignedTo":{"id":2},"canEdit":true,"status":{"id":1}},
-    {"id":2,"title":"task name 2","description":"popis 2","deadline":1503479889210,"startedAt":1503479889210,"closedAt":1503479889210,
-    "important":true,"work":"what has been done","work_time":10,"createdAt":1503479889210,"updatedAt":1503479889210,
-    "createdBy":{"id":1,"username":"mk","name":"Matej","surname":"Kurka","email":"mk@email.sk"},"requestedBy":{"id":1},
-    "project":{"id":1},"company":{"id":1},"assignedTo":{"id":2},"canEdit":true,"status":{"id":1}}
+  "task": [
+    {
+      "id": 1,
+      "title": "task name edited",
+      "description": "popis penky",
+      "deadline": 1501761600000,
+      "startedAt": 1504161000000,
+      "important": true,
+      "work": "what has been done til now now",
+      "work_time": "100",
+      "createdAt": 1503479889210,
+      "updatedAt": 1503916953055,
+      "statusChangedAt": 1503916953055,
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      },
+      "requestedBy": {
+        "id": 1
+      },
+      "project": {
+        "id": 1
+      },
+      "company": {
+        "id": 1
+      },
+      "assignedTo": {
+        "id": 1
+      },
+      "canEdit": true,
+      "status": {
+        "id": 1
+      }
+    },
+    {
+      "id": 2,
+      "title": "task name 2",
+      "description": "popis 2",
+      "deadline": 1503479889210,
+      "startedAt": 1503479889210,
+      "important": true,
+      "work": "what has been done",
+      "work_time": 10,
+      "createdAt": 1503479889210,
+      "updatedAt": 1503479889210,
+      "statusChangedAt": 1503479889210,
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      },
+      "requestedBy": {
+        "id": 1
+      },
+      "project": {
+        "id": 1
+      },
+      "company": {
+        "id": 1
+      },
+      "assignedTo": {
+        "id": 2
+      },
+      "canEdit": false,
+      "status": {
+        "id": 1
+      }
+    },
+    {
+      "title": "abc",
+      "description": "ppp",
+      "deadline": 1502282460000,
+      "startedAt": 1502239260000,
+      "important": true,
+      "work": "nci",
+      "work_time": "480",
+      "createdAt": 1503927194455,
+      "updatedAt": 1503927775636,
+      "statusChangedAt": 1503927775636,
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      },
+      "requestedBy": null,
+      "project": {
+        "id": 2
+      },
+      "company": {
+        "id": 2
+      },
+      "assignedTo": {
+        "id": 1
+      },
+      "canEdit": true,
+      "status": {
+        "id": 4
+      },
+      "id": 3
+    },
+    {
+      "title": "novy task",
+      "description": "ppp",
+      "deadline": 1503391260000,
+      "startedAt": 1502829660000,
+      "important": false,
+      "work": "sss",
+      "work_time": "44",
+      "createdAt": 1503927849341,
+      "updatedAt": 1503927849341,
+      "statusChangedAt": null,
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      },
+      "requestedBy": {
+        "id": null
+      },
+      "project": {},
+      "company": {
+        "id": 1
+      },
+      "assignedTo": {
+        "id": 1
+      },
+      "canEdit": true,
+      "status": {
+        "id": 2
+      },
+      "id": 4
+    }
   ],
-  "users":[
-    {"id":1,"username":"mk","name":"Matej","surname":"Kurka","email":"mk@email.sk"},
-    {"id":2,"username":"pk","name":"Peter","surname":"Karpa","email":"pk@email.sk"}
+  "users": [
+    {
+      "id": 1,
+      "username": "mk",
+      "name": "Matej",
+      "surname": "Kurka",
+      "email": "mk@email.sk"
+    },
+    {
+      "id": 2,
+      "username": "pk",
+      "name": "Peter",
+      "surname": "Karpa",
+      "email": "pk@email.sk"
+    }
   ],
-  "user":[
-    {"id":1,"username":"mk","email":"mk@email.sk","is_active":"true","name":"Matej","surname":"Kurka","title_before":"","title_after": "",
-      "function":"prvy","mobile":"0911315467","tel":"0911315467","fax":"something","signature":"podpis 1","street": null,
-        "city": "Bratislava","zip": "123","country": "Poland","facebook": "facebook.sk","twitter": "twitter.sk","linkdin": "linkdin.sk",
-        "google": "google.sk","user_role":{"id":1},"company":{"id":"1","title":"prva firma"}},
-    {"id":2,"username":"pk","email":"pk@email.sk","is_active":"true","name":"Peter","surname":"Karpa", "title_before":"","title_after": "",
-      "function":"prvy","mobile":"0911315467","tel":"0911315467","fax":"something","signature":"podpis 1","street": null,
-        "city": "Bratislava","zip": "123","country": "Poland","facebook": "facebook.sk","twitter": "twitter.sk","linkdin": "linkdin.sk",
-        "google": "google.sk","user_role":{"id":1},"company":{"id":"1","title":"prva firma"}}
+  "user": [
+    {
+      "id": 1,
+      "username": "mk",
+      "email": "mk@email.sk",
+      "is_active": "true",
+      "name": "Matej",
+      "surname": "Kurka",
+      "title_before": "",
+      "title_after": "",
+      "function": "prvy",
+      "mobile": "0911315467",
+      "tel": "0911315467",
+      "fax": "something",
+      "signature": "podpis 1",
+      "street": null,
+      "city": "Bratislava",
+      "zip": "123",
+      "country": "Poland",
+      "facebook": "facebook.sk",
+      "twitter": "twitter.sk",
+      "linkdin": "linkdin.sk",
+      "google": "google.sk",
+      "user_role": {
+        "id": 1
+      },
+      "company": {
+        "id": "1",
+        "title": "prva firma"
+      }
+    },
+    {
+      "id": 2,
+      "username": "pk",
+      "email": "pk@email.sk",
+      "is_active": "true",
+      "name": "Peter",
+      "surname": "Karpa",
+      "title_before": "",
+      "title_after": "",
+      "function": "prvy",
+      "mobile": "0911315467",
+      "tel": "0911315467",
+      "fax": "something",
+      "signature": "podpis 1",
+      "street": null,
+      "city": "Bratislava",
+      "zip": "123",
+      "country": "Poland",
+      "facebook": "facebook.sk",
+      "twitter": "twitter.sk",
+      "linkdin": "linkdin.sk",
+      "google": "google.sk",
+      "user_role": {
+        "id": 1
+      },
+      "company": {
+        "id": "1",
+        "title": "prva firma"
+      }
+    }
   ],
-  "projects":[
-    {"id":1,"title":"Projekt 1","numberOfTasks":4,"ACL":{"create_task":true,"resolve_task":true, "delete_task":true,"view_internal_note":true}},
-    {"id":2,"title":"Projekt 2","numberOfTasks":2,"ACL":{"create_task":true,"resolve_task":true, "delete_task":true,"view_internal_note":true}}
+  "projects": [
+    {
+      "id": 1,
+      "title": "Projekt 1",
+      "numberOfTasks": 4,
+      "ACL": {
+        "create_task": true,
+        "resolve_task": true,
+        "delete_task": true,
+        "view_internal_note": true
+      }
+    },
+    {
+      "id": 2,
+      "title": "Projekt 2",
+      "numberOfTasks": 2,
+      "ACL": {
+        "create_task": true,
+        "resolve_task": true,
+        "delete_task": true,
+        "view_internal_note": true
+      }
+    }
   ],
-  "companies":[
-    {"id":1,"title":"Company 1"},
-    {"id":2,"title":"Company 2"}
+  "companies": [
+    {
+      "id": 1,
+      "title": "Company 1"
+    },
+    {
+      "id": 2,
+      "title": "Company 2"
+    }
   ],
-  "units":[
-    {"id":1,"title":"kg"},
-    {"id":2,"title":"cm"}
+  "units": [
+    {
+      "id": 1,
+      "title": "kg"
+    },
+    {
+      "id": 2,
+      "title": "cm"
+    }
   ],
-  "statuses":[
-    {"id":1,"title":"New","color":"#2DA3EC"},
-    {"id":2,"title":"Pending","color":"#ff9c00"},
-    {"id":3,"title":"Closed","color":"#b3b3b3"},
-    {"id":4,"title":"Open","color":"#68bc00"}
+  "statuses": [
+    {
+      "id": 1,
+      "title": "New",
+      "color": "#2DA3EC"
+    },
+    {
+      "id": 2,
+      "title": "Pending",
+      "color": "#ff9c00"
+    },
+    {
+      "id": 3,
+      "title": "Closed",
+      "color": "#b3b3b3"
+    },
+    {
+      "id": 4,
+      "title": "Open",
+      "color": "#68bc00"
+    }
   ],
-  "comments":[
-    {"id":1,"time":"6:45 11.2.2017","projectId":1,"user":{"id":1,"name":"Matej","surname":"Kurka"},"message":"Sprava zlava"},
-    {"id":2,"time":"6:45 11.2.2017","projectId":1,"user":{"id":1,"name":"Matej","surname":"Kurka"},"message":"Sprava a zlava"},
-    {"id":3,"time":"6:45 11.2.2017","projectId":2,"user":{"id":1,"name":"Matej","surname":"Kurka"},"message":"Sprava sprava zlava"}
+  "comments": [
+    {
+      "id": 1,
+      "title": "t1",
+      "body": "Sprava",
+      "createdAt": 1504161000000,
+      "internal": true,
+      "email_to": [
+        "mail@gmail.net",
+        "em@tail.net"
+      ],
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      }
+    },
+    {
+      "id": 2,
+      "title": "t2",
+      "body": "Sprava zlava",
+      "createdAt": 1504161000000,
+      "internal": true,
+      "email_to": null,
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      }
+    },
+    {
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      },
+      "createdAt": 1504161000000,
+      "title": "t3",
+      "body": "Sprava zlava prava",
+      "internal": true,
+      "email_to": null,
+      "id": 3
+    },
+    {
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      },
+      "createdAt": 1503935208576,
+      "title": "nadpis",
+      "body": "sprava",
+      "internal": false,
+      "email_to": null,
+      "id": 4
+    },
+    {
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      },
+      "createdAt": 1503938667392,
+      "title": "mial",
+      "body": "Sprava emailu testujeme viacero emailov atd a podobne a taak",
+      "internal": true,
+      "email_to": [
+        "tadamada@sss.sk",
+        "tokoroko@aaa.cu"
+      ],
+      "id": 5
+    }
   ],
-  "items":[
-    {"id":1,"projectId":1,"title":"Chleba","quantity":3,"unit":{"id":1},"price":3},
-    {"id":2,"projectId":1,"title":"Maslo","quantity":2,"unit":{"id":2},"price":4}
+  "items": [
+    {
+      "id": 1,
+      "projectId": 1,
+      "title": "Chleba",
+      "quantity": 3,
+      "unit": {
+        "id": 1
+      },
+      "price": 3
+    },
+    {
+      "id": 2,
+      "projectId": 1,
+      "title": "Maslo",
+      "quantity": 2,
+      "unit": {
+        "id": 2
+      },
+      "price": 4
+    }
   ]
 }

@@ -5,14 +5,12 @@ import { connect } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
 
 import TabAtributes from './tabAtributes';
-import TabComments from './tabComments';
 import styles from './styles';
-import {getTaskAttributes} from '../../redux/actions';
+import {getAttributes} from '../../redux/actions';
 
-
-class TaskEdit extends Component {
+class TaskAdd extends Component {
   componentWillMount(){
-    this.props.getTaskAttributes(this.props.id);
+    this.props.getAttributes();
   }
   render() {
     if(this.props.loadingData){
@@ -32,17 +30,14 @@ class TaskEdit extends Component {
           </Button>
           </Left>
           <Body>
-            <Title>Task Edit</Title>
+            <Title>Task Add</Title>
           </Body>
           <Right />
         </Header>
            <Tabs>
-             <Tab heading="Attributes">
-                 <TabAtributes id={this.props.id} />
-             </Tab>
-             <Tab heading="Comments">
-                 <TabComments id={this.props.id} />
-             </Tab>
+               <Tab heading="Attributes">
+                   <TabAtributes projectId={this.props.projectId} />
+               </Tab>
            </Tabs>
       </Container>
     );
@@ -53,4 +48,4 @@ const mapStateToProps = ({ taskData }) => {
   return { loadingData} = taskData;
 };
 
-export default connect(mapStateToProps,{getTaskAttributes})(TaskEdit);
+export default connect(mapStateToProps,{getAttributes})(TaskAdd);

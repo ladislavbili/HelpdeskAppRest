@@ -10,7 +10,7 @@ const reducers = combineReducers({
     login:loginReducer,
     drawer:drawerReducer,
     navigation:navigationReducer,
-    task:taskReducer,
+    taskData:taskReducer,
   });
 
 const enhancers = compose(

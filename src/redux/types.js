@@ -19,3 +19,9 @@ export const SET_UNITS = 'SET_UNITS';
 export const SET_TASK = 'SET_TASK';
 export const START_LOADING = 'START_LOADING';
 export const SET_TASK_ATTRIBUTES = 'SET_TASK_ATTRIBUTES';
+export const EDIT_TASK_LIST = 'EDIT_TASK_LIST';
+export const ADD_TO_TASK_LIST = 'ADD_TO_TASK_LIST';
+
+export const SET_COMMENTS = 'SET_COMMENTS';
+export const START_LOADING_COMMENTS = 'START_LOADING_COMMENTS';
+export const ADD_NEW_COMMENT = 'ADD_NEW_COMMENT';
