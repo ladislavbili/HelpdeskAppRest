@@ -2,7 +2,7 @@ export default {
   commentAddMessagePlaceholder: 'Zadajte správu',
   commentAddtabComment: '+ Komentár',
   commentAddBody: 'Správa',
-  commentAddTitle: 'Nadpis',
+  commentAddTitle: 'Predmet',
   commentAddEmails:'Pre:',
   commentAddEmail:'Zadajte e-mail',
   };

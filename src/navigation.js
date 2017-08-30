@@ -7,12 +7,17 @@ import { closeDrawer } from './redux/actions';
 import material from '../native-base-theme/variables/material';
 import getTheme from '../native-base-theme/components';
 
+import SideBar from './components/sidebar';
 import Login from './components/login';
+import Settings from './components/settings';
 import TaskList from './components/taskList';
 import TaskEdit from './components/taskEdit';
 import TaskAdd from './components/taskAdd';
 import CommentAdd from './components/commentAdd';
-
+import ItemAdd from './components/itemAdd';
+import ItemEdit from './components/itemEdit';
+import UserList from './components/userList';
+import UserAdd from './components/userAdd';
 const RouterWithRedux = connect()(Router);
 
 class AppNavigator extends Component {
@@ -42,16 +47,21 @@ class AppNavigator extends Component {
       <StyleProvider style={getTheme((this.props.themeState === 'material') ? material : undefined)}>
         <Drawer
           ref={(ref) => { this._drawer = ref; }}
-          content={<Login navigator={this._navigator} />}
+          content={<SideBar navigator={this._navigator} />}
           onClose={() => this.closeDrawer()}
         >
           <RouterWithRedux>
             <Scene key="root" hideNavBar>
               <Scene key="login" component={Login} initial={true} />
+              <Scene key="settings" component={Settings} />
               <Scene key="taskList" component={TaskList} />
               <Scene key="taskEdit" component={TaskEdit} />
               <Scene key="taskAdd" component={TaskAdd} />
               <Scene key="commentAdd" component={CommentAdd} />
+              <Scene key="itemAdd" component={ItemAdd} />
+              <Scene key="itemEdit" component={ItemEdit} />
+              <Scene key="userList" component={UserList} />
+              <Scene key="userAdd" component={UserAdd} />
             </Scene>
           </RouterWithRedux>
         </Drawer>

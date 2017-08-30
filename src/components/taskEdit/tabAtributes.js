@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Modal } from 'react-native';
+import { Modal, Alert } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { View, Body, Container, Content, Icon, Input, Item, Label, Text, Footer, FooterTab, Button, Picker,  ListItem, Header,Title , Left, Right, List , CheckBox } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
 import I18n from '../../translations';
-import {saveEdit} from '../../redux/actions';
+import {saveEdit,deleteTask} from '../../redux/actions';
 import {formatDate} from '../../helperFunctions';
 
 class TabAtributes extends Component {
@@ -25,7 +25,7 @@ class TabAtributes extends Component {
       company:this.props.task.company?this.props.companies[this.props.companies.findIndex((item)=>item.id==this.props.task.company.id)]:null,
       project:this.props.task.project?this.props.task.project.id:this.props.projects[0].id,
       statusChangedAt:this.props.task.statusChangedAt?formatDate(this.props.task.statusChangedAt):'',
-      disabled:!(this.props.task.canEdit||this.props.ACL.update_all_tasks),
+      disabled:!(this.props.task.canEdit||this.props.ACL.update_all_tasks||this.props.task.ACL.resolve_task),
       important:this.props.task.important?true:false,
       selectingCompany:false,
       filterWord:'',
@@ -74,6 +74,21 @@ class TabAtributes extends Component {
         this.state.status
       );
     Actions.pop();
+  }
+
+  deleteTask(){
+    Alert.alert(
+      I18n.t('taskEditdeletingTask'),
+      I18n.t('taskEditdeletingTaskMessage'),
+      [
+        {text: I18n.t('cancel'), style: 'cancel'},
+        {text: I18n.t('ok'), onPress: () =>{
+          this.props.deleteTask(this.props.task.id);
+          Actions.pop();
+        }},
+      ],
+      { cancelable: false }
+    )
   }
 
   render() {
@@ -239,6 +254,14 @@ class TabAtributes extends Component {
             />
           </View>
 
+          {
+            this.props.task.ACL.delete_task &&
+            <Button danger block onPress={this.deleteTask.bind(this)} iconLeft style={{ flexDirection: 'row', borderColor: 'white', marginTop:5, marginBottom:20, borderWidth: 0.5 }}>
+              <Icon active style={{ color: 'white' }} name="trash" />
+              <Text style={{ color: 'white' }} >{I18n.t('delete')}</Text>
+            </Button>
+          }
+
           <Modal
               animationType={"fade"}
               transparent={false}
@@ -384,8 +407,7 @@ class TabAtributes extends Component {
 
 const mapStateToProps = ({ taskData,login }) => {
   const { users, companies,statuses, projects, task} = taskData;
-  const {ACL} = login;
-  return { users, companies,statuses, projects, task, ACL};
+  return { users, companies,statuses, projects, task,ACL:login.ACL};
 };
 
-export default connect(mapStateToProps,{saveEdit})(TabAtributes);
+export default connect(mapStateToProps,{saveEdit, deleteTask})(TabAtributes);

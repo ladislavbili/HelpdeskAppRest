@@ -13,13 +13,12 @@ class TabComment extends Component { // eslint-disable-line
       this.state = {
         message:'',
         messageHeight:50,
-        title:'',
         internal:false,
       };
     }
 
     submitForm(){
-      this.props.addComment({createdBy:this.props.userData,createdAt:(new Date()).getTime(),title:this.state.title,body:this.state.message,internal:this.state.internal,email_to:null});
+      this.props.addComment({createdBy:this.props.userData,createdAt:(new Date()).getTime(),title:null,body:this.state.message,internal:this.state.internal,email_to:null});
       Actions.pop();
     }
 
@@ -28,19 +27,14 @@ class TabComment extends Component { // eslint-disable-line
         <Container style={styles.container}>
           <Content style={{ padding: 15 }}>
 
-          <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
-            <Label>{I18n.t('internal')}</Label>
-            <CheckBox checked={this.state.internal} color='#3F51B5' onPress={()=>this.setState({internal:!this.state.internal})}/>
-          </Item>
+          {
+            (this.props.ACL.view_internal_note||this.props.userACL.update_all_tasks) &&
+            <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
+              <Label>{I18n.t('internal')}</Label>
+              <CheckBox checked={this.state.internal} color='#3F51B5' onPress={()=>this.setState({internal:!this.state.internal})}/>
+            </Item>
 
-            <Text note>{I18n.t('commentAddTitle')}</Text>
-            <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-              <Input
-                placeholder={I18n.t('commentAddTitle')}
-                value={ this.state.title }
-                onChangeText={ value => this.setState({title:value}) }
-              />
-            </View>
+          }
 
             <Text note>{I18n.t('commentAddBody')}</Text>
             <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15}}>
@@ -72,7 +66,9 @@ class TabComment extends Component { // eslint-disable-line
       );
     }
   }
-  const mapStateToProps = ({ login }) => {
-    return {userData} = login;
+  const mapStateToProps = ({ login,taskData }) => {
+    const {userData} = login;
+    const {task} = taskData;
+    return {userData,ACL:task.ACL,userACL:login.ACL};
   };
   export default connect(mapStateToProps,{addComment})(TabComment);

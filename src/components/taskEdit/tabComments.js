@@ -27,28 +27,26 @@ class TabComments extends Component {
           <List
           dataArray={this.props.comments}
           renderRow={data =>
-            <ListItem avatar key={data.id}>
-                   <Body>
-                     <Text note>{data.createdBy?(data.createdBy.name||data.createdBy.surname?((data.createdBy.name?(data.createdBy.name+' '):'')+(data.createdBy.surname?data.createdBy.surname:'')):data.createdBy.username):I18n.t('nobody')}</Text>
-                     {data.email_to &&
-                       <Text>Mailed to:</Text>
-                     }
-                     {data.email_to &&
-                       <List
-                        dataArray={data.email_to}
-                        renderRow={mail=>
-                            <Text note>{mail}</Text>
-                        }
-                       />
-                      }
-                     <Text>Title: <Text style={{color:'#007299'}}> {data.title?data.title:''}</Text></Text>
-                     <Text>Message: {data.body}</Text>
-                   </Body>
-                   <Right>
-                     <Text note>{formatDate(data.createdAt)}</Text>
-                     {data.internal?<Text style={{color:'red'}}>Internal</Text>:null}
-                   </Right>
-               </ListItem>
+            (!data.internal || this.props.ACL.view_internal_note||this.props.userACL.update_all_tasks)?
+            (<ListItem key={data.id} style={{flexDirection:'column',justifyContent:'flex-start',alignItems:'flex-start',flex:1}}>
+              <View style={{flex:1,flexDirection:'row'}}>
+               <Left>
+                 <Text note>{data.createdBy?(data.createdBy.name||data.createdBy.surname?((data.createdBy.name?(data.createdBy.name+' '):'')+(data.createdBy.surname?data.createdBy.surname:'')):data.createdBy.username):I18n.t('nobody')}</Text>
+               </Left>
+               <Right>
+                 <Text note>{data.internal?<Text style={{textAlign:'right',color:'red'}}>i </Text>:null}{formatDate(data.createdAt)}</Text>
+               </Right>
+              </View>
+            <View style={{flex:1}}>
+             {data.email_to &&
+               <Text>Mailed to: <Text note>{data.email_to.join(', ')}</Text></Text>
+             }
+              {data.title &&
+                <Text style={{color:'#007299'}}> {data.title}</Text>
+              }
+             <Text style={{textAlign:'left'}}>{data.body}</Text>
+             </View>
+         </ListItem>):null
           }
           />
       </Content>
@@ -68,9 +66,8 @@ class TabComments extends Component {
   }
 }
 const mapStateToProps = ({ taskData, login }) => {
-  const { comments, loadingComments } = taskData;
-  const {ACL} = login;
-  return { comments,loadingComments, ACL};
+  const { comments, loadingComments, task } = taskData;
+  return { comments,loadingComments, ACL:task.ACL,userACL:login.ACL};
 };
 
 export default connect(mapStateToProps,{startLoadingComments,getComments})(TabComments);

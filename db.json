@@ -1,4 +1,66 @@
 {
+  "user": [
+    {
+      "id": 1,
+      "username": "mk",
+      "email": "mk@email.sk",
+      "is_active": "true",
+      "name": "Matej",
+      "surname": "Kurka",
+      "title_before": "",
+      "title_after": "",
+      "function": "prvy",
+      "mobile": "0911315467",
+      "tel": "0911315467",
+      "fax": "something",
+      "signature": "podpis 1",
+      "street": null,
+      "city": "Bratislava",
+      "zip": "123",
+      "country": "Poland",
+      "facebook": "facebook.sk",
+      "twitter": "twitter.sk",
+      "linkdin": "linkdin.sk",
+      "google": "google.sk",
+      "user_role": {
+        "id": 1
+      },
+      "company": {
+        "id": "1",
+        "title": "prva firma"
+      }
+    },
+    {
+      "id": 2,
+      "username": "pk",
+      "email": "pk@email.sk",
+      "is_active": "true",
+      "name": "Peter",
+      "surname": "Karpa",
+      "title_before": "",
+      "title_after": "",
+      "function": "prvy",
+      "mobile": "0911315467",
+      "tel": "0911315467",
+      "fax": "something",
+      "signature": "podpis 1",
+      "street": null,
+      "city": "Bratislava",
+      "zip": "123",
+      "country": "Poland",
+      "facebook": "facebook.sk",
+      "twitter": "twitter.sk",
+      "linkdin": "linkdin.sk",
+      "google": "google.sk",
+      "user_role": {
+        "id": 1
+      },
+      "company": {
+        "id": "1",
+        "title": "prva firma"
+      }
+    }
+  ],
   "tasks": [
     {
       "id": 1,
@@ -63,95 +125,17 @@
         "id": 1,
         "title": "Projekt 1"
       }
-    },
-    {
-      "title": "abc",
-      "description": "ppp",
-      "deadline": 1502282460000,
-      "startedAt": 1502239260000,
-      "important": true,
-      "work": "nci",
-      "work_time": "480",
-      "createdAt": 1503927194455,
-      "updatedAt": 1503927775636,
-      "statusChangedAt": 1503927775636,
-      "createdBy": {
-        "id": 1,
-        "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
-        "email": "mk@email.sk"
-      },
-      "requestedBy": null,
-      "project": {
-        "id": 2,
-        "title": "Projekt 2"
-      },
-      "company": {
-        "id": 2
-      },
-      "assignedTo": {
-        "id": 1,
-        "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
-        "email": "mk@email.sk"
-      },
-      "canEdit": true,
-      "status": {
-        "id": 4,
-        "title": "Open",
-        "color": "#68bc00"
-      },
-      "id": 3
-    },
-    {
-      "title": "novy task",
-      "description": "ppp",
-      "deadline": 1503391260000,
-      "startedAt": 1502829660000,
-      "important": false,
-      "work": "sss",
-      "work_time": "44",
-      "createdAt": 1503927849341,
-      "updatedAt": 1503927849341,
-      "statusChangedAt": null,
-      "createdBy": {
-        "id": 1,
-        "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
-        "email": "mk@email.sk"
-      },
-      "requestedBy": {
-        "id": null
-      },
-      "project": {
-        "id": 1,
-        "title": "Projekt 1"
-      },
-      "company": {
-        "id": 1
-      },
-      "assignedTo": {
-        "id": 1,
-        "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
-        "email": "mk@email.sk"
-      },
-      "canEdit": true,
-      "status": {
-        "id": 2,
-        "title": "Pending",
-        "color": "#ff9c00"
-      },
-      "id": 4
     }
   ],
   "task": [
     {
       "id": 1,
+      "ACL": {
+        "create_task": true,
+        "resolve_task": true,
+        "delete_task": true,
+        "view_internal_note": false
+      },
       "title": "task name edited",
       "description": "popis penky",
       "deadline": 1501761600000,
@@ -188,6 +172,12 @@
     },
     {
       "id": 2,
+      "ACL": {
+        "create_task": true,
+        "resolve_task": false,
+        "delete_task": true,
+        "view_internal_note": false
+      },
       "title": "task name 2",
       "description": "popis 2",
       "deadline": 1503479889210,
@@ -221,74 +211,6 @@
       "status": {
         "id": 1
       }
-    },
-    {
-      "title": "abc",
-      "description": "ppp",
-      "deadline": 1502282460000,
-      "startedAt": 1502239260000,
-      "important": true,
-      "work": "nci",
-      "work_time": "480",
-      "createdAt": 1503927194455,
-      "updatedAt": 1503927775636,
-      "statusChangedAt": 1503927775636,
-      "createdBy": {
-        "id": 1,
-        "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
-        "email": "mk@email.sk"
-      },
-      "requestedBy": null,
-      "project": {
-        "id": 2
-      },
-      "company": {
-        "id": 2
-      },
-      "assignedTo": {
-        "id": 1
-      },
-      "canEdit": true,
-      "status": {
-        "id": 4
-      },
-      "id": 3
-    },
-    {
-      "title": "novy task",
-      "description": "ppp",
-      "deadline": 1503391260000,
-      "startedAt": 1502829660000,
-      "important": false,
-      "work": "sss",
-      "work_time": "44",
-      "createdAt": 1503927849341,
-      "updatedAt": 1503927849341,
-      "statusChangedAt": null,
-      "createdBy": {
-        "id": 1,
-        "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
-        "email": "mk@email.sk"
-      },
-      "requestedBy": {
-        "id": null
-      },
-      "project": {},
-      "company": {
-        "id": 1
-      },
-      "assignedTo": {
-        "id": 1
-      },
-      "canEdit": true,
-      "status": {
-        "id": 2
-      },
-      "id": 4
     }
   ],
   "users": [
@@ -307,90 +229,16 @@
       "email": "pk@email.sk"
     }
   ],
-  "user": [
-    {
-      "id": 1,
-      "username": "mk",
-      "email": "mk@email.sk",
-      "is_active": "true",
-      "name": "Matej",
-      "surname": "Kurka",
-      "title_before": "",
-      "title_after": "",
-      "function": "prvy",
-      "mobile": "0911315467",
-      "tel": "0911315467",
-      "fax": "something",
-      "signature": "podpis 1",
-      "street": null,
-      "city": "Bratislava",
-      "zip": "123",
-      "country": "Poland",
-      "facebook": "facebook.sk",
-      "twitter": "twitter.sk",
-      "linkdin": "linkdin.sk",
-      "google": "google.sk",
-      "user_role": {
-        "id": 1
-      },
-      "company": {
-        "id": "1",
-        "title": "prva firma"
-      }
-    },
-    {
-      "id": 2,
-      "username": "pk",
-      "email": "pk@email.sk",
-      "is_active": "true",
-      "name": "Peter",
-      "surname": "Karpa",
-      "title_before": "",
-      "title_after": "",
-      "function": "prvy",
-      "mobile": "0911315467",
-      "tel": "0911315467",
-      "fax": "something",
-      "signature": "podpis 1",
-      "street": null,
-      "city": "Bratislava",
-      "zip": "123",
-      "country": "Poland",
-      "facebook": "facebook.sk",
-      "twitter": "twitter.sk",
-      "linkdin": "linkdin.sk",
-      "google": "google.sk",
-      "user_role": {
-        "id": 1
-      },
-      "company": {
-        "id": "1",
-        "title": "prva firma"
-      }
-    }
-  ],
   "projects": [
     {
       "id": 1,
       "title": "Projekt 1",
-      "numberOfTasks": 4,
-      "ACL": {
-        "create_task": true,
-        "resolve_task": true,
-        "delete_task": true,
-        "view_internal_note": true
-      }
+      "numberOfTasks": 4
     },
     {
       "id": 2,
       "title": "Projekt 2",
-      "numberOfTasks": 2,
-      "ACL": {
-        "create_task": true,
-        "resolve_task": true,
-        "delete_task": true,
-        "view_internal_note": true
-      }
+      "numberOfTasks": 2
     }
   ],
   "companies": [
@@ -401,16 +249,6 @@
     {
       "id": 2,
       "title": "Company 2"
-    }
-  ],
-  "units": [
-    {
-      "id": 1,
-      "title": "kg"
-    },
-    {
-      "id": 2,
-      "title": "cm"
     }
   ],
   "statuses": [
@@ -456,7 +294,7 @@
     },
     {
       "id": 2,
-      "title": "t2",
+      "title": null,
       "body": "Sprava zlava",
       "createdAt": 1504161000000,
       "internal": true,
@@ -478,7 +316,7 @@
         "email": "mk@email.sk"
       },
       "createdAt": 1504161000000,
-      "title": "t3",
+      "title": null,
       "body": "Sprava zlava prava",
       "internal": true,
       "email_to": null,
@@ -493,7 +331,7 @@
         "email": "mk@email.sk"
       },
       "createdAt": 1503935208576,
-      "title": "nadpis",
+      "title": null,
       "body": "sprava",
       "internal": false,
       "email_to": null,
@@ -516,28 +354,97 @@
         "tokoroko@aaa.cu"
       ],
       "id": 5
+    },
+    {
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      },
+      "createdAt": 1504080831158,
+      "title": null,
+      "body": "Moja najnovia sprava v oblasti tstovania mobilnych pkac,z android stiduio je neuverteeple tutosv psa pdnaetai",
+      "internal": false,
+      "email_to": null,
+      "id": 6
+    },
+    {
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej",
+        "surname": "Kurka",
+        "email": "mk@email.sk"
+      },
+      "createdAt": 1504080927051,
+      "title": "Sprava poslana emailovou sluzbou",
+      "body": "sprava poslama mailom",
+      "internal": true,
+      "email_to": [
+        "dalsimail@slovensko.sk",
+        "preprivzmail@ttt.sk"
+      ],
+      "id": 7
+    }
+  ],
+  "units": [
+    {
+      "id": 1,
+      "title": "Kilogram",
+      "shortcut": "kg"
+    },
+    {
+      "id": 2,
+      "title": "Centimeter",
+      "shortcut": "cm"
     }
   ],
   "items": [
     {
       "id": 1,
-      "projectId": 1,
-      "title": "Chleba",
-      "quantity": 3,
+      "title": "Chleba0",
+      "amount": 30,
       "unit": {
         "id": 1
       },
-      "price": 3
+      "price": 30
     },
     {
       "id": 2,
-      "projectId": 1,
       "title": "Maslo",
-      "quantity": 2,
+      "amount": 2,
       "unit": {
         "id": 2
       },
       "price": 4
+    },
+    {
+      "title": "Ceruzky",
+      "amount": 120,
+      "unit": {
+        "id": 2
+      },
+      "price": 1,
+      "id": 4
     }
+  ],
+  "user-roles":[
+    {
+      "id":1,
+      "order":1,
+      "title":"Admin"
+    },
+    {
+      "id":2,
+      "order":2,
+      "title":"Manager"
+    },
+    {
+      "id":3,
+      "order":3,
+      "title":"Agent"
+      }
   ]
 }

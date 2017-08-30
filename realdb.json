@@ -10,9 +10,10 @@ create_tasks_in_all_projects - smie vytvarat vsade nove tasky
 update_all_tasks - smie vsade vsetko editovat
 user_settings - editovanie userov, nesmies dat userovi vyssi level ako mas sam
 company_settings - editovanie firiem
+**posledne dve nedorobene
 
-"create_task", - pravo vytvorit task
-"resolve_task", - editovat task, inak len komment
+"create_task", - pravo vytvorit task // netyka sa nas
+"resolve_task", - editovat task, inak len komment ?
 "delete_task", - mazanie tasku
 "view_internal_note", - moze pridavat internal comment
 

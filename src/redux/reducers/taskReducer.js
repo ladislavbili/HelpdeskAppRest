@@ -1,6 +1,7 @@
 
 import { SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_CUSTOM_ATTRIBUTES, SET_UNITS, SET_TASK,SET_TASKS_AND_PROJECTS,START_LOADING,
-  SET_TASK_ATTRIBUTES, EDIT_TASK_LIST, ADD_TO_TASK_LIST, SET_COMMENTS, START_LOADING_COMMENTS,ADD_NEW_COMMENT} from '../types';
+  SET_TASK_ATTRIBUTES, EDIT_TASK_LIST, ADD_TO_TASK_LIST, SET_COMMENTS, START_LOADING_COMMENTS,ADD_NEW_COMMENT, START_LOADING_ITEMS, SET_ITEMS,
+  ADD_NEW_ITEM, DELETE_ITEM,EDIT_ITEM_LIST, SET_ITEM, DELETE_TASK, SET_USER_ATTRIBUTES } from '../types';
 
 const initialState = {
   tasks:[],
@@ -15,10 +16,63 @@ const initialState = {
   loadingData:false,
   loadingComments:false,
   comments:[],
+  loadingitems:false,
+  items:[],
+  item:null,
+  user:null,
+  user_roles:[],
 };
 
 export default function taskReducer (state = initialState, action) {
   switch (action.type) {
+    case SET_ITEM:{
+      return {
+        ...state,
+        item:action.payload.item
+      };
+    }
+    case SET_USER_ATTRIBUTES:{
+      return {
+        ...state,
+        companies:action.payload.companies,
+        user_roles:action.payload.user_roles
+      };
+    }
+    case DELETE_ITEM:{
+      let newItems= [...state.items];
+      newItems.splice(newItems.findIndex((item)=>item.id==action.payload.id),1);
+      return {
+        ...state,
+        items:newItems,
+      };
+    }
+    case EDIT_ITEM_LIST:{
+      let newItems= [...state.items];
+      newItems.splice(newItems.findIndex((item)=>item.id==action.payload.item.id),1,action.payload.item);
+      return {
+        ...state,
+        items:newItems
+      };
+    }
+    case ADD_NEW_ITEM:{
+      return {
+        ...state,
+        items:[action.payload.item,...state.items],
+      };
+    }
+    case START_LOADING_ITEMS:
+      return {
+        ...state,
+        loadingItems: true,
+      };
+    case SET_ITEMS:{
+      return {
+        ...state,
+        items:action.payload.items,
+        units:action.payload.units,
+        loadingItems:false,
+      };
+      }
     case ADD_NEW_COMMENT:{
       return {
         ...state,
@@ -32,6 +86,14 @@ export default function taskReducer (state = initialState, action) {
         loadingComments:false,
       };
       }
+    case DELETE_TASK:{
+      let newTasks= [...state.tasks];
+      newTasks.splice(newTasks.findIndex((item)=>item.id==action.payload.id),1);
+      return {
+        ...state,
+        tasks:newTasks,
+      };
+    }
     case EDIT_TASK_LIST:{
       let newTasks= [...state.tasks];
       newTasks.splice(newTasks.findIndex((task)=>task.id==action.payload.taskInList.id),1,action.payload.taskInList);

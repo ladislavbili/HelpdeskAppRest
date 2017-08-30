@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { Tab, Tabs, Container} from 'native-base';
-
+import { connect } from 'react-redux';
 import styles from './styles';
 import TabComment from './tabComment';
 import TabEmail from './tabEmail';
@@ -16,13 +16,16 @@ class CommentAdd extends Component {
             <Tab heading={I18n.t('commentAddtabComment')}>
                 <TabComment id={this.props.id} />
             </Tab>
-            <Tab heading="+ Email">
+            {ACL.sent_emails_from_comments && <Tab heading="+ Email">
                 <TabEmail id={this.props.id} />
-            </Tab>
+            </Tab>}
         </Tabs>
       </Container>
     );
   }
 }
 
-export default CommentAdd;
+const mapStateToProps = ({ login }) => {
+  return {ACL} = login;
+};
+export default connect(mapStateToProps,{})(CommentAdd);

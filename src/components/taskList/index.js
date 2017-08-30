@@ -38,9 +38,11 @@ class TaskListLoader extends Component {
             <Button transparent style={{ marginTop: 8 }} onPress={Actions.messages}>
               <Icon name="mail" style={{ color: 'white' }} />
             </Button>
-            <Button transparent style={{ marginTop: 8 }} onPress={Actions.settings}>
+            { (this.props.ACL.company_settings || this.props.ACL.user_settings ) &&
+              <Button transparent style={{ marginTop: 8 }} onPress={Actions.settings}>
               <Icon name="settings" style={{ color: 'white' }} />
-            </Button>
+              </Button>
+            }
           </Right>
         </Header>
          <TaskList/>
@@ -49,8 +51,10 @@ class TaskListLoader extends Component {
   }
 }
 
-const mapStateToProps = ({taskData}) => {
-  return {loadingData,tasks,projects} = taskData;
+const mapStateToProps = ({taskData,login}) => {
+  const {loadingData,tasks,projects} = taskData;
+  const {ACL} = login;
+  return {ACL,loadingData,tasks,projects};
 };
 
 export default connect(mapStateToProps,{openDrawer,getTasksAndProjects})(TaskListLoader);

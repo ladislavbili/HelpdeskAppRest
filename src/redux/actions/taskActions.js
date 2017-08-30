@@ -1,6 +1,132 @@
 import {SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_UNITS, SET_TASK, SET_TASKS_AND_PROJECTS,
-  START_LOADING,SET_TASK_ATTRIBUTES, EDIT_TASK_LIST, ADD_TO_TASK_LIST, SET_COMMENTS, START_LOADING_COMMENTS,ADD_NEW_COMMENT } from '../types';
-import {TASK_LIST, PROJECT_LIST,COMPANIES_LIST,STATUSES_LIST,USERS_LIST,UNITS_LIST, TASK, COMMENTS} from '../urls';
+  START_LOADING,SET_TASK_ATTRIBUTES, EDIT_TASK_LIST, ADD_TO_TASK_LIST, SET_COMMENTS, START_LOADING_COMMENTS,ADD_NEW_COMMENT,
+  START_LOADING_ITEMS, SET_ITEMS, ADD_NEW_ITEM, DELETE_ITEM, EDIT_ITEM_LIST, SET_ITEM, SET_USER_ATTRIBUTES,
+  DELETE_TASK } from '../types';
+import {TASK_LIST, PROJECT_LIST,COMPANIES_LIST,STATUSES_LIST,USERS_LIST,UNITS_LIST, TASK, COMMENTS, ITEMS_LIST, USER, USER_ROLES } from '../urls';
+import { Actions } from 'react-native-router-flux';
+
+
+//nacitanie userov:najprv len zoznam, potom companies, user a user_roles
+
+export const openAddingOfUser = () => {
+  return (dispatch) => {
+    Promise.all([
+      fetch(COMPANIES_LIST, {
+        method: 'GET',
+      }),
+      fetch(USER_ROLES, {
+        method: 'GET',
+      })
+    ]).then(([response1,response2])=>Promise.all([response1.json(),response2.json()]).then(([response1,response2])=>{
+      dispatch({type: SET_USER_ATTRIBUTES, payload:{companies:response1,user_roles:response2}});
+      Actions.userAdd();
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+
+
+export const openAddingOfItem = (id) => {
+  return (dispatch) => {
+    fetch(UNITS_LIST, {
+      method: 'GET',
+    }).then((response)=> response.json().then(response => {
+      dispatch({type: SET_UNITS, payload:{units:response}});
+      Actions.itemAdd({id});
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+export const startLoadingItems = () => {
+  return (dispatch) => {
+    dispatch({type: START_LOADING_ITEMS });
+  };
+};
+export const openEditingOfItem = (id,projectID) => {
+  return (dispatch) => {
+    let url = ITEMS_LIST+ '/' + id;
+    fetch(url, {
+      method: 'GET',
+    }).then((response)=> response.json().then(response => {
+      dispatch({type: SET_ITEM, payload:{item:response}});
+      Actions.itemEdit({projectID});
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+export const getItemsAndUnits = () => {
+  return (dispatch) => {
+    Promise.all([
+      fetch(ITEMS_LIST, {
+        method: 'GET',
+      }),
+      fetch(UNITS_LIST, {
+        method: 'GET',
+      })
+    ])
+    .then(([response1,response2]) =>Promise.all([response1.json(),response2.json()]).then(([response1,response2]) => {
+      dispatch({type: SET_ITEMS, payload:{items:response1,units:response2}});
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+export const addItem = (item) => {
+  return (dispatch) => {
+    fetch(ITEMS_LIST, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body:JSON.stringify(item),
+    }).then((response)=>response.json().then((response)=>{
+      dispatch({type: ADD_NEW_ITEM, payload:{item:Object.assign({},item,{id:response.id})}});
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+export const deleteItem = (id) => {
+  return (dispatch) => {
+    let url= ITEMS_LIST+ '/' + id
+    fetch(url, {
+      method: 'DELETE',
+    }).then((response)=>response.json().then((response)=>{
+      dispatch({type: DELETE_ITEM, payload:{id}});
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+export const saveItemEdit = (item) => {
+  return (dispatch) => {
+    let url = ITEMS_LIST + '/' + item.id;
+    fetch(url, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: 'PATCH',
+      body:JSON.stringify(item),
+    }).then((response)=>response.json().then((response)=>{
+      console.log(response);
+      dispatch({type: EDIT_ITEM_LIST, payload:{item}});
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
 
 export const getComments = () => {
   return (dispatch) => {
@@ -14,7 +140,6 @@ export const getComments = () => {
     });
   };
 };
-
 export const addComment = (comment) => {
   return (dispatch) => {
     fetch(COMMENTS, {
@@ -141,7 +266,6 @@ export const getTasks = () => {
     });
   };
 };
-
 export const getTask = (id) => {
   return (dispatch) => {
     let url=TASK+'/?id='+id;
@@ -156,6 +280,7 @@ export const getTask = (id) => {
     });
   };
 };
+
 export const getProjects = () => {
   return (dispatch) => {
     fetch(PROJECT_LIST, {
@@ -250,6 +375,12 @@ export const saveEdit = (task,assignedTo,project,status) => {
 
 export const addTask = (task,assignedTo,project,status) => {
   return (dispatch) => {
+    let ACL = {
+      create_task: true,
+      resolve_task: true,
+      delete_task: true,
+      view_internal_note: false
+    };
     Promise.all([
       fetch(TASK, {
         headers: {
@@ -257,7 +388,7 @@ export const addTask = (task,assignedTo,project,status) => {
           'Content-Type': 'application/json'
         },
         method: 'POST',
-        body:JSON.stringify(task),
+        body:JSON.stringify(Object.assign({},task,{ACL})),
       }),
       fetch(TASK_LIST, {
         headers: {
@@ -265,6 +396,7 @@ export const addTask = (task,assignedTo,project,status) => {
           'Content-Type': 'application/json'
         },
         method: 'POST',
+
         body:JSON.stringify(Object.assign({},task,{assignedTo,project,status})),
       })
     ])
@@ -272,6 +404,26 @@ export const addTask = (task,assignedTo,project,status) => {
       dispatch({type: ADD_TO_TASK_LIST, payload:{taskInList:Object.assign({},task,{assignedTo,id:response1.id,project,status})} });
       }
     ))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+
+export const deleteTask = (id) => {
+  return (dispatch) => {
+    let taskListURL= TASK_LIST+ '/' + id
+    let taskURL= TASK+ '/' + id
+    Promise.all([
+      fetch(taskListURL, {
+        method: 'DELETE',
+      }),
+      fetch(taskURL, {
+        method: 'DELETE',
+      })
+    ]).then(([response1,response2])=>Promise.all([response1.json(),response2.json()]).then(([response1,response2])=>{
+      dispatch({type: DELETE_TASK, payload:{id}});
+    }))
     .catch(function (error) {
       console.log(error);
     });

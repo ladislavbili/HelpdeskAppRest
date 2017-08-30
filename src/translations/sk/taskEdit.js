@@ -19,8 +19,8 @@ export default {
   taskEditEditItemTitle:'Upraviť vec',
 
   taskEditAddSubtask:'Pridať podúlohu',
-  taskEditdeletingSubtask:'Zmazanie podúlohy',
-  taskEditdeletingSubtaskMessage:'Ste si istý že chcete zmazať podúlohu s názvom ',
+  taskEditdeletingTask:'Zmazanie úlohy',
+  taskEditdeletingTaskMessage:'Ste si istý, že chcete zmazať túto úlohu?',
   taskEditFinished:'Ukončená?',
   taskEditSubtask:'Podúloha',
 };

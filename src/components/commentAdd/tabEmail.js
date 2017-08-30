@@ -31,10 +31,38 @@ class TabEmail extends Component { // eslint-disable-line
         <Container style={styles.container}>
           <Content style={{ padding: 15 }}>
 
-          <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
-            <Label>{I18n.t('internal')}</Label>
-            <CheckBox checked={this.state.internal} color='#3F51B5' onPress={()=>this.setState({internal:!this.state.internal})}/>
-          </Item>
+          {
+            (this.props.ACL.view_internal_note||this.props.userACL.update_all_tasks) &&
+            <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
+              <Label>{I18n.t('internal')}</Label>
+              <CheckBox checked={this.state.internal} color='#3F51B5' onPress={()=>this.setState({internal:!this.state.internal})}/>
+            </Item>
+          }
+
+          <Text note>{I18n.t('commentAddEmails')}</Text>
+          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <List
+          dataArray={this.state.email_to}
+          renderRow={data=>
+            <Text style={{color:'#007299'}}>{data}</Text>}
+            />
+            <View style={{flex:1, flexDirection:'row'}}>
+            <Body style={{flex:5,flexDirection:'row'}}>
+            <Input
+            keyboardType="email-address"
+            style={{flex:1,flexDirection:'row'}}
+            placeholder={I18n.t('commentAddEmail')}
+            value={ this.state.newMail }
+            onChangeText={ value => this.setState({newMail:value}) }
+            />
+            </Body>
+            <Right style={{flex:1}}>
+            <Button block  onPress={()=>this.setState({email_to:[this.state.newMail,...this.state.email_to],newMail:''})}>
+            <Icon active style={{ color: 'white' }} name="add" />
+            </Button>
+            </Right>
+            </View>
+            </View>
 
           <Text note>{I18n.t('commentAddTitle')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
@@ -43,31 +71,6 @@ class TabEmail extends Component { // eslint-disable-line
               value={ this.state.title }
               onChangeText={ value => this.setState({title:value}) }
             />
-          </View>
-
-          <Text note>{I18n.t('commentAddEmails')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <List
-              dataArray={this.state.email_to}
-              renderRow={data=>
-              <Text style={{color:'#007299'}}>{data}</Text>}
-            />
-            <View style={{flex:1, flexDirection:'row'}}>
-              <Body style={{flex:5,flexDirection:'row'}}>
-                <Input
-                  keyboardType="email-address"
-                  style={{flex:1,flexDirection:'row'}}
-                  placeholder={I18n.t('commentAddEmail')}
-                  value={ this.state.newMail }
-                  onChangeText={ value => this.setState({newMail:value}) }
-                />
-              </Body>
-              <Right style={{flex:1}}>
-                <Button block  onPress={()=>this.setState({email_to:[this.state.newMail,...this.state.email_to],newMail:''})}>
-                  <Icon active style={{ color: 'white' }} name="add" />
-                </Button>
-              </Right>
-            </View>
           </View>
 
             <Text note>{I18n.t('commentAddBody')}</Text>
@@ -100,7 +103,11 @@ class TabEmail extends Component { // eslint-disable-line
       );
     }
   }
-  const mapStateToProps = ({ login }) => {
-    return {userData} = login;
+
+  const mapStateToProps = ({ login,taskData }) => {
+    const {userData} = login;
+    const {task} = taskData;
+    return {userData,ACL:task.ACL,userACL:login.ACL};
   };
+
   export default connect(mapStateToProps,{addComment})(TabEmail);
