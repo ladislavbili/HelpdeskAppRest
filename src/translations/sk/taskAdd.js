@@ -22,5 +22,5 @@ export default {
   taskAddStartedAtSelect:'Vyberte predpokladaný začiatok',
   taskAddSelectUser:'Vyberte používateľa',
   taskAddCompanySelectRequester:'Vyberte žiadateľa úlohy',
-  taskAddCompanySelectRequester:'Vyberte riešiteľa úlohy',
+  taskAddUserRoleSelect:'Vyberte rolu používateľa',
 };

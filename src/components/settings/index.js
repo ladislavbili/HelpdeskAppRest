@@ -38,7 +38,7 @@ class Settings extends Component {
           </ListItem>
           }
           { this.props.ACL.company_settings &&
-          <ListItem button onPress={Actions.companiesList} icon>
+          <ListItem button onPress={Actions.companyList} icon>
             <Left>
               <Icon name="people" />
             </Left>

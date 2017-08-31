@@ -5,7 +5,7 @@ import {  Item, Footer, FooterTab, Container, Header, Title, Content, Button, Ic
 import { Actions } from 'react-native-router-flux';
 import styles from './styles';
 import I18n from '../../translations/';
-import {getUsers,startLoading,openAddingOfUser} from '../../redux/actions';
+import {getUsers,startLoading,openAddingOfUser,openEditingOfUser} from '../../redux/actions';
 
 
 class userList extends Component {
@@ -52,16 +52,16 @@ class userList extends Component {
               this.props.users.filter((user)=>
               {
                 let filter=this.state.seached.toLowerCase();
-                return (user.name&&user.name.toLowerCase().includes(filter))||(user.surname&&user.surname.toLowerCase().includes(filter))||(user.email&&user.email.toLowerCase().includes(filter))||(user.company&&user.company.name&&user.company.name.toLowerCase().includes(filter))
+                return (user.name&&user.name.toLowerCase().includes(filter))||(user.email&&user.email.toLowerCase().includes(filter))||(user.company&&user.company.name&&user.company.name.toLowerCase().includes(filter))
               })
               }
             renderRow={(user)=>
               <ListItem
-                button onPress={()=>Actions.userEdit({user})}
+                button onPress={()=>this.props.openEditingOfUser(user.id)}
               >
                 <Body>
                 {
-                  (user.name || user.surname)?<Text>{((user.name?(user.name+' '):'')+ (user.surname?user.surname:''))}</Text>:null
+                  (user.name)?<Text>{user.name}</Text>:null
                 }
                 <Text note>{user.email}</Text>
                 </Body>
@@ -90,4 +90,4 @@ const mapStateToProps = ({ taskData }) => {
   return { users, loadingData };
 };
 
-export default connect(mapStateToProps, {getUsers,startLoading,openAddingOfUser})(userList);
+export default connect(mapStateToProps, {getUsers,startLoading,openAddingOfUser,openEditingOfUser})(userList);

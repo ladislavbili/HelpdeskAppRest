@@ -7,45 +7,44 @@ import {Modal} from 'react-native';
 
 import styles from './styles';
 import I18n from '../../translations/';
-import {addUser} from '../../redux/actions';
+import {editUser} from '../../redux/actions';
 
-class UserAdd extends Component {
-constructor(props) {
+class UserEdit extends Component {
+  constructor(props) {
     super(props);
     this.state = {
-      name:'',
-      email:'',
-      company:this.props.companies[0],
+      name:this.props.user.name,
+      email:this.props.user.email,
+      company:this.props.companies[this.props.companies.findIndex((company)=>company.id==this.props.user.company.id)],
       password:'',
-      signature:'',
+      signature:this.props.user.signature,
       selectingCompany:false,
       filterWord:'',
-      active:true,
-      user_role:this.props.user_roles[0],
+      active:this.props.user.is_active,
+      user_role:this.props.user_roles[this.props.user_roles.findIndex((role)=>role.id==this.props.user.user_role.id)],
       selectingUserRole:false,
       filterWordUserRole:'',
       signatureHeight:0,
-      username:'',
-      func:'',
-      mobile:'',
-      tel:'',
+      username:this.props.user.username,
+      func:this.props.user.function,
+      mobile:this.props.user.mobile,
+      tel:this.props.user.tel,
     };
-    }
-
-
+  }
 
   submit(){
-    let newUser = {
+    let user = {
         is_active:this.state.active, user_role:{id:this.state.user_role.id},email:this.state.email,
         username:this.state.username,name:this.state.name,company:{id:this.state.company.id,title:this.state.company.title},
         function:this.state.func,mobile:this.state.mobile,tel:this.state.tel, signature:this.state.signature
     }
     let listUser = {
+      id:this.props.user.id,
       username:this.state.username,
       name:this.state.name,
       email: this.state.email
     }
-    this.props.addUser(newUser, listUser);
+    this.props.editUser(user, listUser);
     Actions.pop();
   }
   render() {
@@ -68,10 +67,10 @@ constructor(props) {
         </Header>
         <Content style={{ padding: 15 }}>
 
-          <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
-            <Label>{I18n.t('settingsActive')}</Label>
-            <CheckBox checked={this.state.active} color='#3F51B5' onPress={()=>this.setState({active:!this.state.active})}/>
-          </Item>
+        <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
+          <Label>{I18n.t('settingsActive')}</Label>
+          <CheckBox checked={this.state.active} color='#3F51B5' onPress={()=>this.setState({active:!this.state.active})}/>
+        </Item>
 
           <Text note>{I18n.t('settingsName')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
@@ -92,11 +91,11 @@ constructor(props) {
             />
           </View>
 
-          <Text note>{I18n.t('homePass')}</Text>
+          <Text note>{I18n.t('newPass')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
               secureTextEntry={true}
-              placeholder={I18n.t('homePass')}
+              placeholder={I18n.t('newPass')}
               value={this.state.password}
               onChangeText={(value)=>this.setState({password:value})}
             />
@@ -252,7 +251,7 @@ constructor(props) {
 }
 
 const mapStateToProps = ({ taskData }) => {
-  return { companies, user_roles } = taskData;
+  return { companies, user_roles, user } = taskData;
 };
 
-export default connect(mapStateToProps, {addUser})(UserAdd);
+export default connect(mapStateToProps, {editUser})(UserEdit);

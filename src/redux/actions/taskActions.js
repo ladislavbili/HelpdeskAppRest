@@ -1,12 +1,133 @@
 import {SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_UNITS, SET_TASK, SET_TASKS_AND_PROJECTS,
   START_LOADING,SET_TASK_ATTRIBUTES, EDIT_TASK_LIST, ADD_TO_TASK_LIST, SET_COMMENTS, START_LOADING_COMMENTS,ADD_NEW_COMMENT,
-  START_LOADING_ITEMS, SET_ITEMS, ADD_NEW_ITEM, DELETE_ITEM, EDIT_ITEM_LIST, SET_ITEM, SET_USER_ATTRIBUTES,
-  DELETE_TASK } from '../types';
-import {TASK_LIST, PROJECT_LIST,COMPANIES_LIST,STATUSES_LIST,USERS_LIST,UNITS_LIST, TASK, COMMENTS, ITEMS_LIST, USER, USER_ROLES } from '../urls';
+  START_LOADING_ITEMS, SET_ITEMS, ADD_NEW_ITEM, DELETE_ITEM, EDIT_ITEM_LIST, SET_ITEM, SET_USER_ATTRIBUTES,EDIT_USER_LIST,
+  DELETE_TASK, ADD_USER, ADD_COMPANY,SET_COMPANY, EDIT_COMPANY_LIST } from '../types';
+import {TASK_LIST, PROJECT_LIST,COMPANIES_LIST,STATUSES_LIST,USERS_LIST,UNITS_LIST, TASK, COMMENTS, ITEMS_LIST, USER, USER_ROLES, COMPANY } from '../urls';
 import { Actions } from 'react-native-router-flux';
 
 
-//nacitanie userov:najprv len zoznam, potom companies, user a user_roles
+export const editCompany = (company,id) => {
+  return (dispatch) => {
+    let listURL = COMPANIES_LIST + '/' + id;
+    let companyURL = COMPANY + '/' + id;
+    Promise.all([
+      fetch(listURL, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'PATCH',
+        body:JSON.stringify({title:company.title}),
+      }),
+      fetch(companyURL, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'PATCH',
+        body:JSON.stringify(company),
+      })
+    ])
+    .then(([response1,response2])=>Promise.all([response1.json(),response2.json()]).then(([response1,response2])=>{
+      dispatch({type: EDIT_COMPANY_LIST, payload:{company:{id,title:company.title}}});
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+
+export const addCompany = (newCompany) => {
+  return (dispatch) => {
+    Promise.all([
+      fetch(COMPANIES_LIST, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body:JSON.stringify({title:newCompany.title}),
+      }),
+      fetch(COMPANY, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body:JSON.stringify(newCompany),
+      })
+    ]).then(([response1,response2])=>Promise.all([response1.json(),response2.json()]).then(([response1,response2])=>{
+      dispatch({type: ADD_COMPANY, payload:{company:{title:newCompany.title,id:response2.id}}});
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+
+export const openEditingOfCompany = (id) => {
+  return (dispatch) => {
+    fetch(COMPANY+'/'+id, {
+      method: 'GET',
+    }).then((response)=>response.json().then((response)=>{
+      dispatch({type: SET_COMPANY, payload:{company:response}});
+      Actions.companyEdit();
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+
+export const openEditingOfUser = (id) => {
+  return (dispatch) => {
+    Promise.all([
+      fetch(COMPANIES_LIST, {
+        method: 'GET',
+      }),
+      fetch(USER_ROLES, {
+        method: 'GET',
+      }),
+      fetch(USER+'/'+id, {
+        method: 'GET',
+      }),
+    ]).then(([response1,response2,response3])=>Promise.all([response1.json(),response2.json(),response3.json()]).then(([response1,response2,response3])=>{
+      dispatch({type: SET_USER_ATTRIBUTES, payload:{companies:response1,user_roles:response2,user:response3}});
+      Actions.userEdit();
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+
+export const addUser = (newUser,listUser) => {
+  return (dispatch) => {
+    Promise.all([
+      fetch(USERS_LIST, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body:JSON.stringify(listUser),
+      }),
+      fetch(USER, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body:JSON.stringify(newUser),
+      })
+    ]).then(([response1,response2])=>Promise.all([response1.json(),response2.json()]).then(([response1,response2])=>{
+      dispatch({type: ADD_USER, payload:{user:Object.assign({},listUser,{id:response2.id})}});
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
 
 export const openAddingOfUser = () => {
   return (dispatch) => {
@@ -26,6 +147,38 @@ export const openAddingOfUser = () => {
     });
   };
 };
+
+export const editUser = (user,listUser) => {
+  return (dispatch) => {
+    let listURL = USERS_LIST + '/' + listUser.id;
+    let userURL = USER + '/' + listUser.id;
+    Promise.all([
+      fetch(listURL, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'PATCH',
+        body:JSON.stringify(listUser),
+      }),
+      fetch(userURL, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'PATCH',
+        body:JSON.stringify(user),
+      })
+    ])
+    .then(([response1,response2])=>Promise.all([response1.json(),response2.json()]).then(([response1,response2])=>{
+      dispatch({type: EDIT_USER_LIST, payload:{user:listUser}});
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+
 
 
 export const openAddingOfItem = (id) => {

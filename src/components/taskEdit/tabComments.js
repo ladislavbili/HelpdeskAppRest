@@ -31,7 +31,7 @@ class TabComments extends Component {
             (<ListItem key={data.id} style={{flexDirection:'column',justifyContent:'flex-start',alignItems:'flex-start',flex:1}}>
               <View style={{flex:1,flexDirection:'row'}}>
                <Left>
-                 <Text note>{data.createdBy?(data.createdBy.name||data.createdBy.surname?((data.createdBy.name?(data.createdBy.name+' '):'')+(data.createdBy.surname?data.createdBy.surname:'')):data.createdBy.username):I18n.t('nobody')}</Text>
+                 <Text note>{data.createdBy?(data.createdBy.name?data.createdBy.name:data.createdBy.email):I18n.t('nobody')}</Text>
                </Left>
                <Right>
                  <Text note>{data.internal?<Text style={{textAlign:'right',color:'red'}}>i </Text>:null}{formatDate(data.createdAt)}</Text>

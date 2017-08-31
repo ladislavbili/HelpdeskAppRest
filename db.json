@@ -1,64 +1,130 @@
 {
-  "user": [
+  "companies": [
     {
       "id": 1,
-      "username": "mk",
-      "email": "mk@email.sk",
-      "is_active": "true",
-      "name": "Matej",
-      "surname": "Kurka",
-      "title_before": "",
-      "title_after": "",
-      "function": "prvy",
-      "mobile": "0911315467",
-      "tel": "0911315467",
-      "fax": "something",
-      "signature": "podpis 1",
-      "street": null,
-      "city": "Bratislava",
-      "zip": "123",
-      "country": "Poland",
-      "facebook": "facebook.sk",
-      "twitter": "twitter.sk",
-      "linkdin": "linkdin.sk",
-      "google": "google.sk",
-      "user_role": {
-        "id": 1
-      },
-      "company": {
-        "id": "1",
-        "title": "prva firma"
-      }
+      "title": "Web-Solutions"
     },
     {
       "id": 2,
-      "username": "pk",
-      "email": "pk@email.sk",
-      "is_active": "true",
-      "name": "Peter",
-      "surname": "Karpa",
-      "title_before": "",
-      "title_after": "",
-      "function": "prvy",
-      "mobile": "0911315467",
-      "tel": "0911315467",
-      "fax": "something",
-      "signature": "podpis 1",
-      "street": null,
+      "title": "LanSystems"
+    },
+    {
+      "title": "tiiitl",
+      "id": 3
+    },
+    {
+      "title": "tiiitle",
+      "id": 4
+    }
+  ],
+  "company": [
+    {
+      "id": 1,
+      "title": "Web-Solutions",
+      "subscription_time": 0,
+      "ico": "1102587",
+      "dic": "12587459644",
+      "ic_dph": "12587459644",
+      "street": "Cesta 125",
       "city": "Bratislava",
-      "zip": "123",
-      "country": "Poland",
-      "facebook": "facebook.sk",
-      "twitter": "twitter.sk",
-      "linkdin": "linkdin.sk",
-      "google": "google.sk",
+      "zip": "02587",
+      "country": "SR",
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "title": "LanSystems",
+      "subscription_time": 0,
+      "ico": "110258782",
+      "dic": "12587458996244",
+      "ic_dph": null,
+      "street": "Ina cesta 125",
+      "city": "Bratislava",
+      "zip": "021478",
+      "country": "Slovenska Republika",
+      "is_active": true
+    },
+    {
+      "title": "tiiitl",
+      "subscription_time": 145,
+      "ico": "2",
+      "dic": "3",
+      "ic_dph": "4",
+      "street": "striii",
+      "city": "blava je riek",
+      "zip": "5",
+      "country": "slova",
+      "is_active": false,
+      "id": 3
+    },
+    {
+      "title": "tiiitle",
+      "subscription_time": 1456,
+      "ico": "22",
+      "dic": "33",
+      "ic_dph": "44",
+      "street": "striiid",
+      "city": "blava je rieka",
+      "zip": "55",
+      "country": "slovak",
+      "is_active": true,
+      "id": 4
+    }
+  ],
+  "user": [
+    {
+      "id": 1,
+      "is_active": true,
       "user_role": {
         "id": 1
       },
+      "email": "mk@email.sk",
+      "username": "mk",
+      "name": "Matej Kurka",
       "company": {
         "id": "1",
         "title": "prva firma"
-      }
+      },
+      "function": "prvy",
+      "mobile": "0911315467",
+      "tel": "0911315467",
+      "signature": "podpis 1"
+    },
+    {
+      "id": 2,
+      "is_active": true,
+      "user_role": {
+        "id": 1
+      },
+      "email": "pk@email.sk",
+      "username": "pk",
+      "name": "Peter Karpa",
+      "company": {
+        "id": "1",
+        "title": "prva firma"
+      },
+      "function": "prvy",
+      "mobile": "0911315467",
+      "tel": "0911315467",
+      "signature": "podpis 1"
+    },
+    {
+      "is_active": false,
+      "user_role": {
+        "id": 2
+      },
+      "email": "mash",
+      "username": "mohikan",
+      "name": "krakowo",
+      "company": {
+        "id": 2,
+        "title": "LanSystems"
+      },
+      "function": "dunno",
+      "mobile": "0118 999 881 999 119 725 3",
+      "tel": "44882325",
+      "signature": "ashes to ashes",
+      "id": 3
     }
   ],
   "tasks": [
@@ -68,8 +134,7 @@
       "assignedTo": {
         "id": 1,
         "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
+        "name": "Matej Kurka",
         "email": "mk@email.sk"
       },
       "deadline": 1501761600000,
@@ -93,8 +158,7 @@
       "createdBy": {
         "id": 1,
         "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
+        "name": "Matej Kurka",
         "email": "mk@email.sk"
       },
       "requestedBy": {
@@ -110,8 +174,7 @@
       "title": "task name 2",
       "assignedTo": {
         "id": 1,
-        "name": "Matej",
-        "surname": "Kurka",
+        "name": "Matej Kurka",
         "username": "mk",
         "email": "mk@email.sk"
       },
@@ -149,8 +212,7 @@
       "createdBy": {
         "id": 1,
         "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
+        "name": "Matej Kurka",
         "email": "mk@email.sk"
       },
       "requestedBy": {
@@ -191,8 +253,7 @@
       "createdBy": {
         "id": 1,
         "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
+        "name": "Matej Kurka",
         "email": "mk@email.sk"
       },
       "requestedBy": {
@@ -217,16 +278,20 @@
     {
       "id": 1,
       "username": "mk",
-      "name": "Matej",
-      "surname": "Kurka",
+      "name": "Matej Kurka",
       "email": "mk@email.sk"
     },
     {
       "id": 2,
       "username": "pk",
-      "name": "Peter",
-      "surname": "Karpa",
+      "name": "Peter Karpa",
       "email": "pk@email.sk"
+    },
+    {
+      "username": "mohikan",
+      "name": "krakowo",
+      "email": "mash",
+      "id": 3
     }
   ],
   "projects": [
@@ -239,16 +304,6 @@
       "id": 2,
       "title": "Projekt 2",
       "numberOfTasks": 2
-    }
-  ],
-  "companies": [
-    {
-      "id": 1,
-      "title": "Company 1"
-    },
-    {
-      "id": 2,
-      "title": "Company 2"
     }
   ],
   "statuses": [
@@ -287,8 +342,7 @@
       "createdBy": {
         "id": 1,
         "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
+        "name": "Matej Kurka",
         "email": "mk@email.sk"
       }
     },
@@ -302,8 +356,7 @@
       "createdBy": {
         "id": 1,
         "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
+        "name": "Matej Kurka",
         "email": "mk@email.sk"
       }
     },
@@ -311,8 +364,7 @@
       "createdBy": {
         "id": 1,
         "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
+        "name": "Matej Kurka",
         "email": "mk@email.sk"
       },
       "createdAt": 1504161000000,
@@ -326,8 +378,7 @@
       "createdBy": {
         "id": 1,
         "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
+        "name": "Matej Kurka",
         "email": "mk@email.sk"
       },
       "createdAt": 1503935208576,
@@ -341,8 +392,7 @@
       "createdBy": {
         "id": 1,
         "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
+        "name": "Matej Kurka",
         "email": "mk@email.sk"
       },
       "createdAt": 1503938667392,
@@ -359,8 +409,7 @@
       "createdBy": {
         "id": 1,
         "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
+        "name": "Matej Kurka",
         "email": "mk@email.sk"
       },
       "createdAt": 1504080831158,
@@ -374,8 +423,7 @@
       "createdBy": {
         "id": 1,
         "username": "mk",
-        "name": "Matej",
-        "surname": "Kurka",
+        "name": "Matej Kurka",
         "email": "mk@email.sk"
       },
       "createdAt": 1504080927051,
@@ -430,21 +478,21 @@
       "id": 4
     }
   ],
-  "user-roles":[
+  "user-roles": [
     {
-      "id":1,
-      "order":1,
-      "title":"Admin"
+      "id": 1,
+      "order": 1,
+      "title": "Admin"
     },
     {
-      "id":2,
-      "order":2,
-      "title":"Manager"
+      "id": 2,
+      "order": 2,
+      "title": "Manager"
     },
     {
-      "id":3,
-      "order":3,
-      "title":"Agent"
-      }
+      "id": 3,
+      "order": 3,
+      "title": "Agent"
+    }
   ]
 }

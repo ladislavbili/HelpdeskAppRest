@@ -18,8 +18,9 @@ export default {
   settingsUser: 'Používateľ',
   settingsUsersListTitle:'Zoznam používateľov',
   settingsEditUserTitle:'Upraviť používateľa',
-  settingsFirstName:'Krstné meno',
-  settingsSurName:'Priezvisko',
+  settingsName:'Celé meno',
   settingsNote:'Poznámka',
   settingsAddUserTitle:'Pridať používateľa',
+  settingsSignature:'Podpis',
+  settingsActive:'Aktívny',
 };

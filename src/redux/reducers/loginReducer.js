@@ -6,8 +6,7 @@ const initialState = {
   userData: {
     "id": 1,
     "username": "mk",
-    "name": "Matej",
-    "surname": "Kurka",
+    "name": "Matej Kurka",
     "email": "mk@email.sk"
   },
   error: '',

@@ -1,7 +1,7 @@
 
 import { SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_CUSTOM_ATTRIBUTES, SET_UNITS, SET_TASK,SET_TASKS_AND_PROJECTS,START_LOADING,
   SET_TASK_ATTRIBUTES, EDIT_TASK_LIST, ADD_TO_TASK_LIST, SET_COMMENTS, START_LOADING_COMMENTS,ADD_NEW_COMMENT, START_LOADING_ITEMS, SET_ITEMS,
-  ADD_NEW_ITEM, DELETE_ITEM,EDIT_ITEM_LIST, SET_ITEM, DELETE_TASK, SET_USER_ATTRIBUTES } from '../types';
+  ADD_NEW_ITEM, DELETE_ITEM,EDIT_ITEM_LIST, SET_ITEM, DELETE_TASK, SET_USER_ATTRIBUTES, ADD_USER, EDIT_USER_LIST, ADD_COMPANY, SET_COMPANY, EDIT_COMPANY_LIST } from '../types';
 
 const initialState = {
   tasks:[],
@@ -21,10 +21,45 @@ const initialState = {
   item:null,
   user:null,
   user_roles:[],
+  company:null,
 };
 
 export default function taskReducer (state = initialState, action) {
   switch (action.type) {
+    case EDIT_COMPANY_LIST:{
+      let newCompanies= [...state.companies];
+      newCompanies.splice(newCompanies.findIndex((company)=>company.id==action.payload.company.id),1,action.payload.company);
+      return {
+        ...state,
+        companies:newCompanies
+      };
+    }
+    case SET_COMPANY:{
+      return {
+        ...state,
+        company:action.payload.company
+      };
+    }
+    case ADD_COMPANY:{
+      return {
+        ...state,
+        companies:[action.payload.company,...state.companies]
+      };
+    }
+    case EDIT_USER_LIST:{
+      let newUsers= [...state.users];
+      newUsers.splice(newUsers.findIndex((user)=>user.id==action.payload.user.id),1,action.payload.user);
+      return {
+        ...state,
+        users:newUsers
+      };
+    }
+    case ADD_USER:{
+      return {
+        ...state,
+        users:[action.payload.user,...state.users]
+      };
+    }
     case SET_ITEM:{
       return {
         ...state,
@@ -35,7 +70,8 @@ export default function taskReducer (state = initialState, action) {
       return {
         ...state,
         companies:action.payload.companies,
-        user_roles:action.payload.user_roles
+        user_roles:action.payload.user_roles,
+        user:action.payload.user?action.payload.user:null
       };
     }
     case DELETE_ITEM:{

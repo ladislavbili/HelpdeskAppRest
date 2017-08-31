@@ -152,12 +152,8 @@ class TabAtributes extends Component {
             <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingRequester:true})}>
               <Left>
                 <Text style={{textAlign:'left',color:'black'}}>{this.state.requestedBy==null ? I18n.t('taskAddSelectUser') : (
-                  (this.state.requestedBy.name||this.state.requestedBy.surname)?<Text>
-                    {
-                    (this.state.requestedBy.name?
-                    this.state.requestedBy.name+' ':
-                    '')+(this.state.requestedBy.surname?this.state.requestedBy.surname:'')
-                  }</Text>:
+                  (this.state.requestedBy.name)?<Text>
+                    {this.state.requestedBy.name}</Text>:
                 <Text>{this.state.requestedBy.email}</Text>
 
                 )}</Text>
@@ -179,12 +175,8 @@ class TabAtributes extends Component {
             <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingAssignedTo:true})}>
             <Left>
               <Text style={{textAlign:'left',color:'black'}}>{this.state.assignedTo==null ? I18n.t('taskAddSelectUser') : (
-                (this.state.assignedTo.name||this.state.assignedTo.surName)?<Text>
-                  {
-                  (this.state.assignedTo.name?
-                  this.state.assignedTo.name+' ':
-                  '')+(this.state.assignedTo.surname?this.state.assignedTo.surname:'')
-                }</Text>:
+                this.state.assignedTo.name?
+                <Text>{this.state.assignedTo.name}</Text>:
               <Text>{this.state.assignedTo.email}</Text>
 
               )}</Text>
@@ -291,11 +283,11 @@ class TabAtributes extends Component {
             <List>
             {
               (([{id:null,name:I18n.t('nobody'), email:I18n.t('none')}]).concat(this.props.users)).map((user) =>
-              (user.email+user.name+' '+user.surname+' '+user.name).toLowerCase().includes(this.state.filterWordRequester.toLowerCase()) &&
+              (user.email+user.name).toLowerCase().includes(this.state.filterWordRequester.toLowerCase()) &&
               <ListItem button key={user.id} onPress={()=>this.setState({requestedBy:user,selectingRequester:false})} >
                 <Body>
                 {
-                  (user.name || user.surname)?<Text>{((user.name?(user.name+' '):'')+ (user.surname?user.surname:''))}</Text>:null
+                  (user.name)?<Text>{user.name}</Text>:null
                 }
                 <Text note>{user.email}</Text>
                 </Body>
@@ -332,11 +324,11 @@ class TabAtributes extends Component {
             <List>
             {
               (([{id:null,name:I18n.t('nobody'), email:I18n.t('none')}]).concat(this.props.users)).map((user) =>
-              (user.email+user.name+' '+user.surname+' '+user.name).toLowerCase().includes(this.state.filterWordAssignedTo.toLowerCase()) &&
+              (user.email+user.name).toLowerCase().includes(this.state.filterWordAssignedTo.toLowerCase()) &&
               <ListItem button key={user.id} onPress={()=>this.setState({assignedTo:user,selectingAssignedTo:false})} >
                 <Body>
                 {
-                  (user.name || user.surname)?<Text>{((user.name?(user.name+' '):'')+ (user.surname?user.surname:''))}</Text>:null
+                  user.name?<Text>{user.name}</Text>:null
                 }
                 <Text note>{user.email}</Text>
                 </Body>

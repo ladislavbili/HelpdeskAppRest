@@ -18,29 +18,13 @@ import ItemAdd from './components/itemAdd';
 import ItemEdit from './components/itemEdit';
 import UserList from './components/userList';
 import UserAdd from './components/userAdd';
+import UserEdit from './components/userEdit';
+import CompanyList from './components/companyList';
+import CompanyAdd from './components/companyAdd';
+import CompanyEdit from './components/companyEdit';
 const RouterWithRedux = connect()(Router);
 
 class AppNavigator extends Component {
-
-  componentDidUpdate() {
-    if (this.props.drawerState === 'opened') {
-      this.openDrawer();
-    }
-
-    if (this.props.drawerState === 'closed') {
-      this._drawer._root.close();
-    }
-  }
-
-  openDrawer() {
-    this._drawer._root.open();
-  }
-
-  closeDrawer() {
-    if (this.props.drawerState === 'opened') {
-      this.props.closeDrawer();
-    }
-  }
 
   render() {
     return (
@@ -62,11 +46,35 @@ class AppNavigator extends Component {
               <Scene key="itemEdit" component={ItemEdit} />
               <Scene key="userList" component={UserList} />
               <Scene key="userAdd" component={UserAdd} />
+              <Scene key="userEdit" component={UserEdit} />
+              <Scene key="companyList" component={CompanyList} />
+              <Scene key="companyAdd" component={CompanyAdd} />
+              <Scene key="companyEdit" component={CompanyEdit} />
             </Scene>
           </RouterWithRedux>
         </Drawer>
       </StyleProvider>
     );
+  }
+
+  componentDidUpdate() {
+    if (this.props.drawerState === 'opened') {
+      this.openDrawer();
+    }
+
+    if (this.props.drawerState === 'closed') {
+      this._drawer._root.close();
+    }
+  }
+
+  openDrawer() {
+    this._drawer._root.open();
+  }
+
+  closeDrawer() {
+    if (this.props.drawerState === 'opened') {
+      this.props.closeDrawer();
+    }
   }
 }
 

@@ -16,7 +16,7 @@ class TaskListRow extends Component {
                 <Text numberOfLines={1} note>
                   {I18n.t('project')}: {this.props.task.project?this.props.task.project.title:'None'}
                 </Text>
-                <Text numberOfLines={1} note>{I18n.t('assignedTo')}: {this.props.task.assignedTo?this.props.task.assignedTo.name+' '+this.props.task.assignedTo.surname:I18n.t('nobody')}</Text>
+                <Text numberOfLines={1} note>{I18n.t('assignedTo')}: {this.props.task.assignedTo?this.props.task.assignedTo.name:I18n.t('nobody')}</Text>
                 <Text numberOfLines={1} note>{I18n.t('deadline')}: {this.props.task.deadline?formatDate(this.props.task.deadline):I18n.t('noDate')}</Text>
                 <Item style={{backgroundColor:this.props.task.status.color,flex:1,flexDirection:'column'}}>
                   <Text style={{color:'white',paddingLeft:10,paddingRight:10,flex:1,flexDirection:'column'}}>{this.props.task.status.title}</Text>
