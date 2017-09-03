@@ -1,5 +1,5 @@
-//export const BASE_URL = 'http://192.168.0.108:3000';
-export const BASE_URL = 'http://192.168.200.101:3000';
+export const BASE_URL = 'http://192.168.0.108:3000';
+//export const BASE_URL = 'http://192.168.200.101:3000';
 
 export const LOGIN_URL = 'https://dev.lanhelpdesk.com/api/v1/token-authentication';
 export const TASK_LIST = BASE_URL + '/tasks';

@@ -34,8 +34,8 @@ class TabEmail extends Component { // eslint-disable-line
           {
             (this.props.ACL.view_internal_note||this.props.userACL.update_all_tasks) &&
             <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
-              <Label>{I18n.t('internal')}</Label>
-              <CheckBox checked={this.state.internal} color='#3F51B5' onPress={()=>this.setState({internal:!this.state.internal})}/>
+            <CheckBox checked={this.state.internal} color='#3F51B5' onPress={()=>this.setState({internal:!this.state.internal})}/>
+              <Label style={{marginLeft:15}}>{I18n.t('internal')}</Label>
             </Item>
           }
 

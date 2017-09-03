@@ -82,10 +82,10 @@ class CompanyEdit extends Component {
           </Right>
         </Header>
         <Content style={{ padding: 15 }}>
-        
+
           <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
-            <Label>{I18n.t('settingsActive')}</Label>
-            <CheckBox checked={this.state.is_active} color='#3F51B5' onPress={()=>this.setState({is_active:!this.state.is_active})}/>
+          <CheckBox checked={this.state.is_active} color='#3F51B5' onPress={()=>this.setState({is_active:!this.state.is_active})}/>
+            <Label style={{marginLeft:15}}>{I18n.t('settingsActive')}</Label>
           </Item>
 
           <Text note>{I18n.t('settingsCompanyName')}</Text>

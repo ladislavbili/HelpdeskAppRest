@@ -69,8 +69,8 @@ constructor(props) {
         <Content style={{ padding: 15 }}>
 
           <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
-            <Label>{I18n.t('settingsActive')}</Label>
-            <CheckBox checked={this.state.active} color='#3F51B5' onPress={()=>this.setState({active:!this.state.active})}/>
+          <CheckBox checked={this.state.active} color='#3F51B5' onPress={()=>this.setState({active:!this.state.active})}/>
+            <Label style={{marginLeft:15}}>{I18n.t('settingsActive')}</Label>
           </Item>
 
           <Text note>{I18n.t('settingsName')}</Text>

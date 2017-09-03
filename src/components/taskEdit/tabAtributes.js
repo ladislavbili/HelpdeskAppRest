@@ -98,8 +98,8 @@ class TabAtributes extends Component {
         <Content style={{ padding: 15 }}>
 
           <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
-            <Label>Important</Label>
-              <CheckBox checked={this.state.important} disabled={this.state.disabled} color='#3F51B5' onPress={()=>this.setState({important:!this.state.important})}/>
+          <CheckBox checked={this.state.important} disabled={this.state.disabled} color='#3F51B5' onPress={()=>this.setState({important:!this.state.important})}/>
+            <Label style={{marginLeft:15}}>Important</Label>
           </Item>
 
           <Text note>{I18n.t('taskAddTaskName')}</Text>
