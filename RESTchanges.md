@@ -21,6 +21,8 @@ Zmeny:
       body:JSON.stringify(data),
     })
 10. Čas ukladáme ako currentmills (1505118430509)
+11. ACL su true alebo false
+12. null je standardna hodnota pre nevyplnené udaje
 
 Ukážkový vzhľad získavaných REST dát:
 Informácia: názov pred datami je informatívny, z API ho nedostávame
@@ -159,7 +161,7 @@ Samotná úloha obsahuje tieto data
     }
   }
 
-Zoznam projektov obsahuje nasledujúce data:
+Zoznam projektov obsahuje nasledujúce data
 "projects": [
   {
     "id": 1,
@@ -169,18 +171,48 @@ Zoznam projektov obsahuje nasledujúce data:
   ...
 ]
 
+Samotný task obsahuje tieto data, ak nesmie nastavit pouzivatelom ACL tak null
+"project": {
+  "id": 1,
+  "title":"Projekt 1",
+  "users_ACL":[{
+    "id": 1,
+    "username": "mk",
+    "name": "Matej Kurka",
+    "email": "mk@email.sk",
+    "is_active": true,
+    "company": {
+      "id": "1",
+      "title": "prva firma"
+      },
+      "ACL": {
+        ... všetky ACL vramci projektu daneho pouzivatela
+      },
+    },...],     
+  }
 
-Zoznam statusov obsahuje nasledujúce data:
+Zoznam statusov obsahuje nasledujúce data
 "statuses": [
   {
     "id": 1,
     "title": "New",
-    "color": "#2DA3EC"
+    "color": "#2DA3EC",
+    "order": 1
   },
   ...
 ]
 
-Zoznam komentárov obsahuje nasledujúce data:
+Samotný status
+"status":{
+  "id": 1,
+  "title": "New",
+  "color": "#2DA3EC",
+  "is_active":true,
+  "description":"popis",
+  "order":1
+}
+
+Zoznam komentárov obsahuje nasledujúce data
 "comments": [
   {
     "id": 1,
@@ -216,10 +248,11 @@ Zoznam komentárov obsahuje nasledujúce data:
   ...
 ]
 
-Zoznam jednotiek obsahuje nasledujúce data:
+Zoznam jednotiek obsahuje nasledujúce data
 "units": [
   {
     "id": 1,
+    "is_active":true,
     "title": "Kilogram",
     "shortcut": "kg"
   },
@@ -227,7 +260,7 @@ Zoznam jednotiek obsahuje nasledujúce data:
 ]
 
 
-Zoznam vecí obsahuje nasledujúce data:
+Zoznam vecí obsahuje nasledujúce data
 "items": [
   {
     "id": 1,
@@ -241,17 +274,38 @@ Zoznam vecí obsahuje nasledujúce data:
   ...
 ]
 
+Samotný item
+"item": {
+  "id": 1,
+  "title": "Chleba0",
+  "amount": 30,
+  "unit": {
+    "id": 1
+  },
+  "price": 30
+}
 
-Zoznam rolí obsahuje nasledujúce data:
+Zoznam rolí obsahuje nasledujúce data
 "user-roles": [
   {
     "id": 1,
     "order": 1,
-    "title": "Admin"
+    "title": "Admin",
+    "is_active":true
   },
   ...
 ]
 
-Neurčené data na API:
-KONKRETNY PROJEKT NIE JE URČENÝ ZATIAĽ!!!
-status, unit, item, user-roles
+Samotná rola
+"user-role": {
+  "id": 1,
+  "order": 1,
+  "title": "Admin",
+  "is_active":true,
+  "description":"rolaaa",
+  "ACL":[všetky globalne ACL používateľa]
+}
+
+SMTP zostáva nezmenené
+
+IMAP neurcene, pravdepodobne identicke s API, zmena v datume na cas v milisekdundach
