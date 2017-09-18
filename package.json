@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
-    "eject-native-base": "node node_modules/native-base/ejectTheme.js"
+    "eject-native-base": "node node_modules/native-base/ejectTheme.js",
+    "server": "json-server db.json -p 3100 --watch"
   },
   "dependencies": {
     "@shoutem/theme": "^0.9.0",

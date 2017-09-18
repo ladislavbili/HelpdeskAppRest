@@ -328,6 +328,7 @@ export const getTasksAndProjects = () => {
         });
     }
   ).catch(function (error) {
+    console.log('Failed to load projects and tasks');
     console.log(error);
   });
   };

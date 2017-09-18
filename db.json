@@ -188,6 +188,47 @@
         "id": 1,
         "title": "Projekt 1"
       }
+    },
+    {
+      "title": "abc",
+      "description": "des ulohy",
+      "deadline": 1506502260000,
+      "startedAt": 1506063060000,
+      "important": false,
+      "work": "AAAAa",
+      "work_time": "123",
+      "createdAt": 1505724748469,
+      "updatedAt": 1505724784632,
+      "statusChangedAt": 1505724784632,
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej Kurka",
+        "email": "mk@email.sk"
+      },
+      "requestedBy": {
+        "id": 1
+      },
+      "project": {
+        "id": 2,
+        "title": "Projekt 2"
+      },
+      "company": {
+        "id": 4
+      },
+      "assignedTo": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej Kurka",
+        "email": "mk@email.sk"
+      },
+      "canEdit": true,
+      "status": {
+        "id": 3,
+        "title": "Closed",
+        "color": "#b3b3b3"
+      },
+      "id": 3
     }
   ],
   "task": [
@@ -272,6 +313,47 @@
       "status": {
         "id": 1
       }
+    },
+    {
+      "title": "abc",
+      "description": "des ulohy",
+      "deadline": 1506502260000,
+      "startedAt": 1506063060000,
+      "important": false,
+      "work": "AAAAa",
+      "work_time": "123",
+      "createdAt": 1505724748469,
+      "updatedAt": 1505724784632,
+      "statusChangedAt": 1505724784632,
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej Kurka",
+        "email": "mk@email.sk"
+      },
+      "requestedBy": {
+        "id": 1
+      },
+      "project": {
+        "id": 2
+      },
+      "company": {
+        "id": 4
+      },
+      "assignedTo": {
+        "id": 1
+      },
+      "canEdit": true,
+      "status": {
+        "id": 3
+      },
+      "ACL": {
+        "create_task": true,
+        "resolve_task": true,
+        "delete_task": true,
+        "view_internal_note": false
+      },
+      "id": 3
     }
   ],
   "users": [
@@ -435,6 +517,20 @@
         "preprivzmail@ttt.sk"
       ],
       "id": 7
+    },
+    {
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej Kurka",
+        "email": "mk@email.sk"
+      },
+      "createdAt": 1505724844350,
+      "title": null,
+      "body": "aaaaa",
+      "internal": true,
+      "email_to": null,
+      "id": 8
     }
   ],
   "units": [
@@ -450,15 +546,6 @@
     }
   ],
   "items": [
-    {
-      "id": 1,
-      "title": "Chleba0",
-      "amount": 30,
-      "unit": {
-        "id": 1
-      },
-      "price": 30
-    },
     {
       "id": 2,
       "title": "Maslo",

@@ -24,6 +24,10 @@ Zmeny:
 11. ACL su true alebo false
 12. null je standardna hodnota pre nevyplnené udaje
 
+OTAZKY:
+1. Neda sa vytvorit task so vsetkymi parametrami?
+2. Updatovanie tasklistu s pomocou api (subscription, napriklad cez updatedat co je datum poslendej zmeny, api sa poda request s casom posledneho updatu a ona vrati vsetky zmenene data skupiny- tasks,projects)
+
 Ukážkový vzhľad získavaných REST dát:
 Informácia: názov pred datami je informatívny, z API ho nedostávame
 

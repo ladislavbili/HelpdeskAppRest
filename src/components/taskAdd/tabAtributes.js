@@ -7,7 +7,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 
 import I18n from '../../translations';
 import {addTask} from '../../redux/actions';
-import {formatDate} from '../../helperFunctions';
+import {formatDate,processInteger} from '../../helperFunctions';
 
 class TabAtributes extends Component {
   constructor(props) {
@@ -35,19 +35,6 @@ class TabAtributes extends Component {
       deadline:null,
       selectingStartedAt:false,
       startedAt:null,
-    }
-    this.setWorkTime.bind(this);
-  }
-
-  setWorkTime(input) {
-    if(!/^\d*$/.test(input)){
-      return;
-    }
-    if(input.length>2 && input[0]=='0'){
-      this.setState({work_time:input[1]});
-    }
-    else{
-      this.setState({work_time:input});
     }
   }
 
@@ -219,7 +206,7 @@ class TabAtributes extends Component {
             <Input
               value={this.state.work_time}
               keyboardType='numeric'
-              onChangeText={ value => this.setWorkTime(value) }
+              onChangeText={ value => {let result = processInteger(value);this.setState({work_time:(result?result:this.state.work_time)})} }
             />
           </View>
 
