@@ -1,9 +1,9 @@
 import {ActivityIndicator} from 'react-native';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {  Item, Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, View, Input } from 'native-base';
+import {  Item, Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, Input } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import styles from './styles';
+
 import I18n from '../../translations/';
 import {getUsers,startLoading,openAddingOfUser,openEditingOfUser} from '../../redux/actions';
 
@@ -28,7 +28,7 @@ class userList extends Component {
       )
     }
     return (
-      <Container style={styles.container}>
+      <Container>
         <Header>
           <Left>
             <Button transparent onPress={() => Actions.pop()}>

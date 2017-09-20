@@ -1,8 +1,7 @@
 
 import React, { Component } from 'react';
-import { Title, Header, View, Container, Content,Input, Text, Footer, FooterTab, Button, Icon, Item, Label, CheckBox } from 'native-base';
+import { Title, View, Container, Content,Input, Text, Footer, FooterTab, Button, Icon, Item, Label, CheckBox } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import styles from './styles';
 import { connect } from 'react-redux';
 import I18n from '../../translations/';
 import {addComment} from '../../redux/actions';
@@ -24,7 +23,7 @@ class TabComment extends Component { // eslint-disable-line
 
     render() {
       return (
-        <Container style={styles.container}>
+        <Container>
           <Content style={{ padding: 15 }}>
 
           {

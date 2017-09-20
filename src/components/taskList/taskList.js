@@ -1,15 +1,15 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Footer, FooterTab, Container, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, View } from 'native-base';
+import { Footer, FooterTab, Container, Content, Button, Icon, Text, List } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import { startLoading } from '../../redux/actions';
 import TaskListRow from './taskListRow';
-import styles from './styles';
+
 class TaskList extends Component {
   render() {
     return (
-      <Container style={styles.container}>
+      <Container>
         <Content>
           <List>
           {

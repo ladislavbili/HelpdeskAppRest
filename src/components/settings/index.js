@@ -1,16 +1,16 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, View } from 'native-base';
+import { Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import styles from './styles';
+
 import I18n from '../../translations/';
 import {openAddingOfUser} from '../../redux/actions';
 
 class Settings extends Component {
   render() {
     return (
-      <Container style={styles.container}>
+      <Container>
         <Header>
           <Left>
             <Button transparent onPress={() => Actions.pop()}>

@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Input, Picker, Item, Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, View } from 'native-base';
+import { Input, Picker, Item, Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Body, View } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-
-import styles from './styles';
 import I18n from '../../translations/';
 import {addItem} from '../../redux/actions';
 
@@ -55,7 +53,7 @@ class ItemAdd extends Component {
 
   render() {
     return (
-      <Container style={styles.container}>
+      <Container>
         <Header>
           <Left>
             <Button transparent onPress={() => Actions.pop()}>

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Input, Picker, Item, Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, View, Label, CheckBox } from 'native-base';
+import { Input, Item, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, View, Label, CheckBox } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
-import styles from './styles';
 import I18n from '../../translations/';
 import {editCompany} from '../../redux/actions';
+import {processInteger} from '../../helperFunctions';
 
 class CompanyEdit extends Component {
 
@@ -21,51 +21,22 @@ class CompanyEdit extends Component {
         zip:this.props.company.zip,
         country:this.props.company.country,
         is_active:this.props.company.is_active,
+        phone:this.props.company.phone,
       };
-      this.setHours.bind(this);
-      this.setRegistrationNumber.bind(this);
-      this.setTaxNumber.bind(this);
-      this.setZIP.bind(this);
     }
+    checkIfNumber(value){
+      return /^\d*$/.test(value);
+    }
+
   submit(){
     let company=Object.assign({},this.state,{subscription_time:parseInt(this.state.subscription_time)});
     this.props.editCompany(company, this.props.company.id);
     Actions.pop();
   }
 
-  setHours(input){
-    if(!/^\d*$/.test(input)){
-      return;
-    }
-    if(input.length==2 && input[0]=='0'){
-      this.setState({subscription_time:input[1]});
-    }
-    else{
-      this.setState({subscription_time:input});
-    }
-  }
-  setRegistrationNumber(input){
-    if(!/^\d*$/.test(input)){
-      return;
-    }
-    this.setState({ico:input});
-  }
-  setTaxNumber(input){
-    if(!/^\d*$/.test(input)){
-      return;
-    }
-    this.setState({ic_dph:input});
-  }
-  setZIP(input){
-    if(!/^\d*$/.test(input)){
-      return;
-    }
-    this.setState({zip:input});
-  }
-
   render() {
     return (
-      <Container style={styles.container}>
+      <Container>
         <Header>
           <Left>
             <Button transparent onPress={() => Actions.pop()}>
@@ -130,7 +101,7 @@ class CompanyEdit extends Component {
           placeholder={I18n.t('subscriptionTime')}
           keyboardType='numeric'
           value={this.state.subscription_time}
-          onChangeText={value => this.setHours(value)}
+          onChangeText={ value => {let result = processInteger(value);this.setState({subscription_time:(result?result:this.state.subscription_time)})} }
           />
           </View>
 
@@ -140,7 +111,7 @@ class CompanyEdit extends Component {
           keyboardType='numeric'
           placeholder={I18n.t('ico')}
           value={this.state.ico}
-          onChangeText={value => this.setRegistrationNumber(value)}
+          onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ico:(result?value:this.state.ico)})} }
           />
           </View>
 
@@ -150,7 +121,7 @@ class CompanyEdit extends Component {
           keyboardType='numeric'
           placeholder={I18n.t('ic_dph')}
           value={this.state.ic_dph}
-          onChangeText={value => this.setTaxNumber(value)}
+          onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ic_dph:(result?value:this.state.ic_dph)})}}
           />
           </View>
 
@@ -169,7 +140,17 @@ class CompanyEdit extends Component {
           placeholder={I18n.t('zipCode')}
           keyboardType='numeric'
           value={this.state.zip}
-          onChangeText={value => this.setZIP(value)}
+          onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({zip:(result?value:this.state.zip)})}}
+          />
+          </View>
+
+          <Text note>{I18n.t('phone')}</Text>
+          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Input
+          placeholder={I18n.t('phone')}
+          keyboardType='numeric'
+          value={this.state.phone}
+          onChangeText={value => this.setState({phone:value})}
           />
           </View>
 

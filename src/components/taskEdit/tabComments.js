@@ -1,9 +1,8 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import { Input, Label, Button, Icon, Item, Footer, FooterTab,View, Thumbnail, Container, Content, Card, CardItem, Text, ListItem, List,  Left, Body, Right } from 'native-base';
+import { Button, Icon, Footer, FooterTab,View, Container, Content, Text, ListItem, List,  Left, Right } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import {ActivityIndicator} from 'react-native';
-import styles from './styles';
 import I18n from '../../translations/';
 import {startLoadingComments, getComments} from '../../redux/actions';
 import {formatDate} from '../../helperFunctions';

@@ -27,4 +27,5 @@ export default {
   func:'Funkcia',
   newPass:'Nové heslo',
   subscriptionTime:'Predplatený čas',
+  phone:'Telefónne číslo'
 };

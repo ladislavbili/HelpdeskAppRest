@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Tab, Tabs, Container} from 'native-base';
 import { connect } from 'react-redux';
-import styles from './styles';
 import TabComment from './tabComment';
 import TabEmail from './tabEmail';
 import I18n from '../../translations/';
@@ -11,7 +10,7 @@ class CommentAdd extends Component {
 
   render() {
     return (
-      <Container style={styles.container}>
+      <Container>
         <Tabs>
             <Tab heading={I18n.t('commentAddtabComment')}>
                 <TabComment id={this.props.id} />

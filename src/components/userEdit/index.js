@@ -1,11 +1,11 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Input, Picker, Item, Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, View, CheckBox, Label } from 'native-base';
+import { Input, Item, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, View, CheckBox, Label } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import {Modal} from 'react-native';
 
-import styles from './styles';
+
 import I18n from '../../translations/';
 import {editUser} from '../../redux/actions';
 
@@ -49,7 +49,7 @@ class UserEdit extends Component {
   }
   render() {
     return (
-      <Container style={styles.container}>
+      <Container>
         <Header>
           <Left>
             <Button transparent onPress={() => Actions.pop()}>

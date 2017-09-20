@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
 
 import TabAtributes from './tabAtributes';
-import styles from './styles';
+
 import {getAttributes} from '../../redux/actions';
 
 class TaskAdd extends Component {
@@ -22,7 +22,7 @@ class TaskAdd extends Component {
     }
 
     return (
-      <Container style={styles.container}>
+      <Container>
         <Header>
           <Left>
           <Button transparent onPress={() => Actions.pop()}>

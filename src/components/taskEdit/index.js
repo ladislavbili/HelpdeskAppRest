@@ -7,7 +7,7 @@ import { ActivityIndicator } from 'react-native';
 import TabAtributes from './tabAtributes';
 import TabComments from './tabComments';
 import TabItems from './tabItems';
-import styles from './styles';
+
 import {getTaskAttributes} from '../../redux/actions';
 
 
@@ -25,7 +25,7 @@ class TaskEdit extends Component {
     }
 
     return (
-      <Container style={styles.container}>
+      <Container>
         <Header>
           <Left>
           <Button transparent onPress={() => Actions.pop()}>
@@ -39,7 +39,7 @@ class TaskEdit extends Component {
         </Header>
            <Tabs>
              <Tab heading="Attributes">
-                 <TabAtributes id={this.props.id} />
+                 <TabAtributes id={this.props.id} fromFilter={this.props.fromFilter} />
              </Tab>
              <Tab heading="Comments">
                  <TabComments id={this.props.id} />

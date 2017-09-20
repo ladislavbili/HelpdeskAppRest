@@ -1,10 +1,71 @@
 import {SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_UNITS, SET_TASK, SET_TASKS_AND_PROJECTS,
   START_LOADING,SET_TASK_ATTRIBUTES, EDIT_TASK_LIST, ADD_TO_TASK_LIST, SET_COMMENTS, START_LOADING_COMMENTS,ADD_NEW_COMMENT,
   START_LOADING_ITEMS, SET_ITEMS, ADD_NEW_ITEM, DELETE_ITEM, EDIT_ITEM_LIST, SET_ITEM, SET_USER_ATTRIBUTES,EDIT_USER_LIST,
-  DELETE_TASK, ADD_USER, ADD_COMPANY,SET_COMPANY, EDIT_COMPANY_LIST } from '../types';
+  DELETE_TASK, ADD_USER, ADD_COMPANY,SET_COMPANY, EDIT_COMPANY_LIST,  CLEAR_SEARCHED_TASKS, SET_SEARCHED_TASKS, SET_SEARCHED_FILTER } from '../types';
 import {TASK_LIST, PROJECT_LIST,COMPANIES_LIST,STATUSES_LIST,USERS_LIST,UNITS_LIST, TASK, COMMENTS, ITEMS_LIST, USER, USER_ROLES, COMPANY } from '../urls';
 import { Actions } from 'react-native-router-flux';
 
+export const saveFilteredEdit = (task,assignedTo,project,status, word, filter) => {
+  return (dispatch) => {
+    let taskURL = TASK + '/'+ task.id;
+    let taskListURL = TASK_LIST + '/'+ task.id;
+    Promise.all([
+      fetch(taskURL, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'PATCH',
+        body:JSON.stringify(task),
+      }),
+      fetch(taskListURL, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'PATCH',
+        body:JSON.stringify(Object.assign({},task,{assignedTo,project,status})),
+      })
+    ])
+    .then((responses) =>{
+      dispatch({type: EDIT_TASK_LIST, payload:{taskInList:Object.assign({},task,{assignedTo,project,status})} });
+      dispatch({type: CLEAR_SEARCHED_TASKS});
+      dispatch({type: SET_SEARCHED_FILTER, payload:{filter,word}});
+
+      fetch(TASK_LIST, {
+        method: 'GET',
+      }).then((response)=>response.json().then((response)=>{
+        dispatch({type: SET_SEARCHED_TASKS, payload:{tasks:response}});
+      }))
+      .catch(function (error) {
+        console.log(error);
+      });
+      }
+    )
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+
+
+
+export const searchTasks = (filter, word) => {
+  return (dispatch) => {
+    dispatch({type: CLEAR_SEARCHED_TASKS});
+    dispatch({type: SET_SEARCHED_FILTER, payload:{filter,word}});
+
+    fetch(TASK_LIST, {
+      method: 'GET',
+    }).then((response)=>response.json().then((response)=>{
+      dispatch({type: SET_SEARCHED_TASKS, payload:{tasks:response}});
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+
+  };
+};
 
 export const editCompany = (company,id) => {
   return (dispatch) => {

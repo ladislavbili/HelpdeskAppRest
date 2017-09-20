@@ -1,4 +1,5 @@
-export const BASE_URL = 'http://192.168.0.107:3100';
+//export const BASE_URL = 'http://192.168.0.107:3100';
+export const BASE_URL = 'http://192.168.200.101:3100';
 //export const BASE_URL = 'http://127.0.0.1:3100';
 
 export const LOGIN_URL = 'https://dev.lanhelpdesk.com/api/v1/token-authentication';

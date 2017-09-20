@@ -1,7 +1,8 @@
 
 import { SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_CUSTOM_ATTRIBUTES, SET_UNITS, SET_TASK,SET_TASKS_AND_PROJECTS,START_LOADING,
   SET_TASK_ATTRIBUTES, EDIT_TASK_LIST, ADD_TO_TASK_LIST, SET_COMMENTS, START_LOADING_COMMENTS,ADD_NEW_COMMENT, START_LOADING_ITEMS, SET_ITEMS,
-  ADD_NEW_ITEM, DELETE_ITEM,EDIT_ITEM_LIST, SET_ITEM, DELETE_TASK, SET_USER_ATTRIBUTES, ADD_USER, EDIT_USER_LIST, ADD_COMPANY, SET_COMPANY, EDIT_COMPANY_LIST } from '../types';
+  ADD_NEW_ITEM, DELETE_ITEM,EDIT_ITEM_LIST, SET_ITEM, DELETE_TASK, SET_USER_ATTRIBUTES, ADD_USER, EDIT_USER_LIST, ADD_COMPANY, SET_COMPANY, EDIT_COMPANY_LIST,
+  CLEAR_SEARCHED_TASKS, SET_SEARCHED_TASKS, SET_SEARCHED_FILTER } from '../types';
 
 const initialState = {
   tasks:[],
@@ -22,10 +23,35 @@ const initialState = {
   user:null,
   user_roles:[],
   company:null,
+  searchedTasks:[],
+  searchedWord:'',
+  searchedFilter:'',
+  searching:false,
 };
 
 export default function taskReducer (state = initialState, action) {
   switch (action.type) {
+    case SET_SEARCHED_FILTER:{
+      return {
+        ...state,
+        searchedWord:action.payload.word,
+        searchedFilter:action.payload.filter,
+      };
+    }
+    case SET_SEARCHED_TASKS:{
+      return {
+        ...state,
+        searchedTasks:action.payload.tasks,
+        searching:false,
+      };
+    }
+    case CLEAR_SEARCHED_TASKS:{
+      return {
+        ...state,
+        searchedTasks:[],
+        searching:true,
+      };
+    }
     case EDIT_COMPANY_LIST:{
       let newCompanies= [...state.companies];
       newCompanies.splice(newCompanies.findIndex((company)=>company.id==action.payload.company.id),1,action.payload.company);

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Right, Left, Container, Content, Card, CardItem, Text, Body, Footer, FooterTab, Button, Icon } from 'native-base';
+import { Right, Left, Container, Content, Card, CardItem, Text, Footer, FooterTab, Button, Icon } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import { ActivityIndicator, Alert } from 'react-native';
 import { connect } from 'react-redux';
 
-import styles from './styles';
+
 import I18n from '../../translations/';
 import {startLoadingItems, getItemsAndUnits, openAddingOfItem, deleteItem, openEditingOfItem} from '../../redux/actions';
 

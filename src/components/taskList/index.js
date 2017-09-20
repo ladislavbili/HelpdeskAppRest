@@ -4,9 +4,7 @@ import { Container, Header, Title, Button, Icon, Left, Right, Body } from 'nativ
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { ActivityIndicator } from 'react-native';
-
 import TaskList from './taskList';
-import styles from './styles';
 import { openDrawer, closeDrawer, getTasksAndProjects } from '../../redux/actions';
 class TaskListLoader extends Component {
   componentWillMount(){
@@ -21,7 +19,7 @@ class TaskListLoader extends Component {
       )
     }
     return (
-      <Container style={styles.container}>
+      <Container>
         <Header>
           <Left>
             <Button transparent onPress={this.props.openDrawer}>

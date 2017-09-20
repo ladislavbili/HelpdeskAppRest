@@ -4,10 +4,9 @@ import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { View, Body, Container, Content, Icon, Input, Item, Label, Text, Footer, FooterTab, Button, Picker,  ListItem, Header,Title , Left, Right, List , CheckBox } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-
 import I18n from '../../translations';
-import {saveEdit,deleteTask} from '../../redux/actions';
-import {formatDate} from '../../helperFunctions';
+import {saveEdit,deleteTask,saveFilteredEdit} from '../../redux/actions';
+import {formatDate,processInteger} from '../../helperFunctions';
 
 class TabAtributes extends Component {
   constructor(props) {
@@ -38,23 +37,10 @@ class TabAtributes extends Component {
       selectingStartedAt:false,
       startedAt:this.props.task.startedAt?this.props.task.startedAt:null,
     }
-    this.setWorkTime.bind(this);
   }
 
-  setWorkTime(input) {
-    if(!/^\d*$/.test(input)){
-      return;
-    }
-    if(input.length==2 && input[0]=='0'){
-      this.setState({work_time:input[1]});
-    }
-    else{
-      this.setState({work_time:input});
-    }
-  }
 
   submitForm(){
-    // auto: createdAt, createdBy
     const id = this.props.task.id;
     const {title,description,work_time,deadline,startedAt,work, important} = this.state;
     const assignedTo = this.state.assignedTo.id?{id:this.state.assignedTo.id}:null;
@@ -66,13 +52,23 @@ class TabAtributes extends Component {
     const statusChangedAt = !this.props.task.status||status!=this.props.task.status.id?(new Date()).getTime():this.state.statusChangedAt;
     const createdAt = this.props.task.createdAt;
     const createdBy = this.props.task.createdBy;
-    this.props.saveEdit(
-      {id,title,description,deadline,startedAt,important,work,work_time,
-        createdAt,updatedAt,statusChangedAt,createdBy,requestedBy,project,company,assignedTo,
-        canEdit:this.props.task.canEdit,status},this.state.assignedTo.id?this.state.assignedTo:null,
-        this.state.project?{id:this.state.project,title:this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.state.project)].title}:null,
-        this.state.status
-      );
+    if(this.props.fromFilter){
+      this.props.saveFilteredEdit(
+        {id,title,description,deadline,startedAt,important,work,work_time,
+          createdAt,updatedAt,statusChangedAt,createdBy,requestedBy,project,company,assignedTo,
+          canEdit:this.props.task.canEdit,status},this.state.assignedTo.id?this.state.assignedTo:null,
+          this.state.project?{id:this.state.project,title:this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.state.project)].title}:null,
+          this.state.status, this.props.searchedFilter,this.props.searchedWord);
+    }
+    else{
+      this.props.saveEdit(
+        {id,title,description,deadline,startedAt,important,work,work_time,
+          createdAt,updatedAt,statusChangedAt,createdBy,requestedBy,project,company,assignedTo,
+          canEdit:this.props.task.canEdit,status},this.state.assignedTo.id?this.state.assignedTo:null,
+          this.state.project?{id:this.state.project,title:this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.state.project)].title}:null,
+          this.state.status
+        );
+    }
     Actions.pop();
   }
 
@@ -242,7 +238,7 @@ class TabAtributes extends Component {
               disabled={this.state.disabled}
               value={this.state.work_time}
               keyboardType='numeric'
-              onChangeText={ value => this.setWorkTime(value) }
+              onChangeText={ value => {let result = processInteger(value);this.setState({work_time:(result?result:this.state.work_time)})} }
             />
           </View>
 
@@ -398,8 +394,8 @@ class TabAtributes extends Component {
 }
 
 const mapStateToProps = ({ taskData,login }) => {
-  const { users, companies,statuses, projects, task} = taskData;
-  return { users, companies,statuses, projects, task,ACL:login.ACL};
+  const { users, companies,statuses, projects, task,searchedFilter,searchedWord} = taskData;
+  return { users, companies,statuses, projects, task,ACL:login.ACL,searchedFilter,searchedWord};
 };
 
-export default connect(mapStateToProps,{saveEdit, deleteTask})(TabAtributes);
+export default connect(mapStateToProps,{saveEdit, deleteTask,saveFilteredEdit})(TabAtributes);

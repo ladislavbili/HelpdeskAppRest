@@ -15,6 +15,10 @@
     {
       "title": "tiiitle",
       "id": 4
+    },
+    {
+      "title": "agrarny",
+      "id": 5
     }
   ],
   "company": [
@@ -29,6 +33,7 @@
       "city": "Bratislava",
       "zip": "02587",
       "country": "SR",
+      "phone": "0944",
       "is_active": true
     },
     {
@@ -42,6 +47,7 @@
       "city": "Bratislava",
       "zip": "021478",
       "country": "Slovenska Republika",
+      "phone": "0944",
       "is_active": true
     },
     {
@@ -54,6 +60,7 @@
       "city": "blava je riek",
       "zip": "5",
       "country": "slova",
+      "phone": "0944",
       "is_active": false,
       "id": 3
     },
@@ -67,8 +74,23 @@
       "city": "blava je rieka",
       "zip": "55",
       "country": "slovak",
+      "phone": "0944",
       "is_active": true,
       "id": 4
+    },
+    {
+      "title": "agrarny",
+      "subscription_time": 1444,
+      "ico": "66",
+      "dic": "666",
+      "ic_dph": "6666",
+      "street": "dstiuz",
+      "city": "koral",
+      "zip": "666",
+      "country": "akola",
+      "is_active": true,
+      "phone": "0+421999666",
+      "id": 5
     }
   ],
   "user": [
@@ -139,9 +161,9 @@
       },
       "deadline": 1501761600000,
       "status": {
-        "id": 1,
-        "title": "New",
-        "color": "#2DA3EC"
+        "id": 4,
+        "title": "Open",
+        "color": "#68bc00"
       },
       "project": {
         "id": 1,
@@ -153,8 +175,8 @@
       "work": "what has been done til now now",
       "work_time": "100",
       "createdAt": 1503479889210,
-      "updatedAt": 1503916953055,
-      "statusChangedAt": 1503916953055,
+      "updatedAt": 1505900451964,
+      "statusChangedAt": 1505900451964,
       "createdBy": {
         "id": 1,
         "username": "mk",
@@ -198,8 +220,8 @@
       "work": "AAAAa",
       "work_time": "123",
       "createdAt": 1505724748469,
-      "updatedAt": 1505724784632,
-      "statusChangedAt": 1505724784632,
+      "updatedAt": 1505897029875,
+      "statusChangedAt": 1505897029875,
       "createdBy": {
         "id": 1,
         "username": "mk",
@@ -224,9 +246,9 @@
       },
       "canEdit": true,
       "status": {
-        "id": 3,
-        "title": "Closed",
-        "color": "#b3b3b3"
+        "id": 1,
+        "title": "New",
+        "color": "#2DA3EC"
       },
       "id": 3
     }
@@ -248,8 +270,8 @@
       "work": "what has been done til now now",
       "work_time": "100",
       "createdAt": 1503479889210,
-      "updatedAt": 1503916953055,
-      "statusChangedAt": 1503916953055,
+      "updatedAt": 1505900451964,
+      "statusChangedAt": 1505900451964,
       "createdBy": {
         "id": 1,
         "username": "mk",
@@ -270,7 +292,7 @@
       },
       "canEdit": true,
       "status": {
-        "id": 1
+        "id": 4
       }
     },
     {
@@ -323,8 +345,8 @@
       "work": "AAAAa",
       "work_time": "123",
       "createdAt": 1505724748469,
-      "updatedAt": 1505724784632,
-      "statusChangedAt": 1505724784632,
+      "updatedAt": 1505897029875,
+      "statusChangedAt": 1505897029875,
       "createdBy": {
         "id": 1,
         "username": "mk",
@@ -345,7 +367,7 @@
       },
       "canEdit": true,
       "status": {
-        "id": 3
+        "id": 1
       },
       "ACL": {
         "create_task": true,

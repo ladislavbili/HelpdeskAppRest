@@ -1,9 +1,8 @@
 import {ActivityIndicator} from 'react-native';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Input, Picker, Item, Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, View } from 'native-base';
+import { Input, Item, Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import styles from './styles';
 import I18n from '../../translations/';
 import {getCompanies,startLoading,openEditingOfCompany} from '../../redux/actions';
 
@@ -29,7 +28,7 @@ componentWillMount(){
       )
     }
     return (
-      <Container style={styles.container}>
+      <Container>
         <Header>
           <Left>
             <Button transparent onPress={() => Actions.pop()}>

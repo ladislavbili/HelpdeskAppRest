@@ -1,10 +1,9 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Title ,Header, Body, Content, Text, List, ListItem, Icon, Container, Left, Right, Badge, Button, View, StyleProvider, getTheme, variables } from 'native-base';
+import { Title ,Header, Body, Content, Text, List, ListItem, Icon, Container, Left, Right, Badge } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import { ActivityIndicator } from 'react-native';
-
 import { closeDrawer } from '../../redux/actions';
 import styles from './style';
 import I18n from '../../translations/';

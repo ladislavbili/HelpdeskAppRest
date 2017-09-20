@@ -22,6 +22,7 @@ import UserEdit from './components/userEdit';
 import CompanyList from './components/companyList';
 import CompanyAdd from './components/companyAdd';
 import CompanyEdit from './components/companyEdit';
+import Search from './components/search';
 const RouterWithRedux = connect()(Router);
 
 class AppNavigator extends Component {
@@ -50,6 +51,7 @@ class AppNavigator extends Component {
               <Scene key="companyList" component={CompanyList} />
               <Scene key="companyAdd" component={CompanyAdd} />
               <Scene key="companyEdit" component={CompanyEdit} />
+              <Scene key="search" component={Search} />
             </Scene>
           </RouterWithRedux>
         </Drawer>
