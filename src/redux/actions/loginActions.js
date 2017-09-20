@@ -1,6 +1,5 @@
-import {LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_LOGOUT,
-  SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_UNITS, START_LOADING } from '../types';
-import {LOGIN_URL,TASK_LIST, PROJECT_LIST,COMPANIES_LIST,STATUSES_LIST,USERS_LIST,UNITS_LIST} from '../urls';
+import {LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_LOGOUT, START_LOADING } from '../types';
+import {LOGIN_URL} from '../urls';
 import { Actions } from 'react-native-router-flux';
 import { AsyncStorage } from 'react-native';
 

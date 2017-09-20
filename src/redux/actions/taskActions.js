@@ -95,32 +95,6 @@ export const startLoading = () => {
     dispatch({type: START_LOADING });
   };
 };
-export const getTasks = () => {
-  return (dispatch) => {
-    fetch(TASK_LIST, {
-      method: 'GET',
-    }).then((response) =>response.json().then((response) => {
-      dispatch({type: SET_TASKS, payload:{tasks:response}});
-    }))
-    .catch(function (error) {
-      console.log(error);
-    });
-  };
-};
-export const getTask = (id) => {
-  return (dispatch) => {
-    let url=TASK+'/?id='+id;
-    fetch(url, {
-      method: 'GET',
-    }).then((response) =>response.json().then((response) => {
-      dispatch({type: SET_TASK, payload:{task:response}});
-    }))
-    .catch(function (error) {
-      console.log(url);
-      console.log(error);
-    });
-  };
-};
 export const saveEdit = (task,assignedTo,project,status) => {
   return (dispatch) => {
     let taskURL = TASK + '/'+ task.id;
