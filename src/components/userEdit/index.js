@@ -250,8 +250,10 @@ class UserEdit extends Component {
   }
 }
 
-const mapStateToProps = ({ taskData }) => {
-  return { companies, user_roles, user } = taskData;
+const mapStateToProps = ({ companyR, userR }) => {
+  const { user_roles, user } = userR;
+  const { companies } = companyR;
+  return { companies, user_roles, user };
 };
 
 export default connect(mapStateToProps, {editUser})(UserEdit);

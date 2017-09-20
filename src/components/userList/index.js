@@ -85,8 +85,9 @@ class userList extends Component {
   }
 }
 
-const mapStateToProps = ({ taskData }) => {
-  const { users, loadingData } = taskData;
+const mapStateToProps = ({ taskR, userR }) => {
+  const { loadingData } = taskR;
+  const { users } = userR;
   return { users, loadingData };
 };
 

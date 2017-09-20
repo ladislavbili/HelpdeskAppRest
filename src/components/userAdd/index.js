@@ -249,8 +249,10 @@ constructor(props) {
   }
 }
 
-const mapStateToProps = ({ taskData }) => {
-  return { companies, user_roles } = taskData;
+const mapStateToProps = ({ companyR, userR }) => {
+  const { user_roles } = userR;
+  const { companies } = companyR;
+  return {user_roles, companies};
 };
 
 export default connect(mapStateToProps, {addUser})(UserAdd);

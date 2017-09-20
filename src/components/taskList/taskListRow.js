@@ -29,7 +29,7 @@ class TaskListRow extends Component {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = () => {
   return {};
 };
 

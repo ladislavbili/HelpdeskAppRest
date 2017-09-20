@@ -119,8 +119,8 @@ class ItemEdit extends Component {
     );
   }
 }
-const mapStateToProps = ({ taskData }) => {
-  const { units, item } = taskData;
+const mapStateToProps = ({ itemR }) => {
+  const { units, item } = itemR;
   return { units, item };
 };
 

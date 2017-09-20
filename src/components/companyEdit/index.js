@@ -160,8 +160,8 @@ class CompanyEdit extends Component {
   }
 }
 
-const mapStateToProps = ({ taskData }) => {
-  return {company} = taskData;
+const mapStateToProps = ({ companyR }) => {
+  return {company} = companyR;
 };
 
 export default connect(mapStateToProps, {editCompany})(CompanyEdit);

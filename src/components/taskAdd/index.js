@@ -44,8 +44,8 @@ class TaskAdd extends Component {
   }
 }
 
-const mapStateToProps = ({ taskData }) => {
-  return { loadingData} = taskData;
+const mapStateToProps = ({ taskR }) => {
+  return { loadingData} = taskR;
 };
 
 export default connect(mapStateToProps,{getAttributes})(TaskAdd);

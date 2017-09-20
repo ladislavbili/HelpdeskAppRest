@@ -175,8 +175,8 @@
       "work": "what has been done til now now",
       "work_time": "100",
       "createdAt": 1503479889210,
-      "updatedAt": 1505900451964,
-      "statusChangedAt": 1505900451964,
+      "updatedAt": 1505907116174,
+      "statusChangedAt": 1505907116174,
       "createdBy": {
         "id": 1,
         "username": "mk",
@@ -189,7 +189,11 @@
       "company": {
         "id": 1
       },
-      "canEdit": true
+      "canEdit": true,
+      "labels": [
+        1,
+        4
+      ]
     },
     {
       "id": 2,
@@ -263,6 +267,10 @@
         "view_internal_note": false
       },
       "title": "task name edited",
+      "labels": [
+        1,
+        4
+      ],
       "description": "popis penky",
       "deadline": 1501761600000,
       "startedAt": 1504161000000,
@@ -270,8 +278,8 @@
       "work": "what has been done til now now",
       "work_time": "100",
       "createdAt": 1503479889210,
-      "updatedAt": 1505900451964,
-      "statusChangedAt": 1505900451964,
+      "updatedAt": 1505907116174,
+      "statusChangedAt": 1505907116174,
       "createdBy": {
         "id": 1,
         "username": "mk",
@@ -305,6 +313,11 @@
       },
       "title": "task name 2",
       "description": "popis 2",
+      "labels": [
+        1,
+        2,
+        3
+      ],
       "deadline": 1503479889210,
       "startedAt": 1503479889210,
       "important": true,
@@ -339,6 +352,11 @@
     {
       "title": "abc",
       "description": "des ulohy",
+      "labels": [
+        1,
+        2,
+        3
+      ],
       "deadline": 1506502260000,
       "startedAt": 1506063060000,
       "important": false,
@@ -429,6 +447,28 @@
     {
       "id": 4,
       "title": "Open",
+      "color": "#68bc00"
+    }
+  ],
+  "labels": [
+    {
+      "id": 1,
+      "title": "Chill",
+      "color": "#2DA3EC"
+    },
+    {
+      "id": 2,
+      "title": "Medium",
+      "color": "#ff9c00"
+    },
+    {
+      "id": 3,
+      "title": "Unimportant",
+      "color": "#b3b3b3"
+    },
+    {
+      "id": 4,
+      "title": "Solved",
       "color": "#68bc00"
     }
   ],

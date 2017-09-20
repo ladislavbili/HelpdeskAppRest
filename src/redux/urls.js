@@ -16,3 +16,4 @@ export const ITEMS_LIST = BASE_URL + '/items';
 export const COMMENTS = BASE_URL + '/comments';
 export const USER_ROLES = BASE_URL + '/user-roles';
 export const COMPANY = BASE_URL + '/company';
+export const LABEL_LIST = BASE_URL + '/labels';

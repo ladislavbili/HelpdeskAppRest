@@ -4,10 +4,10 @@ import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { View, Body, Container, Content, Icon, Input, Item, Label, Text, Footer, FooterTab, Button, Picker,  ListItem, Header,Title , Left, Right, List , CheckBox } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-
 import I18n from '../../translations';
 import {addTask} from '../../redux/actions';
 import {formatDate,processInteger} from '../../helperFunctions';
+import TaskLabel from './label';
 
 class TabAtributes extends Component {
   constructor(props) {
@@ -35,8 +35,28 @@ class TabAtributes extends Component {
       deadline:null,
       selectingStartedAt:false,
       startedAt:null,
+      modalLabel:false,
+      labels:[]
     }
   }
+
+  setLabel(removing,label){
+   if(removing){
+     let index=this.state.labels.findIndex((item)=>item.id==label.id);
+     if(index==-1){
+       return;
+     }
+     let newLabels=[...this.state.labels];
+     newLabels.splice(index,1);
+     this.setState({labels:newLabels});
+   }
+   else{
+     let index=this.state.labels.findIndex((item)=>item.id==label.id);
+     if(index==-1){
+       this.setState({labels:[...this.state.labels,label]});
+     }
+   }
+ }
 
   submitForm(){
     // auto: createdAt, createdBy
@@ -50,9 +70,9 @@ class TabAtributes extends Component {
     const statusChangedAt = null;
     const createdAt = (new Date()).getTime();
     const createdBy = this.props.userData;
-    //const id = this.props.tasks.length+1;
+    const labels = this.state.labels.map((label)=>label.id);
     this.props.addTask(
-      {title,description,deadline,startedAt,important,work,work_time,
+      {title,description,deadline,startedAt,important,work,work_time,labels,
         createdAt,updatedAt,statusChangedAt,createdBy,requestedBy,project,company,assignedTo,
         canEdit:true,status},this.state.assignedTo.id?this.state.assignedTo:null,
         {id:this.state.project,title:this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.state.project)].title},
@@ -210,6 +230,56 @@ class TabAtributes extends Component {
             />
           </View>
 
+          <Text note>Labels</Text>
+          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Button block onPress={()=>{this.setState({modalLabel:true})}}><Text>Select labels</Text></Button>
+          <List
+            dataArray={this.state.labels}
+            renderRow={label =>
+              <ListItem>
+                <View style={{backgroundColor:label.color,paddingLeft:10}}>
+                  <Text style={{color:'white'}}>{label.title}</Text>
+                </View>
+              </ListItem>
+              }
+          />
+        </View>
+
+        <Modal
+          animationType={"fade"}
+          transparent={false}
+          style={{flex:1}}
+          visible={this.state.modalLabel}
+          onRequestClose={() => this.setState({modalLabel:false})}
+          >
+          <Content style={{ padding: 15 }}>
+          <Header>
+            <Body>
+              <Title>Select labels</Title>
+            </Body>
+          </Header>
+
+         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+           <List
+             dataArray={this.props.labels}
+             renderRow={item =>
+               <TaskLabel item={item} setLabel={this.setLabel.bind(this)} selected={this.state.labels.some((label)=>item.id==label.id)}/>
+               }
+           />
+         </View>
+
+        </Content>
+        <Footer>
+
+          <FooterTab>
+            <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
+              onPress={()=>this.setState({modalLabel:false})}>
+              <Text style={{ color: 'white' }}>DONE</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
+      </Modal>
+
           <Modal
               animationType={"fade"}
               transparent={false}
@@ -351,10 +421,12 @@ class TabAtributes extends Component {
   }
 }
 
-const mapStateToProps = ({ taskData, login }) => {
+const mapStateToProps = ({ taskR, login, companyR, userR }) => {
   const {userData} = login;
-  const { users, companies,statuses, projects} = taskData;
-  return { users, companies,statuses, projects, userData};
+  const {users} = userR;
+  const {companies} = companyR;
+  const { statuses, projects,labels} = taskR;
+  return { users, companies,statuses, projects, userData,labels};
 };
 
 export default connect(mapStateToProps,{addTask})(TabAtributes);

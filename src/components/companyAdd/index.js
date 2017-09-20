@@ -161,7 +161,7 @@ class CompanyAdd extends Component {
   }
 }
 
-const mapStateToProps = ({ taskData }) => {
+const mapStateToProps = () => {
   return {};
 };
 

@@ -75,8 +75,9 @@ componentWillMount(){
   }
 }
 
-const mapStateToProps = ({ taskData }) => {
-  const { companies, loadingData } = taskData;
+const mapStateToProps = ({ taskR, companyR }) => {
+  const { loadingData } = taskR;
+  const { companies } = companyR;
   return { companies, loadingData };
 };
 

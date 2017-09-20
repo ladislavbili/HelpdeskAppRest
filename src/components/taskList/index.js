@@ -49,8 +49,8 @@ class TaskListLoader extends Component {
   }
 }
 
-const mapStateToProps = ({taskData,login}) => {
-  const {loadingData,tasks,projects} = taskData;
+const mapStateToProps = ({taskR,login}) => {
+  const {loadingData,tasks,projects} = taskR;
   const {ACL} = login;
   return {ACL,loadingData,tasks,projects};
 };

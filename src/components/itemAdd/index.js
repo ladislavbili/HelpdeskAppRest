@@ -119,8 +119,8 @@ class ItemAdd extends Component {
     );
   }
 }
-const mapStateToProps = ({ taskData }) => {
-  const { units } = taskData;
+const mapStateToProps = ({ itemR }) => {
+  const { units } = itemR;
   return { units };
 };
 

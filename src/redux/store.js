@@ -5,12 +5,20 @@ import loginReducer from './reducers/loginReducer';
 import drawerReducer from './reducers/drawerReducer';
 import navigationReducer from './reducers/navigationReducer';
 import taskReducer from './reducers/taskReducer';
+import commentReducer from './reducers/commentReducer';
+import companyReducer from './reducers/companyReducer';
+import itemReducer from './reducers/itemReducer';
+import userReducer from './reducers/userReducer';
 
 const reducers = combineReducers({
     login:loginReducer,
     drawer:drawerReducer,
     navigation:navigationReducer,
-    taskData:taskReducer,
+    taskR:taskReducer,
+    commentR:commentReducer,
+    companyR:companyReducer,
+    itemR:itemReducer,
+    userR:userReducer,
   });
 
 const enhancers = compose(

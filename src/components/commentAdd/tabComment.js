@@ -65,9 +65,9 @@ class TabComment extends Component { // eslint-disable-line
       );
     }
   }
-  const mapStateToProps = ({ login,taskData }) => {
+  const mapStateToProps = ({ login,taskR }) => {
     const {userData} = login;
-    const {task} = taskData;
+    const {task} = taskR;
     return {userData,ACL:task.ACL,userACL:login.ACL};
   };
   export default connect(mapStateToProps,{addComment})(TabComment);

@@ -127,9 +127,10 @@ class TabItems extends Component{
     );
   }
 }
-const mapStateToProps = ({ taskData, login }) => {
-  const {task,items, loadingItems,units } = taskData;
-  return { items,loadingItems, units, ACL:task.ACL,userACL:login.ACL};
+const mapStateToProps = ({ taskR, login, itemsR }) => {
+  const { items, loadingItems ,units } = itemsR;
+  const { task } = taskR;
+  return { items, loadingItems, units, ACL:task.ACL ,userACL:login.ACL };
 };
 
 export default connect(mapStateToProps,{startLoadingItems,getItemsAndUnits,openAddingOfItem, deleteItem, openEditingOfItem})(TabItems);

@@ -55,8 +55,8 @@ class SideBar extends Component {
   }
 }
 
-const mapStateToProps = ({ taskData }) => {
-  const { projects } = taskData;
+const mapStateToProps = ({ taskR }) => {
+  const { projects } = taskR;
   return { projects };
 };
 

@@ -30,8 +30,8 @@ class TaskList extends Component {
   }
 }
 
-const mapStateToProps = ({ taskData, login }) => {
-  const { searchedTasks,searching } = taskData;
+const mapStateToProps = ({ taskR, login }) => {
+  const { searchedTasks,searching } = taskR;
   const { ACL } = login;
   return {tasks:searchedTasks,searching, ACL};
 };

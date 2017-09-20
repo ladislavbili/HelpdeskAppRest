@@ -7,6 +7,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import I18n from '../../translations';
 import {saveEdit,deleteTask,saveFilteredEdit} from '../../redux/actions';
 import {formatDate,processInteger} from '../../helperFunctions';
+import TaskLabel from './label';
 
 class TabAtributes extends Component {
   constructor(props) {
@@ -36,9 +37,29 @@ class TabAtributes extends Component {
       deadline:this.props.task.deadline?this.props.task.deadline:null,
       selectingStartedAt:false,
       startedAt:this.props.task.startedAt?this.props.task.startedAt:null,
+      modalLabel:false,
+      labels:this.props.task.labels?this.props.labels.filter(
+        (label)=>this.props.task.labels.some((id)=>id==label.id)):[]
     }
   }
 
+  setLabel(removing,label){
+   if(removing){
+     let index=this.state.labels.findIndex((item)=>item.id==label.id);
+     if(index==-1){
+       return;
+     }
+     let newLabels=[...this.state.labels];
+     newLabels.splice(index,1);
+     this.setState({labels:newLabels});
+   }
+   else{
+     let index=this.state.labels.findIndex((item)=>item.id==label.id);
+     if(index==-1){
+       this.setState({labels:[...this.state.labels,label]});
+     }
+   }
+ }
 
   submitForm(){
     const id = this.props.task.id;
@@ -52,9 +73,10 @@ class TabAtributes extends Component {
     const statusChangedAt = !this.props.task.status||status!=this.props.task.status.id?(new Date()).getTime():this.state.statusChangedAt;
     const createdAt = this.props.task.createdAt;
     const createdBy = this.props.task.createdBy;
+    const labels = this.state.labels.map((label)=>label.id);
     if(this.props.fromFilter){
       this.props.saveFilteredEdit(
-        {id,title,description,deadline,startedAt,important,work,work_time,
+        {id,title,description,deadline,startedAt,important,work,work_time,labels,
           createdAt,updatedAt,statusChangedAt,createdBy,requestedBy,project,company,assignedTo,
           canEdit:this.props.task.canEdit,status},this.state.assignedTo.id?this.state.assignedTo:null,
           this.state.project?{id:this.state.project,title:this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.state.project)].title}:null,
@@ -62,7 +84,7 @@ class TabAtributes extends Component {
     }
     else{
       this.props.saveEdit(
-        {id,title,description,deadline,startedAt,important,work,work_time,
+        {id,title,description,deadline,startedAt,important,work,work_time,labels,
           createdAt,updatedAt,statusChangedAt,createdBy,requestedBy,project,company,assignedTo,
           canEdit:this.props.task.canEdit,status},this.state.assignedTo.id?this.state.assignedTo:null,
           this.state.project?{id:this.state.project,title:this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.state.project)].title}:null,
@@ -242,6 +264,21 @@ class TabAtributes extends Component {
             />
           </View>
 
+          <Text note>Labels</Text>
+          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Button block onPress={()=>{this.setState({modalLabel:true})}}><Text>Select labels</Text></Button>
+          <List
+            dataArray={this.state.labels}
+            renderRow={label =>
+              <ListItem>
+                <View style={{backgroundColor:label.color,paddingLeft:10}}>
+                  <Text style={{color:'white'}}>{label.title}</Text>
+                </View>
+              </ListItem>
+              }
+          />
+        </View>
+
           {
             this.props.task.ACL.delete_task &&
             <Button danger block onPress={this.deleteTask.bind(this)} iconLeft style={{ flexDirection: 'row', borderColor: 'white', marginTop:5, marginBottom:20, borderWidth: 0.5 }}>
@@ -249,7 +286,39 @@ class TabAtributes extends Component {
               <Text style={{ color: 'white' }} >{I18n.t('delete')}</Text>
             </Button>
           }
+          <Modal
+            animationType={"fade"}
+            transparent={false}
+            style={{flex:1}}
+            visible={this.state.modalLabel}
+            onRequestClose={() => this.setState({modalLabel:false})}
+            >
+            <Content style={{ padding: 15 }}>
+            <Header>
+              <Body>
+                <Title>Select labels</Title>
+              </Body>
+            </Header>
 
+           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+             <List
+               dataArray={this.props.labels}
+               renderRow={item =>
+                 <TaskLabel item={item} setLabel={this.setLabel.bind(this)} selected={this.state.labels.some((label)=>item.id==label.id)}/>
+                 }
+             />
+           </View>
+           </Content>
+           <Footer>
+
+             <FooterTab>
+               <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
+                 onPress={()=>this.setState({modalLabel:false})}>
+                 <Text style={{ color: 'white' }}>DONE</Text>
+               </Button>
+             </FooterTab>
+           </Footer>
+         </Modal>
           <Modal
               animationType={"fade"}
               transparent={false}
@@ -393,9 +462,11 @@ class TabAtributes extends Component {
   }
 }
 
-const mapStateToProps = ({ taskData,login }) => {
-  const { users, companies,statuses, projects, task,searchedFilter,searchedWord} = taskData;
-  return { users, companies,statuses, projects, task,ACL:login.ACL,searchedFilter,searchedWord};
+const mapStateToProps = ({ taskR, login, userR, companyR }) => {
+  const { users } = userR;
+  const { companies } = companyR;
+  const { statuses, projects, task,searchedFilter,searchedWord,labels} = taskR;
+  return { users, companies,statuses, projects, task,ACL:login.ACL,searchedFilter,searchedWord,labels};
 };
 
 export default connect(mapStateToProps,{saveEdit, deleteTask,saveFilteredEdit})(TabAtributes);

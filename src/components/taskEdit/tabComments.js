@@ -64,8 +64,9 @@ class TabComments extends Component {
     );
   }
 }
-const mapStateToProps = ({ taskData, login }) => {
-  const { comments, loadingComments, task } = taskData;
+const mapStateToProps = ({ taskR, login, commentR }) => {
+  const { comments, loadingComments } = commentR;
+  const { task } = taskR;
   return { comments,loadingComments, ACL:task.ACL,userACL:login.ACL};
 };
 
