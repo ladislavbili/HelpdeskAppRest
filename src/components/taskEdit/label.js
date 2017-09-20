@@ -10,7 +10,7 @@ class Label extends Component {
 
   render() {
     return (
-      <ListItem thumbnail onPress={()=>{this.props.setLabel(this.state.selected,this.props.item);this.setState({selected:!this.state.selected});}}>
+      <ListItem thumbnail onPress={()=>{this.props.setLabel(this.state.selected,this.props.item);this.setState({selected:!this.state.selected});this.props.inputChanged();}}>
         <Left>
             <CheckBox checked={this.state.selected}  onPress={()=>{this.props.setLabel(this.state.selected,this.props.item);this.setState({selected:!this.state.selected});}} />
         </Left>

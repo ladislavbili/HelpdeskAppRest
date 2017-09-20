@@ -12,6 +12,19 @@ import {getTaskAttributes} from '../../redux/actions';
 
 
 class TaskEdit extends Component {
+  constructor(props){
+    super(props);
+    this.state={saveFunction:null, canSave:false, changed:false}
+  }
+
+  setFunction(func,canSave){
+    this.setState({saveFunction:func,canSave});
+  }
+
+  inputChanged(){
+    this.setState({changed:true});
+  }
+
   componentWillMount(){
     this.props.getTaskAttributes(this.props.id);
   }
@@ -35,11 +48,17 @@ class TaskEdit extends Component {
           <Body>
             <Title>Task Edit</Title>
           </Body>
-          <Right />
-        </Header>
+          {
+            this.state.canSave && this.state.changed && (<Right>
+              <Button transparent onPress={()=>this.state.saveFunction?this.state.saveFunction():()=>{}}>
+                <Icon active style={{ color: 'white', padding:10 }} name="ios-checkmark-circle-outline" />
+              </Button>
+            </Right>)
+          }
+          </Header>
            <Tabs>
              <Tab heading="Attributes">
-                 <TabAtributes id={this.props.id} fromFilter={this.props.fromFilter} />
+                 <TabAtributes id={this.props.id} fromFilter={this.props.fromFilter} saveFunction={this.setFunction.bind(this)} inputChanged={this.inputChanged.bind(this)} />
              </Tab>
              <Tab heading="Comments">
                  <TabComments id={this.props.id} />

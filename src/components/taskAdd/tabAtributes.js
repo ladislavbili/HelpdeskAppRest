@@ -39,6 +39,9 @@ class TabAtributes extends Component {
       labels:[]
     }
   }
+  componentDidMount(){
+    this.props.saveFunction(this.submitForm.bind(this));
+  }
 
   setLabel(removing,label){
    if(removing){
@@ -400,22 +403,6 @@ class TabAtributes extends Component {
           </Modal>
 
         </Content>
-        <Footer>
-          <FooterTab>
-            <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }} onPress={Actions.pop}>
-              <Icon active style={{ color: 'white' }} name="md-add" />
-              <Text style={{ color: 'white' }} >{I18n.t('cancel')}</Text>
-            </Button>
-          </FooterTab>
-          <FooterTab>
-            <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
-            onPress={this.submitForm.bind(this)}
-            >
-              <Icon active name="md-add" style={{ color: 'white' }} />
-              <Text style={{ color: 'white' }} >{I18n.t('add')}</Text>
-            </Button>
-          </FooterTab>
-        </Footer>
       </Container>
     );
   }

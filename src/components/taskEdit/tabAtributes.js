@@ -43,7 +43,12 @@ class TabAtributes extends Component {
     }
   }
 
+  componentDidMount(){
+    this.props.saveFunction(this.submitForm.bind(this),(this.props.task.canEdit||this.props.ACL.update_all_tasks||this.props.task.ACL.resolve_task));
+  }
+
   setLabel(removing,label){
+    this.props.inputChanged();
    if(removing){
      let index=this.state.labels.findIndex((item)=>item.id==label.id);
      if(index==-1){
@@ -126,7 +131,7 @@ class TabAtributes extends Component {
               disabled={this.state.disabled}
               placeholder={I18n.t('taskAddTaskNameLabel')}
               value={ this.state.title }
-              onChangeText={ value => this.setState({title:value}) }
+              onChangeText={ value => {this.setState({title:value}); this.props.inputChanged();} }
             />
           </View>
           <View style={{flexDirection:'row'}}>
@@ -138,7 +143,7 @@ class TabAtributes extends Component {
               {
                   this.state.pickingStatus && this.props.statuses.map((status)=>
                       !(this.state.status.id==status.id) &&
-                      <Button style={{backgroundColor:status.color,flex:1}} onPress={()=>this.setState({status:status,pickingStatus:false})} key={status.id} >
+                      <Button style={{backgroundColor:status.color,flex:1}} onPress={()=>{this.setState({status:status,pickingStatus:false});this.props.inputChanged();}} key={status.id} >
                         <Text style={{color:'white',flex:1,textAlign:'center'}}>{status.title}</Text>
                       </Button>)
               }
@@ -150,7 +155,7 @@ class TabAtributes extends Component {
               style={{height:Math.max(35, this.state.descriptionHeight)}}
               multiline={true}
               disabled={this.state.disabled}
-              onChange={ event => this.setState({description:event.nativeEvent.text}) }
+              onChange={ event => {this.setState({description:event.nativeEvent.text});this.props.inputChanged();} }
               onContentSizeChange={(event) => this.setState({ descriptionHeight: event.nativeEvent.contentSize.height })}
               value={ this.state.description }
               placeholder={I18n.t('taskAddDescriptionLabel')}
@@ -163,7 +168,7 @@ class TabAtributes extends Component {
               style={{height:Math.max(35, this.state.workHeight)}}
               multiline={true}
               disabled={this.state.disabled}
-              onChange={ event => this.setState({work:event.nativeEvent.text}) }
+              onChange={ event => {this.setState({work:event.nativeEvent.text});this.props.inputChanged();} }
               onContentSizeChange={(event) => this.setState({ workHeight: event.nativeEvent.contentSize.height })}
               value={ this.state.work }
               placeholder={I18n.t('taskAddWorkLabel')}
@@ -178,7 +183,7 @@ class TabAtributes extends Component {
               iosHeader={I18n.t('selectOne')}
               mode="dropdown"
               selectedValue={this.state.project}
-              onValueChange={(value)=>{this.setState({project : value})}}>
+              onValueChange={(value)=>{this.setState({project : value});this.props.inputChanged();}}>
               {
                 this.props.projects.map((project)=>
                     (<Item label={project.title?project.title:''} key={project.id} value={project.id} />)
@@ -212,7 +217,7 @@ class TabAtributes extends Component {
 
           <Text note>{I18n.t('assignedTo')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingAssignedTo:true})}>
+            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>{this.setState({selectingAssignedTo:true});this.props.inputChanged();}}>
             <Left>
               <Text style={{textAlign:'left',color:'black'}}>{this.state.assignedTo==null ? I18n.t('taskAddSelectUser') : (
                 (this.state.assignedTo.name)?
@@ -234,7 +239,7 @@ class TabAtributes extends Component {
             <DateTimePicker
               mode="datetime"
               isVisible={this.state.selectingDeadline}
-              onConfirm={(date)=>this.setState({deadline:(new Date(date)).getTime()})}
+              onConfirm={(date)=>{this.setState({deadline:(new Date(date)).getTime()});this.props.inputChanged();}}
               onCancel={()=>this.setState({selectingDeadline:false})}
             />
           </View>
@@ -249,7 +254,7 @@ class TabAtributes extends Component {
             <DateTimePicker
               mode="datetime"
               isVisible={this.state.selectingStartedAt}
-              onConfirm={(date)=>this.setState({startedAt:(new Date(date)).getTime()})}
+              onConfirm={(date)=>{this.setState({startedAt:(new Date(date)).getTime()});this.props.inputChanged();}}
               onCancel={()=>this.setState({selectingStartedAt:false})}
             />
           </View>
@@ -260,7 +265,7 @@ class TabAtributes extends Component {
               disabled={this.state.disabled}
               value={this.state.work_time}
               keyboardType='numeric'
-              onChangeText={ value => {let result = processInteger(value);this.setState({work_time:(result?result:this.state.work_time)})} }
+              onChangeText={ value => {let result = processInteger(value);this.setState({work_time:(result?result:this.state.work_time)});this.props.inputChanged();} }
             />
           </View>
 
@@ -304,7 +309,7 @@ class TabAtributes extends Component {
              <List
                dataArray={this.props.labels}
                renderRow={item =>
-                 <TaskLabel item={item} setLabel={this.setLabel.bind(this)} selected={this.state.labels.some((label)=>item.id==label.id)}/>
+                 <TaskLabel item={item} setLabel={this.setLabel.bind(this)} inputChanged={this.props.inputChanged} selected={this.state.labels.some((label)=>item.id==label.id)}/>
                  }
              />
            </View>
@@ -342,7 +347,7 @@ class TabAtributes extends Component {
             <List>
             {
               this.props.companies.map((company) =>
-              company.title.toLowerCase().includes(this.state.filterWord.toLowerCase()) && <ListItem button key={company.id} onPress={()=>this.setState({company:company,selectingCompany:false})} >
+              company.title.toLowerCase().includes(this.state.filterWord.toLowerCase()) && <ListItem button key={company.id} onPress={()=>{this.setState({company:company,selectingCompany:false});this.props.inputChanged();}} >
                 <Body>
                   <Text>{company.title}</Text>
                 </Body>
@@ -380,7 +385,7 @@ class TabAtributes extends Component {
             {
               (([{id:null,name:I18n.t('nobody'), email:I18n.t('none')}]).concat(this.props.users)).map((user) =>
               (user.email+user.name).toLowerCase().includes(this.state.filterWordRequester.toLowerCase()) &&
-              <ListItem button key={user.id} onPress={()=>this.setState({requestedBy:user,selectingRequester:false})} >
+              <ListItem button key={user.id} onPress={()=>{this.setState({requestedBy:user,selectingRequester:false});this.props.inputChanged();}} >
                 <Body>
                 {
                   (user.name)?<Text>{user.name}</Text>:null
@@ -413,7 +418,7 @@ class TabAtributes extends Component {
             <ListItem>
               <Item rounded>
                 <Icon name="ios-search" />
-                <Input placeholder={I18n.t('search')} value={this.state.filterWordAssignedTo} onChangeText={((value)=>this.setState({filterWordAssignedTo:value}))} />
+                <Input placeholder={I18n.t('search')} value={this.state.filterWordAssignedTo} onChangeText={(value)=>this.setState({filterWordAssignedTo:value})} />
               </Item>
             </ListItem>
 
@@ -421,7 +426,7 @@ class TabAtributes extends Component {
             {
               (([{id:null,name:I18n.t('nobody'), email:I18n.t('none')}]).concat(this.props.users)).map((user) =>
               (user.email+user.name).toLowerCase().includes(this.state.filterWordAssignedTo.toLowerCase()) &&
-              <ListItem button key={user.id} onPress={()=>this.setState({assignedTo:user,selectingAssignedTo:false})} >
+              <ListItem button key={user.id} onPress={()=>{this.setState({assignedTo:user,selectingAssignedTo:false});this.props.inputChanged();}} >
                 <Body>
                 {
                   (user.name)?<Text>{user.name}</Text>:null
@@ -439,24 +444,6 @@ class TabAtributes extends Component {
           </Modal>
 
         </Content>
-        <Footer>
-          <FooterTab>
-            <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }} onPress={Actions.pop}>
-              <Icon active style={{ color: 'white' }} name="md-add" />
-              <Text style={{ color: 'white' }} >{I18n.t('cancel')}</Text>
-            </Button>
-          </FooterTab>
-          { !this.state.disabled &&
-            <FooterTab>
-              <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
-              onPress={this.submitForm.bind(this)}
-              >
-                <Icon active name="md-add" style={{ color: 'white' }} />
-                <Text style={{ color: 'white' }} >{I18n.t('save')}</Text>
-              </Button>
-            </FooterTab>
-          }
-        </Footer>
       </Container>
     );
   }

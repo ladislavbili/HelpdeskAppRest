@@ -127,8 +127,8 @@ class TabItems extends Component{
     );
   }
 }
-const mapStateToProps = ({ taskR, login, itemsR }) => {
-  const { items, loadingItems ,units } = itemsR;
+const mapStateToProps = ({ taskR, login, itemR }) => {
+  const { items, loadingItems ,units } = itemR;
   const { task } = taskR;
   return { items, loadingItems, units, ACL:task.ACL ,userACL:login.ACL };
 };

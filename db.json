@@ -152,7 +152,7 @@
   "tasks": [
     {
       "id": 1,
-      "title": "task name edited",
+      "title": "task name editedeee",
       "assignedTo": {
         "id": 1,
         "username": "mk",
@@ -175,8 +175,8 @@
       "work": "what has been done til now now",
       "work_time": "100",
       "createdAt": 1503479889210,
-      "updatedAt": 1505907116174,
-      "statusChangedAt": 1505907116174,
+      "updatedAt": 1505918408920,
+      "statusChangedAt": 1505918408920,
       "createdBy": {
         "id": 1,
         "username": "mk",
@@ -255,18 +255,50 @@
         "color": "#2DA3EC"
       },
       "id": 3
+    },
+    {
+      "title": "hornym",
+      "description": "menu",
+      "deadline": null,
+      "startedAt": null,
+      "important": true,
+      "work": "",
+      "work_time": "0",
+      "labels": [],
+      "createdAt": 1505916013684,
+      "updatedAt": 1505916182913,
+      "statusChangedAt": 1505916182913,
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej Kurka",
+        "email": "mk@email.sk"
+      },
+      "requestedBy": {
+        "id": 1
+      },
+      "project": null,
+      "company": null,
+      "assignedTo": null,
+      "canEdit": true,
+      "status": {
+        "id": 1,
+        "title": "New",
+        "color": "#2DA3EC"
+      },
+      "id": 4
     }
   ],
   "task": [
     {
       "id": 1,
       "ACL": {
-        "create_task": true,
-        "resolve_task": true,
-        "delete_task": true,
+        "create_task": false,
+        "resolve_task": false,
+        "delete_task": false,
         "view_internal_note": false
       },
-      "title": "task name edited",
+      "title": "task name editedeee",
       "labels": [
         1,
         4
@@ -278,8 +310,8 @@
       "work": "what has been done til now now",
       "work_time": "100",
       "createdAt": 1503479889210,
-      "updatedAt": 1505907116174,
-      "statusChangedAt": 1505907116174,
+      "updatedAt": 1505918408920,
+      "statusChangedAt": 1505918408920,
       "createdBy": {
         "id": 1,
         "username": "mk",
@@ -394,6 +426,42 @@
         "view_internal_note": false
       },
       "id": 3
+    },
+    {
+      "title": "hornym",
+      "description": "menu",
+      "deadline": null,
+      "startedAt": null,
+      "important": true,
+      "work": "",
+      "work_time": "0",
+      "labels": [],
+      "createdAt": 1505916013684,
+      "updatedAt": 1505916182913,
+      "statusChangedAt": 1505916182913,
+      "createdBy": {
+        "id": 1,
+        "username": "mk",
+        "name": "Matej Kurka",
+        "email": "mk@email.sk"
+      },
+      "requestedBy": {
+        "id": 1
+      },
+      "project": {},
+      "company": null,
+      "assignedTo": null,
+      "canEdit": true,
+      "status": {
+        "id": 1
+      },
+      "ACL": {
+        "create_task": true,
+        "resolve_task": true,
+        "delete_task": true,
+        "view_internal_note": false
+      },
+      "id": 4
     }
   ],
   "users": [
