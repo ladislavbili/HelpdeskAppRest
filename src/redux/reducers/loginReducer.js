@@ -4,7 +4,8 @@ const initialState = {
   authenticated: false,
   user: null,
   error: '',
-  loading:false,
+  token:null,
+  loading:false
 };
 
 export default function loginReducer(state = initialState, action) {
@@ -13,13 +14,16 @@ export default function loginReducer(state = initialState, action) {
       return { ...state, loading: true, error: '' };
     case LOGIN_SUCCESS:
       return {
+        ...state,
         authenticated: true,
         user: action.payload.user,
+        token: action.payload.token,
         error: '',
         loading:false,
       };
     case LOGIN_FAIL:
       return {
+        ...state,
         authenticated: false,
         user: null,
         error: 'Login failed, invalid name or password',
@@ -27,6 +31,7 @@ export default function loginReducer(state = initialState, action) {
       };
     case LOGIN_LOGOUT:
       return {
+        ...state,
         authenticated: false,
         user: null,
         error: '',

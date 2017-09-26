@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View,ActivityIndicator } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-import { Container, Button, Text, Content, Item, Form, Input, Label, Header, Body, Title } from 'native-base';
+import { View, Container, Button, Text, Content, Item, Form, Input, Label, Header, Body, Title } from 'native-base';
 import styles from './styles';
 import {loginUser} from '../../redux/actions';
+
 class Login extends Component {
   constructor(props){
     super(props);

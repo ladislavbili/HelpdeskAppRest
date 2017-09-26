@@ -1,16 +1,44 @@
-
 import React, { Component } from 'react';
 import { Tab, Tabs, Container, Header, Title, Button, Icon, Left, Right, Body} from 'native-base';
 import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
+import { ActivityIndicator } from 'react-native';
+
 import TabAtributes from './tabAtributes';
-import styles from './styles';
+import TabComments from './tabComments';
+import TabItems from './tabItems';
+
+import {getTaskAttributes} from '../../redux/actions';
 
 
 class TaskEdit extends Component {
+  constructor(props){
+    super(props);
+    this.state={saveFunction:null, canSave:false, changed:false}
+  }
 
+  setFunction(func,canSave){
+    this.setState({saveFunction:func,canSave});
+  }
+
+  inputChanged(){
+    this.setState({changed:true});
+  }
+
+  componentWillMount(){
+    this.props.getTaskAttributes(this.props.id);
+  }
   render() {
+    if(this.props.loadingData){
+      return (
+        <ActivityIndicator
+        animating size={ 'large' }
+        color='#007299' />
+      )
+    }
+
     return (
-      <Container style={styles.container}>
+      <Container>
         <Header>
           <Left>
           <Button transparent onPress={() => Actions.pop()}>
@@ -20,16 +48,32 @@ class TaskEdit extends Component {
           <Body>
             <Title>Task Edit</Title>
           </Body>
-          <Right />
-        </Header>
+          {
+            this.state.canSave && this.state.changed && (<Right>
+              <Button transparent onPress={()=>this.state.saveFunction?this.state.saveFunction():()=>{}}>
+                <Icon active style={{ color: 'white', padding:10 }} name="ios-checkmark-circle-outline" />
+              </Button>
+            </Right>)
+          }
+          </Header>
            <Tabs>
-               <Tab heading="Attributes">
-                   <TabAtributes data={this.props.data} />
-               </Tab>
+             <Tab heading="Attributes">
+                 <TabAtributes id={this.props.id} fromFilter={this.props.fromFilter} saveFunction={this.setFunction.bind(this)} inputChanged={this.inputChanged.bind(this)} />
+             </Tab>
+             <Tab heading="Comments">
+                 <TabComments id={this.props.id} />
+             </Tab>
+             <Tab heading="Items">
+                 <TabItems id={this.props.id} />
+             </Tab>
            </Tabs>
       </Container>
     );
   }
 }
 
-export default TaskEdit;
+const mapStateToProps = ({ taskR }) => {
+  return { loadingData} = taskR;
+};
+
+export default connect(mapStateToProps,{getTaskAttributes})(TaskEdit);

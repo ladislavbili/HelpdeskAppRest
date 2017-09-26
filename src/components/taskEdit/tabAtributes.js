@@ -1,106 +1,189 @@
 import React, { Component } from 'react';
-import { Modal } from 'react-native';
+import { Modal, Alert } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
-import { View, Body, Container, Content, Icon, Input, Item, Label, Text, Footer, FooterTab, Button, Picker,  ListItem, Header,Title , Left, Right, List } from 'native-base';
-import styles from './styles';
+import { View, Body, Container, Content, Icon, Input, Item, Label, Text, Footer, FooterTab, Button, Picker,  ListItem, Header,Title , Left, Right, List , CheckBox } from 'native-base';
+import DateTimePicker from 'react-native-modal-datetime-picker';
+import I18n from '../../translations';
+import {saveEdit,deleteTask,saveFilteredEdit} from '../../redux/actions';
+import {formatDate,processInteger} from '../../helperFunctions';
+import TaskLabel from './label';
 
 class TabAtributes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      taskName:this.props.data.title,
-      taskDescription:this.props.data.description,
-      assignedTo:this.props.data.assignedUser?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.data.assignedUser.id)]:null,
-      requester:this.props.data.requester?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.data.requester.id)]:null,
-      status:this.props.data.status?this.props.data.status:{color:'blue',name:'Statusss'},
-      duration:this.props.data.duration?this.props.data.duration.toString():'0',
+      title:this.props.task.title?this.props.task.title:'',
+      assignedTo:this.props.task.assignedTo?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.task.assignedTo.id)]:{id:null,name:I18n.t('nobody'), email:I18n.t('none')},
+      requestedBy:this.props.task.requestedBy?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.task.requestedBy.id)]:{id:null,name:I18n.t('nobody'), email:I18n.t('none')},
+      status:this.props.task.status?this.props.statuses[this.props.statuses.findIndex((item)=>item.id==this.props.task.status.id)]:this.props.statuses[0],
+      work_time:this.props.task.work_time?this.props.task.work_time.toString():'0',
+      description:this.props.task.description?this.props.task.description:'',
       descriptionHeight:100,
-      company:this.props.data.company?this.props.companies[this.props.companies.findIndex((item)=>item.id==this.props.data.company.id)]:null,
-      project:this.props.data.project?this.props.data.project.id:this.props.projects[0].id,
-      statusChangedAt:this.props.data.statusChangedAt?this.props.data.statusChangedAt.toString():'',
+      work:this.props.task.work?this.props.task.work:'',
+      workHeight:100,
+      company:this.props.task.company?this.props.companies[this.props.companies.findIndex((item)=>item.id==this.props.task.company.id)]:null,
+      project:this.props.task.project?this.props.task.project.id:this.props.projects[0].id,
+      statusChangedAt:this.props.task.statusChangedAt?formatDate(this.props.task.statusChangedAt):'',
+      disabled:!(this.props.task.canEdit||this.props.ACL.update_all_tasks||this.props.task.ACL.resolve_task),
+      important:this.props.task.important?true:false,
       selectingCompany:false,
       filterWord:'',
       selectingRequester:false,
       filterWordRequester:'',
       selectingAssignedTo:false,
       filterWordAssignedTo:'',
+      selectingDeadline:false,
+      deadline:this.props.task.deadline?this.props.task.deadline:null,
+      selectingStartedAt:false,
+      startedAt:this.props.task.startedAt?this.props.task.startedAt:null,
+      modalLabel:false,
+      labels:this.props.task.labels?this.props.labels.filter(
+        (label)=>this.props.task.labels.some((id)=>id==label.id)):[]
     }
-    this.setWorkTime.bind(this);
   }
 
-  setWorkTime(input) {
-    if(!/^\d*$/.test(input)){
-      return;
-    }
-    if(input.length==2 && input[0]=='0'){
-      this.setState({duration:input[1]});
-    }
-    else{
-      this.setState({duration:input});
-    }
+  componentDidMount(){
+    this.props.saveFunction(this.submitForm.bind(this),(this.props.task.canEdit||this.props.ACL.update_all_tasks||this.props.task.ACL.resolve_task));
   }
+
+  setLabel(removing,label){
+    this.props.inputChanged();
+   if(removing){
+     let index=this.state.labels.findIndex((item)=>item.id==label.id);
+     if(index==-1){
+       return;
+     }
+     let newLabels=[...this.state.labels];
+     newLabels.splice(index,1);
+     this.setState({labels:newLabels});
+   }
+   else{
+     let index=this.state.labels.findIndex((item)=>item.id==label.id);
+     if(index==-1){
+       this.setState({labels:[...this.state.labels,label]});
+     }
+   }
+ }
 
   submitForm(){
+    const id = this.props.task.id;
+    const {title,description,work_time,deadline,startedAt,work, important} = this.state;
+    const assignedTo = this.state.assignedTo.id?{id:this.state.assignedTo.id}:null;
+    const requestedBy = this.state.requestedBy.id?{id:this.state.requestedBy.id}:null;
+    const status = {id:this.state.status.id};
+    const company = this.state.company?{id:this.state.company.id}:null;
+    const project = {id:this.state.project};
+    const updatedAt = (new Date()).getTime();
+    const statusChangedAt = !this.props.task.status||status!=this.props.task.status.id?(new Date()).getTime():this.state.statusChangedAt;
+    const createdAt = this.props.task.createdAt;
+    const createdBy = this.props.task.createdBy;
+    const labels = this.state.labels.map((label)=>label.id);
+    if(this.props.fromFilter){
+      this.props.saveFilteredEdit(
+        {id,title,description,deadline,startedAt,important,work,work_time,labels,
+          createdAt,updatedAt,statusChangedAt,createdBy,requestedBy,project,company,assignedTo,
+          canEdit:this.props.task.canEdit,status},this.state.assignedTo.id?this.state.assignedTo:null,
+          this.state.project?{id:this.state.project,title:this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.state.project)].title}:null,
+          this.state.status, this.props.searchedFilter,this.props.searchedWord);
+    }
+    else{
+      this.props.saveEdit(
+        {id,title,description,deadline,startedAt,important,work,work_time,labels,
+          createdAt,updatedAt,statusChangedAt,createdBy,requestedBy,project,company,assignedTo,
+          canEdit:this.props.task.canEdit,status},this.state.assignedTo.id?this.state.assignedTo:null,
+          this.state.project?{id:this.state.project,title:this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.state.project)].title}:null,
+          this.state.status
+        );
+    }
     Actions.pop();
   }
 
+  deleteTask(){
+    Alert.alert(
+      I18n.t('taskEditdeletingTask'),
+      I18n.t('taskEditdeletingTaskMessage'),
+      [
+        {text: I18n.t('cancel'), style: 'cancel'},
+        {text: I18n.t('ok'), onPress: () =>{
+          this.props.deleteTask(this.props.task.id);
+          Actions.pop();
+        }},
+      ],
+      { cancelable: false }
+    )
+  }
+
   render() {
-    let statusButtonStyle={flex:1};
-    if(this.state.status=='' && this.props.data.status){
-      statusButtonStyle={backgroundColor:this.props.data.status.color,flex:1};
-    }
-    else if (this.state.status!='') {
-      statusButtonStyle={backgroundColor:this.state.status.color,flex:1};
-    }
+    let statusButtonStyle={backgroundColor:this.state.status.color,flex:1};
     return (
       <Container>
         <Content style={{ padding: 15 }}>
 
-          <Text note>Task Name</Text>
+          <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
+          <CheckBox checked={this.state.important} disabled={this.state.disabled} color='#3F51B5' onPress={()=>this.setState({important:!this.state.important})}/>
+            <Label style={{marginLeft:15}}>Important</Label>
+          </Item>
+
+          <Text note>{I18n.t('taskAddTaskName')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
-              placeholder="Enter task name"
-              value={ this.state.taskName }
-              onChangeText={ value => this.setState({taskName:value}) }
+              disabled={this.state.disabled}
+              placeholder={I18n.t('taskAddTaskNameLabel')}
+              value={ this.state.title }
+              onChangeText={ value => {this.setState({title:value}); this.props.inputChanged();} }
             />
           </View>
-
           <View style={{flexDirection:'row'}}>
-            <Text note>Status</Text>
+            <Text note>{I18n.t('status')}</Text>
             <Text note  style={{textAlign: 'right',flex:1}}>{this.state.statusChangedAt}</Text>
           </View>
-
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button style={statusButtonStyle} onPress={()=>this.setState({pickingStatus:!this.state.pickingStatus})}><Text style={{color:'white',flex:1,textAlign:'center'}}>{this.state.status =='' && this.props.data.status ? this.props.data.status.name : this.state.status ==''?'Choose status':this.state.status.name}</Text></Button>
+            <Button style={statusButtonStyle} disabled={this.state.disabled} onPress={()=>this.setState({pickingStatus:!this.state.pickingStatus})}><Text style={{color:'white',flex:1,textAlign:'center'}}>{this.state.status.title}</Text></Button>
               {
-              this.state.pickingStatus && this.props.statuses.map((status)=>
-                  this.state.status!=status && !(this.props.data.status.id==status.id && this.state.status=='') &&
-                  <Button style={{backgroundColor:status.color,flex:1}} onPress={()=>this.setState({status:status,pickingStatus:false})} key={status.id} >
-                    <Text style={{color:'white',flex:1,textAlign:'center'}}>{status.name}</Text>
-                  </Button>)
+                  this.state.pickingStatus && this.props.statuses.map((status)=>
+                      !(this.state.status.id==status.id) &&
+                      <Button style={{backgroundColor:status.color,flex:1}} onPress={()=>{this.setState({status:status,pickingStatus:false});this.props.inputChanged();}} key={status.id} >
+                        <Text style={{color:'white',flex:1,textAlign:'center'}}>{status.title}</Text>
+                      </Button>)
               }
           </View>
 
-          <Text note>Description</Text>
+          <Text note>{I18n.t('taskAddDescription')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
               style={{height:Math.max(35, this.state.descriptionHeight)}}
               multiline={true}
-              onChange={ event => this.setState({taskDescription:event.nativeEvent.text,descriptionHeight:event.nativeEvent.text.length/1.2}) }
-              value={ this.state.taskDescription }
-              placeholder="Popis"
+              disabled={this.state.disabled}
+              onChange={ event => {this.setState({description:event.nativeEvent.text});this.props.inputChanged();} }
+              onContentSizeChange={(event) => this.setState({ descriptionHeight: event.nativeEvent.contentSize.height })}
+              value={ this.state.description }
+              placeholder={I18n.t('taskAddDescriptionLabel')}
             />
           </View>
 
+          <Text note>{I18n.t('taskAddWork')}</Text>
+          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+            <Input
+              style={{height:Math.max(35, this.state.workHeight)}}
+              multiline={true}
+              disabled={this.state.disabled}
+              onChange={ event => {this.setState({work:event.nativeEvent.text});this.props.inputChanged();} }
+              onContentSizeChange={(event) => this.setState({ workHeight: event.nativeEvent.contentSize.height })}
+              value={ this.state.work }
+              placeholder={I18n.t('taskAddWorkLabel')}
+            />
+          </View>
 
-          <Text note>Project</Text>
+          <Text note>{I18n.t('project')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Picker
+              enabled={!this.state.disabled}
               supportedOrientations={['portrait', 'landscape']}
+              iosHeader={I18n.t('selectOne')}
               mode="dropdown"
               selectedValue={this.state.project}
-              onValueChange={(value)=>{this.setState({project : value})}}>
+              onValueChange={(value)=>{this.setState({project : value});this.props.inputChanged();}}>
               {
                 this.props.projects.map((project)=>
                     (<Item label={project.title?project.title:''} key={project.id} value={project.id} />)
@@ -109,59 +192,138 @@ class TabAtributes extends Component {
             </Picker>
           </View>
 
-          <Text note>Requester</Text>
+          <Text note>{I18n.t('requester')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingRequester:true})}>
+            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingRequester:true})}>
               <Left>
-                <Text style={{textAlign:'left',color:'black'}}>{this.state.requester==null ? "Určite žiadateľa" : (
-                  (this.state.requester.firstName||this.state.requester.surName)?<Text>
-                    {
-                    this.state.requester.firstName?
-                    this.state.requester.firstName+' ':
-                    ''+this.state.requester.surName?this.state.requester.surName:''
-                  }</Text>:
-                <Text>{this.state.requester.email}</Text>
+                <Text style={{textAlign:'left',color:'black'}}>{this.state.requestedBy==null ? I18n.t('taskAddSelectUser') : (
+                  (this.state.requestedBy.name)?
+                  <Text>{this.state.requestedBy.name}</Text>:
+                <Text>{this.state.requestedBy.email}</Text>
 
                 )}</Text>
               </Left>
             </Button>
           </View>
 
-          <Text note>Company</Text>
+          <Text note>{I18n.t('company')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingCompany:true})}>
+            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingCompany:true})}>
               <Left>
-                <Text style={{textAlign:'left',color:'black'}}>{this.state.company==null ? "Výber firmy" : this.state.company.name}</Text>
+                <Text style={{textAlign:'left',color:'black'}}>{this.state.company==null ? I18n.t('taskAddCompanySelect') : this.state.company.title}</Text>
               </Left>
             </Button>
           </View>
 
-          <Text note>Assigned to</Text>
+          <Text note>{I18n.t('assignedTo')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingAssignedTo:true})}>
-              <Left>
-                <Text style={{textAlign:'left',color:'black'}}>{this.state.assignedTo==null ? "Výber riešiteľa" : (
-                  (this.state.assignedTo.firstName||this.state.assignedTo.surName)?<Text>
-                    {
-                    this.state.assignedTo.firstName?
-                    this.state.assignedTo.firstName+' ':
-                    ''+this.state.assignedTo.surName?this.state.assignedTo.surName:''
-                  }</Text>:
-                <Text>{this.state.assignedTo.email}</Text>
-                )}</Text>
-              </Left>
+            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>{this.setState({selectingAssignedTo:true});this.props.inputChanged();}}>
+            <Left>
+              <Text style={{textAlign:'left',color:'black'}}>{this.state.assignedTo==null ? I18n.t('taskAddSelectUser') : (
+                (this.state.assignedTo.name)?
+                <Text>{this.state.assignedTo.name}</Text>:
+              <Text>{this.state.assignedTo.email}</Text>
+
+              )}</Text>
+            </Left>
             </Button>
           </View>
 
-          <Text note>Work hours</Text>
+          <Text note>{I18n.t('deadline')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Input
-              value={this.state.duration}
-              keyboardType='numeric'
-              onChangeText={ value => this.setWorkTime(value) }
+            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingDeadline:true})}>
+              <Left>
+                <Text style={{textAlign:'left',color:'black'}}>{this.state.deadline==null ? I18n.t('taskAddDeadlineSelect') : formatDate(this.state.deadline)}</Text>
+              </Left>
+            </Button>
+            <DateTimePicker
+              mode="datetime"
+              isVisible={this.state.selectingDeadline}
+              onConfirm={(date)=>{this.setState({deadline:(new Date(date)).getTime()});this.props.inputChanged();}}
+              onCancel={()=>this.setState({selectingDeadline:false})}
             />
           </View>
 
+          <Text note>{I18n.t('pendingAt')}</Text>
+          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingStartedAt:true})}>
+              <Left>
+                <Text style={{textAlign:'left',color:'black'}}>{this.state.startedAt==null ? I18n.t('taskAddStartedAtSelect') : formatDate(this.state.startedAt)}</Text>
+              </Left>
+            </Button>
+            <DateTimePicker
+              mode="datetime"
+              isVisible={this.state.selectingStartedAt}
+              onConfirm={(date)=>{this.setState({startedAt:(new Date(date)).getTime()});this.props.inputChanged();}}
+              onCancel={()=>this.setState({selectingStartedAt:false})}
+            />
+          </View>
+
+          <Text note>{I18n.t('workHours')}</Text>
+          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+            <Input
+              disabled={this.state.disabled}
+              value={this.state.work_time}
+              keyboardType='numeric'
+              onChangeText={ value => {let result = processInteger(value);this.setState({work_time:(result?result:this.state.work_time)});this.props.inputChanged();} }
+            />
+          </View>
+
+          <Text note>Labels</Text>
+          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Button block onPress={()=>{this.setState({modalLabel:true})}}><Text>Select labels</Text></Button>
+          <List
+            dataArray={this.state.labels}
+            renderRow={label =>
+              <ListItem>
+                <View style={{backgroundColor:label.color,paddingLeft:10}}>
+                  <Text style={{color:'white'}}>{label.title}</Text>
+                </View>
+              </ListItem>
+              }
+          />
+        </View>
+
+          {
+            this.props.task.ACL.delete_task &&
+            <Button danger block onPress={this.deleteTask.bind(this)} iconLeft style={{ flexDirection: 'row', borderColor: 'white', marginTop:5, marginBottom:20, borderWidth: 0.5 }}>
+              <Icon active style={{ color: 'white' }} name="trash" />
+              <Text style={{ color: 'white' }} >{I18n.t('delete')}</Text>
+            </Button>
+          }
+          <Modal
+            animationType={"fade"}
+            transparent={false}
+            style={{flex:1}}
+            visible={this.state.modalLabel}
+            onRequestClose={() => this.setState({modalLabel:false})}
+            >
+            <Content style={{ padding: 15 }}>
+            <Header>
+              <Body>
+                <Title>Select labels</Title>
+              </Body>
+            </Header>
+
+           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+             <List
+               dataArray={this.props.labels}
+               renderRow={item =>
+                 <TaskLabel item={item} setLabel={this.setLabel.bind(this)} inputChanged={this.props.inputChanged} selected={this.state.labels.some((label)=>item.id==label.id)}/>
+                 }
+             />
+           </View>
+           </Content>
+           <Footer>
+
+             <FooterTab>
+               <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
+                 onPress={()=>this.setState({modalLabel:false})}>
+                 <Text style={{ color: 'white' }}>DONE</Text>
+               </Button>
+             </FooterTab>
+           </Footer>
+         </Modal>
           <Modal
               animationType={"fade"}
               transparent={false}
@@ -170,7 +332,7 @@ class TabAtributes extends Component {
               onRequestClose={() => this.setState({selectingCompany:false})}>
             <Header>
               <Body>
-              <Title>Výber firmy</Title>
+              <Title>{I18n.t('taskAddCompanySelect')}</Title>
               </Body>
             </Header>
             <Content style={{ padding: 15 }}>
@@ -178,16 +340,16 @@ class TabAtributes extends Component {
             <ListItem>
               <Item rounded>
                 <Icon name="ios-search" />
-                <Input placeholder="Hľadanie" value={this.state.filterWord} onChangeText={((value)=>this.setState({filterWord:value}))} />
+                <Input placeholder={I18n.t('search')} value={this.state.filterWord} onChangeText={((value)=>this.setState({filterWord:value}))} />
               </Item>
             </ListItem>
 
             <List>
             {
               this.props.companies.map((company) =>
-              company.name.toLowerCase().includes(this.state.filterWord.toLowerCase()) && <ListItem button key={company.id} onPress={()=>this.setState({company:company,selectingCompany:false})} >
+              company.title.toLowerCase().includes(this.state.filterWord.toLowerCase()) && <ListItem button key={company.id} onPress={()=>{this.setState({company:company,selectingCompany:false});this.props.inputChanged();}} >
                 <Body>
-                  <Text>{company.name}</Text>
+                  <Text>{company.title}</Text>
                 </Body>
                 <Right>
                   <Icon name="arrow-forward" />
@@ -207,7 +369,7 @@ class TabAtributes extends Component {
               onRequestClose={() => this.setState({selectingRequester:false})}>
             <Header>
               <Body>
-              <Title>Výber žiadateľa</Title>
+              <Title>{I18n.t('taskAddCompanySelectRequester')}</Title>
               </Body>
             </Header>
             <Content style={{ padding: 15 }}>
@@ -215,31 +377,29 @@ class TabAtributes extends Component {
             <ListItem>
               <Item rounded>
                 <Icon name="ios-search" />
-                <Input placeholder="Vyhľadávanie" value={this.state.filterWordRequester} onChangeText={((value)=>this.setState({filterWordRequester:value}))} />
+                <Input placeholder={I18n.t('search')} value={this.state.filterWordRequester} onChangeText={((value)=>this.setState({filterWordRequester:value}))} />
               </Item>
             </ListItem>
 
             <List>
             {
-              (([{id:null,firstName:"Nikto", email:"žiadny"}]).concat(this.props.users)).map((user) =>
-              {
-              return ((user.email+user.firstName+' '+user.surName+' '+user.firstName).toLowerCase().includes(this.state.filterWordRequester.toLowerCase()) &&
-              <ListItem button key={user.id} onPress={()=>this.setState({requester:user,selectingRequester:false})} >
+              (([{id:null,name:I18n.t('nobody'), email:I18n.t('none')}]).concat(this.props.users)).map((user) =>
+              (user.email+user.name).toLowerCase().includes(this.state.filterWordRequester.toLowerCase()) &&
+              <ListItem button key={user.id} onPress={()=>{this.setState({requestedBy:user,selectingRequester:false});this.props.inputChanged();}} >
                 <Body>
                 {
-                  (user.firstName || user.surName)?<Text>{((user.firstName?(user.firstName+' '):'')+ (user.surName?user.surName:''))}</Text>:null
+                  (user.name)?<Text>{user.name}</Text>:null
                 }
                 <Text note>{user.email}</Text>
                 </Body>
                 <Right>
                   <Icon name="arrow-forward" />
                 </Right>
-              </ListItem>);
-              }
+              </ListItem>
             )
-          }
-          </List>
-          </Content>
+            }
+            </List>
+            </Content>
           </Modal>
 
           <Modal
@@ -250,7 +410,7 @@ class TabAtributes extends Component {
               onRequestClose={() => this.setState({selectingAssignedTo:false})}>
             <Header>
               <Body>
-              <Title>Vyber riešiteľa</Title>
+              <Title>{I18n.t('taskAddCompanySelectAssignedTo')}</Title>
               </Body>
             </Header>
             <Content style={{ padding: 15 }}>
@@ -258,18 +418,18 @@ class TabAtributes extends Component {
             <ListItem>
               <Item rounded>
                 <Icon name="ios-search" />
-                <Input placeholder="Vyhľadávanie" value={this.state.filterWordAssignedTo} onChangeText={((value)=>this.setState({filterWordAssignedTo:value}))} />
+                <Input placeholder={I18n.t('search')} value={this.state.filterWordAssignedTo} onChangeText={(value)=>this.setState({filterWordAssignedTo:value})} />
               </Item>
             </ListItem>
 
             <List>
             {
-              (([{id:null,firstName:'Nikto', email:'Žiadny'}]).concat(this.props.users)).map((user) =>
-              (user.email+user.firstName+' '+user.surName+' '+user.firstName).toLowerCase().includes(this.state.filterWordAssignedTo.toLowerCase()) &&
-              <ListItem button key={user.id} onPress={()=>this.setState({assignedTo:user,selectingAssignedTo:false})} >
+              (([{id:null,name:I18n.t('nobody'), email:I18n.t('none')}]).concat(this.props.users)).map((user) =>
+              (user.email+user.name).toLowerCase().includes(this.state.filterWordAssignedTo.toLowerCase()) &&
+              <ListItem button key={user.id} onPress={()=>{this.setState({assignedTo:user,selectingAssignedTo:false});this.props.inputChanged();}} >
                 <Body>
                 {
-                  (user.firstName || user.surName)?<Text>{((user.firstName?(user.firstName+' '):'')+ (user.surName?user.surName:''))}</Text>:null
+                  (user.name)?<Text>{user.name}</Text>:null
                 }
                 <Text note>{user.email}</Text>
                 </Body>
@@ -284,30 +444,16 @@ class TabAtributes extends Component {
           </Modal>
 
         </Content>
-      <Footer>
-        <FooterTab>
-          <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }} onPress={Actions.pop}>
-            <Icon active style={{ color: 'white' }} name="md-add" />
-            <Text style={{ color: 'white' }} >Zrušiť</Text>
-          </Button>
-        </FooterTab>
-
-        <FooterTab>
-          <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
-          onPress={this.submitForm.bind(this)}
-          >
-            <Icon active name="md-add" style={{ color: 'white' }} />
-            <Text style={{ color: 'white' }} >Uložiť</Text>
-          </Button>
-        </FooterTab>
-    </Footer>
-    </Container>
+      </Container>
     );
   }
 }
 
-const mapStateToProps = ({ task }) => {
-  return { users, companies,statuses, projects} = task;
+const mapStateToProps = ({ taskR, login, userR, companyR }) => {
+  const { users } = userR;
+  const { companies } = companyR;
+  const { statuses, projects, task,searchedFilter,searchedWord,labels} = taskR;
+  return { users, companies,statuses, projects, task,ACL:login.ACL,searchedFilter,searchedWord,labels};
 };
 
-export default connect(mapStateToProps,{})(TabAtributes);
+export default connect(mapStateToProps,{saveEdit, deleteTask,saveFilteredEdit})(TabAtributes);

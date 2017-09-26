@@ -1,25 +1,30 @@
 import React, { Component } from 'react';
-import { Icon, Text, Right, Body, ListItem, Item, Container} from 'native-base';
+import { Icon, Text, Right, Body, ListItem, Item} from 'native-base';
+import { connect } from 'react-redux';
+
+import I18n from '../../translations/';
+import {startLoading} from '../../redux/actions';
 import { Actions } from 'react-native-router-flux';
-import styles from './styles';
+import {formatDate} from '../../helperFunctions';
 
 class TaskListRow extends Component {
   render() {
+    let project=this.props.task.project;
+    let assigned=this.props.task.taskHasAssignedUsers?this.props.task.taskHasAssignedUsers[0]:false;
     return (
-      <ListItem button onPress={()=>Actions.taskEdit({data:this.props.data})} >
+      <ListItem button onPress={()=>{this.props.startLoading();Actions.taskEdit({id:this.props.task.id,fromFilter:false})}} >
               <Body>
-                <Text>{this.props.data.title?this.props.data.title:'None'}</Text>
+                <Text>{this.props.task.title?this.props.task.title:''}</Text>
                 <Text numberOfLines={1} note>
-                  Projekt: {this.props.data.project?this.props.data.project.title:'None'}
+                  {I18n.t('project')}: {project?project.title:'None'}
                 </Text>
-                <Text numberOfLines={1} note>Riešiteľ: {this.props.data.taskHasAssignedUsers.length>0?this.props.data.taskHasAssignedUsers[0].user.username:'Nobody'}</Text>
-                <Text numberOfLines={1} note>Deadline: {this.props.data.deadline?this.props.data.deadline:'No Date'}</Text>
-                {
-                  this.props.data.taskHasAssignedUsers.length > 0 && this.props.data.taskHasAssignedUsers.map((record, i) =>
-                    <Item key={i} style={{backgroundColor:record.status.color,flex:1,flexDirection:'column'}}>
-                    <Text style={{color:'white',paddingLeft:10,paddingRight:10,flex:1,flexDirection:'column'}}>{record.status.title}</Text>
-                    </Item>)
-                }
+                <Text numberOfLines={1} note>{I18n.t('assignedTo')}: {assigned?assigned.user.username:I18n.t('nobody')}</Text>
+                <Text numberOfLines={1} note>{I18n.t('deadline')}: {this.props.task?'tu bude deadline':I18n.t('noDate')}</Text>
+                { assigned &&
+                  <Item style={{backgroundColor:assigned.status.color,flex:1,flexDirection:'column'}}>
+                    <Text style={{color:'white',paddingLeft:10,paddingRight:10,flex:1,flexDirection:'column'}}>{assigned.status.title}</Text>
+                  </Item>
+                  }
               </Body>
               <Right>
                 <Icon name="arrow-forward" />
@@ -28,5 +33,8 @@ class TaskListRow extends Component {
     );
   }
 }
+const mapStateToProps = () => {
+  return {};
+};
 
-export default TaskListRow;
+export default connect(mapStateToProps,{startLoading})(TaskListRow);

@@ -1,45 +1,41 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Footer, FooterTab, Container, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, View } from 'native-base';
+import { Footer, FooterTab, Container, Content, Button, Icon, Text, List } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import { openDrawer, closeDrawer } from '../../redux/actions/drawerActions';
+import { startLoading } from '../../redux/actions';
 import TaskListRow from './taskListRow';
-import styles from './styles';
 
 class TaskList extends Component {
   render() {
     return (
-      <Container style={styles.container}>
+      <Container>
         <Content>
           <List>
           {
-            this.props.allTasks.map((data) => <TaskListRow data={data} key={data.id} />)
+            this.props.tasks.map((task) => <TaskListRow task={task} key={task.id} />)
           }
           </List>
         </Content>
+      { this.props.ACL.includes('create_tasks_in_all_projects') &&
         <Footer>
           <FooterTab>
-            <Button vertical onPress={Actions.projectAdd}>
-              <Icon active style={{ color: 'white' }} name="md-add" />
-              <Text style={{ color: 'white' }} >Project</Text>
-            </Button>
-          </FooterTab>
-
-          <FooterTab>
-            <Button vertical onPress={()=>Actions.taskAdd({projectId:this.props.projectId})}>
+            <Button vertical onPress={()=>{this.props.startLoading();Actions.taskAdd({projectId:this.props.projectId?this.props.projectId:null});}}>
               <Icon name="md-add" style={{ color: 'white' }} />
               <Text style={{ color: 'white' }} >Task</Text>
             </Button>
           </FooterTab>
         </Footer>
+      }
       </Container>
     );
   }
 }
 
-const mapStateToProps = ({ task }) => {
-  return { allTasks:task.tasks};
+const mapStateToProps = ({ taskR, login }) => {
+  const { tasks } = taskR;
+  const { user } = login;
+  return {tasks, ACL:user.ACL};
 };
 
-export default connect(mapStateToProps, {})(TaskList);
+export default connect(mapStateToProps, {startLoading})(TaskList);
