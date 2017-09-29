@@ -15,7 +15,7 @@ class TabAtributes extends Component {
     this.state = {
       title:'',
       assignedTo:{id:null,name:I18n.t('nobody'), email:I18n.t('none')},
-      requestedBy:this.props.users[this.props.users.findIndex((user)=>user.id==this.props.userData.id)],
+      requestedBy:this.props.users[this.props.users.findIndex((user)=>user.id==user.id)],
       status:this.props.statuses[0],
       work_time:'0',
       description:'',
@@ -38,6 +38,7 @@ class TabAtributes extends Component {
       modalLabel:false,
       labels:[]
     }
+    console.log(this.props.labels);
   }
   componentDidMount(){
     this.props.saveFunction(this.submitForm.bind(this));
@@ -72,7 +73,7 @@ class TabAtributes extends Component {
     const updatedAt = (new Date()).getTime();
     const statusChangedAt = null;
     const createdAt = (new Date()).getTime();
-    const createdBy = this.props.userData;
+    const createdBy = this.props.this.props.users[0];
     const labels = this.state.labels.map((label)=>label.id);
     this.props.addTask(
       {title,description,deadline,startedAt,important,work,work_time,labels,
@@ -240,7 +241,7 @@ class TabAtributes extends Component {
             dataArray={this.state.labels}
             renderRow={label =>
               <ListItem>
-                <View style={{backgroundColor:label.color,paddingLeft:10}}>
+                <View style={{backgroundColor:((this.props.item.color.includes('#')?'':'#')+label.color),paddingLeft:10}}>
                   <Text style={{color:'white'}}>{label.title}</Text>
                 </View>
               </ListItem>
@@ -409,11 +410,10 @@ class TabAtributes extends Component {
 }
 
 const mapStateToProps = ({ taskR, login, companyR, userR }) => {
-  const {userData} = login;
   const {users} = userR;
   const {companies} = companyR;
   const { statuses, projects,labels} = taskR;
-  return { users, companies,statuses, projects, userData,labels};
+  return { users, companies,statuses, projects,labels};
 };
 
 export default connect(mapStateToProps,{addTask})(TabAtributes);

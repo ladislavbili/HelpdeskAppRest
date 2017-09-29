@@ -19,7 +19,7 @@ class TaskAdd extends Component {
   }
 
   componentWillMount(){
-    this.props.getAttributes();
+    this.props.getAttributes(this.props.token);
   }
 
   render() {
@@ -57,8 +57,10 @@ class TaskAdd extends Component {
   }
 }
 
-const mapStateToProps = ({ taskR }) => {
-  return { loadingData } = taskR;
+const mapStateToProps = ({ taskR, login }) => {
+  const { loadingData } = taskR;
+  const { token } = login;
+  return { loadingData, token };
 };
 
 export default connect(mapStateToProps,{getAttributes})(TaskAdd);

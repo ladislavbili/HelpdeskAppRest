@@ -12,11 +12,12 @@ import TaskLabel from './label';
 class TabAtributes extends Component {
   constructor(props) {
     super(props);
+    console.log(this.props.task.tags);
     this.state = {
       title:this.props.task.title?this.props.task.title:'',
-      assignedTo:this.props.task.assignedTo?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.task.assignedTo.id)]:{id:null,name:I18n.t('nobody'), email:I18n.t('none')},
+      assignedTo:this.props.task.taskHasAssignedUsers?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.task.taskHasAssignedUsers[0].user.id)]:{id:null,name:I18n.t('nobody'), email:I18n.t('none')},
       requestedBy:this.props.task.requestedBy?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.task.requestedBy.id)]:{id:null,name:I18n.t('nobody'), email:I18n.t('none')},
-      status:this.props.task.status?this.props.statuses[this.props.statuses.findIndex((item)=>item.id==this.props.task.status.id)]:this.props.statuses[0],
+      status:this.props.task.taskHasAssignedUsers && this.props.task.taskHasAssignedUsers[0].status ? this.props.statuses[this.props.statuses.findIndex((item)=>item.id==this.props.task.taskHasAssignedUsers[0].status.id)]:this.props.statuses[0],
       work_time:this.props.task.work_time?this.props.task.work_time.toString():'0',
       description:this.props.task.description?this.props.task.description:'',
       descriptionHeight:100,
@@ -25,7 +26,7 @@ class TabAtributes extends Component {
       company:this.props.task.company?this.props.companies[this.props.companies.findIndex((item)=>item.id==this.props.task.company.id)]:null,
       project:this.props.task.project?this.props.task.project.id:this.props.projects[0].id,
       statusChangedAt:this.props.task.statusChangedAt?formatDate(this.props.task.statusChangedAt):'',
-      disabled:!(this.props.task.canEdit||this.props.ACL.update_all_tasks||this.props.task.ACL.resolve_task),
+      disabled:!(this.props.task.canEdit||this.props.task.loggedUserProjectAcl.includes('update_all_tasks')||this.props.task.loggedUserRoleAcl.includes('update_all_tasks')||this.props.task.loggedUserProjectAcl.includes('resolve_task')||this.props.task.loggedUserRoleAcl.includes('resolve_task')),
       important:this.props.task.important?true:false,
       selectingCompany:false,
       filterWord:'',
@@ -38,13 +39,14 @@ class TabAtributes extends Component {
       selectingStartedAt:false,
       startedAt:this.props.task.startedAt?this.props.task.startedAt:null,
       modalLabel:false,
-      labels:this.props.task.labels?this.props.labels.filter(
-        (label)=>this.props.task.labels.some((id)=>id==label.id)):[]
+      labels:this.props.task.tags?this.props.labels.filter(
+        (label)=>this.props.task.tags.some((tag)=>tag.id==label.id)):[]
     }
+    console.log(this.state.labels);
   }
 
   componentDidMount(){
-    this.props.saveFunction(this.submitForm.bind(this),(this.props.task.canEdit||this.props.ACL.update_all_tasks||this.props.task.ACL.resolve_task));
+    this.props.saveFunction(this.submitForm.bind(this),(this.props.task.canEdit||this.props.task.loggedUserProjectAcl.includes('update_all_tasks')||this.props.task.loggedUserRoleAcl.includes('update_all_tasks')||this.props.task.loggedUserProjectAcl.includes('resolve_task')||this.props.task.loggedUserRoleAcl.includes('resolve_task')));
   }
 
   setLabel(removing,label){
@@ -276,7 +278,7 @@ class TabAtributes extends Component {
             dataArray={this.state.labels}
             renderRow={label =>
               <ListItem>
-                <View style={{backgroundColor:label.color,paddingLeft:10}}>
+                <View style={{backgroundColor:((label.color.includes('#')?'':'#')+label.color),paddingLeft:10}}>
                   <Text style={{color:'white'}}>{label.title}</Text>
                 </View>
               </ListItem>
@@ -285,7 +287,7 @@ class TabAtributes extends Component {
         </View>
 
           {
-            this.props.task.ACL.delete_task &&
+            (this.props.task.loggedUserProjectAcl.includes('delete_task')||this.props.task.loggedUserRoleAcl.includes('delete_task'))&&
             <Button danger block onPress={this.deleteTask.bind(this)} iconLeft style={{ flexDirection: 'row', borderColor: 'white', marginTop:5, marginBottom:20, borderWidth: 0.5 }}>
               <Icon active style={{ color: 'white' }} name="trash" />
               <Text style={{ color: 'white' }} >{I18n.t('delete')}</Text>
@@ -453,7 +455,7 @@ const mapStateToProps = ({ taskR, login, userR, companyR }) => {
   const { users } = userR;
   const { companies } = companyR;
   const { statuses, projects, task,searchedFilter,searchedWord,labels} = taskR;
-  return { users, companies,statuses, projects, task,ACL:login.ACL,searchedFilter,searchedWord,labels};
+  return { users, companies,statuses, projects, task,searchedFilter,searchedWord,labels};
 };
 
 export default connect(mapStateToProps,{saveEdit, deleteTask,saveFilteredEdit})(TabAtributes);

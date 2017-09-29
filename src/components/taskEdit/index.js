@@ -26,7 +26,7 @@ class TaskEdit extends Component {
   }
 
   componentWillMount(){
-    this.props.getTaskAttributes(this.props.id);
+    this.props.getTaskAttributes(this.props.id, this.props.token);
   }
   render() {
     if(this.props.loadingData){
@@ -72,8 +72,10 @@ class TaskEdit extends Component {
   }
 }
 
-const mapStateToProps = ({ taskR }) => {
-  return { loadingData} = taskR;
+const mapStateToProps = ({ taskR, login }) => {
+  const { loadingData } = taskR;
+  const { token } = login;
+  return { loadingData, token };
 };
 
 export default connect(mapStateToProps,{getTaskAttributes})(TaskEdit);

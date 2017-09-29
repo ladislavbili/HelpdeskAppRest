@@ -9,13 +9,14 @@ class Label extends Component {
  }
 
   render() {
+    console.log(this.props.item.color);
     return (
-      <ListItem thumbnail onPress={()=>{this.props.setLabel(this.state.selected,this.props.item);this.setState({selected:!this.state.selected});this.props.inputChanged();}}>
+      <ListItem thumbnail onPress={()=>{this.props.setLabel(this.state.selected,this.props.item);this.setState({selected:!this.state.selected});}}>
         <Left>
             <CheckBox checked={this.state.selected}  onPress={()=>{this.props.setLabel(this.state.selected,this.props.item);this.setState({selected:!this.state.selected});}} />
         </Left>
         <Body>
-          <View style={{backgroundColor:this.props.item.color,paddingLeft:10}}>
+          <View style={{backgroundColor:((this.props.item.color.includes('#')?'':'#')+this.props.item.color),paddingLeft:10}}>
             <Text style={{color:'white'}}>{this.props.item.title}</Text>
           </View>
         </Body>
