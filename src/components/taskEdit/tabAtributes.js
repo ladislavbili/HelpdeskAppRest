@@ -12,7 +12,7 @@ import TaskLabel from './label';
 class TabAtributes extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props.task.tags);
+    console.log(this.props.task.id);
     this.state = {
       title:this.props.task.title?this.props.task.title:'',
       assignedTo:this.props.task.taskHasAssignedUsers?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.task.taskHasAssignedUsers[0].user.id)]:{id:null,name:I18n.t('nobody'), email:I18n.t('none')},

@@ -32,7 +32,7 @@ class TabEmail extends Component { // eslint-disable-line
           <Content style={{ padding: 15 }}>
 
           {
-            (this.props.ACL.view_internal_note||this.props.userACL.update_all_tasks) &&
+            (this.props.ACL.includes('view_internal_note')||this.props.ACL.includes('update_all_tasks')) &&
             <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
             <CheckBox checked={this.state.internal} color='#3F51B5' onPress={()=>this.setState({internal:!this.state.internal})}/>
               <Label style={{marginLeft:15}}>{I18n.t('internal')}</Label>
@@ -104,10 +104,9 @@ class TabEmail extends Component { // eslint-disable-line
     }
   }
 
-  const mapStateToProps = ({ login,taskR }) => {
+  const mapStateToProps = ({ login }) => {
     const {userData} = login;
-    const {task} = taskR;
-    return {userData,ACL:task.ACL,userACL:login.ACL};
+    return {userData};
   };
 
   export default connect(mapStateToProps,{addComment})(TabEmail);

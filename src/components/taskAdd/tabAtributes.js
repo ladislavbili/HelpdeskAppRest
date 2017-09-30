@@ -241,7 +241,7 @@ class TabAtributes extends Component {
             dataArray={this.state.labels}
             renderRow={label =>
               <ListItem>
-                <View style={{backgroundColor:((this.props.item.color.includes('#')?'':'#')+label.color),paddingLeft:10}}>
+                <View style={{backgroundColor:((label.color.includes('#')?'':'#')+label.color),paddingLeft:10}}>
                   <Text style={{color:'white'}}>{label.title}</Text>
                 </View>
               </ListItem>

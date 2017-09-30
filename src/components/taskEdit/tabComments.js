@@ -10,7 +10,7 @@ import {formatDate} from '../../helperFunctions';
 class TabComments extends Component {
   componentDidMount(){
     this.props.startLoadingComments();
-    this.props.getComments();
+    this.props.getComments(this.props.id, this.props.token);
   }
   render() {
     if(this.props.loadingComments){
@@ -26,7 +26,7 @@ class TabComments extends Component {
           <List
           dataArray={this.props.comments}
           renderRow={data =>
-            (!data.internal || this.props.ACL.view_internal_note||this.props.userACL.update_all_tasks)?
+            (!data.internal || this.props.ACL.includes('view_internal_note')||this.props.ACL.includes('update_all_tasks'))?
             (<ListItem key={data.id} style={{flexDirection:'column',justifyContent:'flex-start',alignItems:'flex-start',flex:1}}>
               <View style={{flex:1,flexDirection:'row'}}>
                <Left>
@@ -52,7 +52,7 @@ class TabComments extends Component {
 
       <Footer>
         <FooterTab>
-          <Button onPress={()=>{Actions.commentAdd({id:this.props.id})}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
+          <Button onPress={()=>{Actions.commentAdd({id:this.props.id,ACL:this.props.ACL})}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
             <Icon active style={{ color: 'white' }} name="md-add" />
             <Text style={{ color: 'white' }} >{I18n.t('taskEditComment')}</Text>
           </Button>
@@ -66,8 +66,8 @@ class TabComments extends Component {
 }
 const mapStateToProps = ({ taskR, login, commentR }) => {
   const { comments, loadingComments } = commentR;
-  const { task } = taskR;
-  return { comments,loadingComments, ACL:task.ACL,userACL:login.ACL};
+  const { token } = login;
+  return { comments, token, loadingComments,ACL:taskR.task.loggedUserProjectAcl.concat(taskR.task.loggedUserRoleAcl)};
 };
 
 export default connect(mapStateToProps,{startLoadingComments,getComments})(TabComments);

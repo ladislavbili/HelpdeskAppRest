@@ -1,12 +1,15 @@
 import { SET_COMMENTS, ADD_NEW_COMMENT, START_LOADING_COMMENTS } from '../types';
-import { COMMENTS } from '../urls';
+import { TASK_LIST } from '../urls';
 
-export const getComments = () => {
+export const getComments = (id,token) => {
   return (dispatch) => {
-    fetch(COMMENTS, {
+    fetch(TASK_LIST+'/'+id+'/comments', {
       method: 'GET',
+      headers: {
+          'Authorization': 'Bearer ' + token
+      }
     }).then((response) =>response.json().then((response) => {
-      dispatch({type: SET_COMMENTS, payload:{comments:response}});
+      dispatch({type: SET_COMMENTS, payload:{comments:response.data}});
     }))
     .catch(function (error) {
       console.log(error);

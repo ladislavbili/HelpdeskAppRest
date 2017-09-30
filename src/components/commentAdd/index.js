@@ -13,18 +13,21 @@ class CommentAdd extends Component {
       <Container>
         <Tabs>
             <Tab heading={I18n.t('commentAddtabComment')}>
-                <TabComment id={this.props.id} />
+                <TabComment id={this.props.id} ACL={this.props.ACL} />
             </Tab>
-            {ACL.sent_emails_from_comments && <Tab heading="+ Email">
-                <TabEmail id={this.props.id} />
-            </Tab>}
+            {
+              this.props.ACL.includes('sent_emails_from_comments') &&
+              <Tab heading="+ Email">
+                  <TabEmail id={this.props.id} ACL={this.props.ACL} />
+              </Tab>
+          }
         </Tabs>
       </Container>
     );
   }
 }
 
-const mapStateToProps = ({ login }) => {
-  return {ACL} = login;
+const mapStateToProps = () => {
+  return {};
 };
 export default connect(mapStateToProps,{})(CommentAdd);
