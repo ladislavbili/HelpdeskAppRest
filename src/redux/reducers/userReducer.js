@@ -1,4 +1,4 @@
-import { SET_USER_ATTRIBUTES, EDIT_USER_LIST, ADD_USER, SET_USERS, SET_TASK_ATTRIBUTES } from '../types';
+import { SET_USER_ATTRIBUTES, EDIT_USER_LIST, ADD_USER, SET_USERS, SET_TASK_ATTRIBUTES, SET_SEARCH_ATTRIBUTES } from '../types';
 
 const initialState = {
   user_roles:[],
@@ -38,6 +38,11 @@ export default function reducer (state = initialState, action) {
       return {
         ...state,
         users:action.payload.users
+      };
+    case SET_SEARCH_ATTRIBUTES:
+      return {
+        ...state,
+        users:action.payload.users,
       };
     default:
       return state;

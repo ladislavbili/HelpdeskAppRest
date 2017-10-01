@@ -1,22 +1,33 @@
-import { SET_UNITS, SET_LABELS, SET_SEARCHED_FILTER, SET_SEARCHED_TASKS, CLEAR_SEARCHED_TASKS, DELETE_TASK, EDIT_TASK_LIST, ADD_TO_TASK_LIST, START_LOADING,
-  SET_TASKS_AND_PROJECTS, SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_TASK, SET_TASK_ATTRIBUTES } from '../types';
+import { SET_UNITS, SET_LABELS, DELETE_TASK, EDIT_TASK_LIST, ADD_TO_TASK_LIST, START_LOADING, START_LOADING_PROJECTS, SET_SEARCH_ATTRIBUTES,
+  SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_TASK, SET_TASK_ATTRIBUTES } from '../types';
 
 const initialState = {
   statuses:[],
   loadingData:false,
   tasks:[],
   task:null,
-  searchedTasks:[],
-  searchedWord:'',
-  searchedFilter:'',
-  searching:false,
+  loadingSearch:false,
   labels:[],
   project:null,
   projects:[],
+  loadingProjects:false
 };
 
 export default function taskReducer (state = initialState, action) {
   switch (action.type) {
+    case START_LOADING_PROJECTS:
+      return {
+        ...state,
+        loadingProjects: true,
+      };
+    case SET_SEARCH_ATTRIBUTES:
+      return {
+        ...state,
+        statuses:action.payload.statuses,
+        projects:action.payload.projects,
+        labels:action.payload.labels,
+        loadingSearch:false
+      };
     case SET_UNITS:
       return {
         ...state,
@@ -26,27 +37,6 @@ export default function taskReducer (state = initialState, action) {
       return {
         ...state,
         labels:action.payload.labels,
-      };
-    }
-    case SET_SEARCHED_FILTER:{
-      return {
-        ...state,
-        searchedWord:action.payload.word,
-        searchedFilter:action.payload.filter,
-      };
-    }
-    case SET_SEARCHED_TASKS:{
-      return {
-        ...state,
-        searchedTasks:action.payload.tasks,
-        searching:false,
-      };
-    }
-    case CLEAR_SEARCHED_TASKS:{
-      return {
-        ...state,
-        searchedTasks:[],
-        searching:true,
       };
     }
     case DELETE_TASK:{
@@ -76,13 +66,6 @@ export default function taskReducer (state = initialState, action) {
         ...state,
         loadingData: true,
       };
-    case SET_TASKS_AND_PROJECTS:
-      return {
-        ...state,
-        projects: action.payload.projects,
-        tasks: action.payload.tasks,
-        loadingData:false,
-      };
     case SET_TASKS:
     return {
       ...state,
@@ -93,7 +76,7 @@ export default function taskReducer (state = initialState, action) {
       return {
         ...state,
         projects: action.payload.projects,
-        loadingData:false,
+        loadingProjects:false,
       };
     case SET_COMPANIES:
       return {

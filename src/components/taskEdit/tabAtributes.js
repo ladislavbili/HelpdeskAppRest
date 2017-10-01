@@ -5,14 +5,14 @@ import { connect } from 'react-redux';
 import { View, Body, Container, Content, Icon, Input, Item, Label, Text, Footer, FooterTab, Button, Picker,  ListItem, Header,Title , Left, Right, List , CheckBox } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import I18n from '../../translations';
-import {saveEdit,deleteTask,saveFilteredEdit} from '../../redux/actions';
+import {saveEdit,deleteTask} from '../../redux/actions';
 import {formatDate,processInteger} from '../../helperFunctions';
 import TaskLabel from './label';
 
 class TabAtributes extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props.task.id);
+    console.log(this.props.task.project.id);
     this.state = {
       title:this.props.task.title?this.props.task.title:'',
       assignedTo:this.props.task.taskHasAssignedUsers?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.task.taskHasAssignedUsers[0].user.id)]:{id:null,name:I18n.t('nobody'), email:I18n.t('none')},
@@ -42,7 +42,6 @@ class TabAtributes extends Component {
       labels:this.props.task.tags?this.props.labels.filter(
         (label)=>this.props.task.tags.some((tag)=>tag.id==label.id)):[]
     }
-    console.log(this.state.labels);
   }
 
   componentDidMount(){
@@ -81,23 +80,15 @@ class TabAtributes extends Component {
     const createdAt = this.props.task.createdAt;
     const createdBy = this.props.task.createdBy;
     const labels = this.state.labels.map((label)=>label.id);
-    if(this.props.fromFilter){
-      this.props.saveFilteredEdit(
-        {id,title,description,deadline,startedAt,important,work,work_time,labels,
-          createdAt,updatedAt,statusChangedAt,createdBy,requestedBy,project,company,assignedTo,
-          canEdit:this.props.task.canEdit,status},this.state.assignedTo.id?this.state.assignedTo:null,
-          this.state.project?{id:this.state.project,title:this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.state.project)].title}:null,
-          this.state.status, this.props.searchedFilter,this.props.searchedWord);
-    }
-    else{
-      this.props.saveEdit(
-        {id,title,description,deadline,startedAt,important,work,work_time,labels,
-          createdAt,updatedAt,statusChangedAt,createdBy,requestedBy,project,company,assignedTo,
-          canEdit:this.props.task.canEdit,status},this.state.assignedTo.id?this.state.assignedTo:null,
-          this.state.project?{id:this.state.project,title:this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.state.project)].title}:null,
-          this.state.status
-        );
-    }
+
+    this.props.saveEdit(
+      {id,title,description,deadline,startedAt,important,work,work_time,labels,
+        createdAt,updatedAt,statusChangedAt,createdBy,requestedBy,project,company,assignedTo,
+        canEdit:this.props.task.canEdit,status},this.state.assignedTo.id?this.state.assignedTo:null,
+        this.state.project?{id:this.state.project,title:this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.state.project)].title}:null,
+        this.state.status
+      );
+
     Actions.pop();
   }
 
@@ -454,8 +445,8 @@ class TabAtributes extends Component {
 const mapStateToProps = ({ taskR, login, userR, companyR }) => {
   const { users } = userR;
   const { companies } = companyR;
-  const { statuses, projects, task,searchedFilter,searchedWord,labels} = taskR;
-  return { users, companies,statuses, projects, task,searchedFilter,searchedWord,labels};
+  const { statuses, projects, task,labels} = taskR;
+  return { users, companies,statuses, projects, task,labels};
 };
 
-export default connect(mapStateToProps,{saveEdit, deleteTask,saveFilteredEdit})(TabAtributes);
+export default connect(mapStateToProps,{saveEdit, deleteTask})(TabAtributes);

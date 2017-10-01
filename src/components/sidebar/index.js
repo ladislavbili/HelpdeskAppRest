@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Title ,Header, Body, Content, Text, List, ListItem, Icon, Container, Left, Right, Badge } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import { ActivityIndicator } from 'react-native';
+
 import { closeDrawer } from '../../redux/actions';
 import styles from './style';
 import I18n from '../../translations/';
@@ -18,6 +19,15 @@ class SideBar extends Component {
   }
 
   render() {
+
+    if(this.props.loadingProjects){
+      return (
+        <ActivityIndicator
+        animating size={ 'large' }
+        color='#007299' />
+      )
+    }
+
     return (
       <Container>
         <Content
@@ -32,7 +42,7 @@ class SideBar extends Component {
         </Header>
           <List
             dataArray={this.props.projects} renderRow={data =>
-              <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList();}} >
+              <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filter:{project:''+data.id}});}} >
                 <Left>
                   <Icon active name={data.id=='REQUESTED'||data.id=='INBOX'?'ios-color-filter-outline':'ios-folder-outline'} style={{ color: '#777', fontSize: 26, width: 30 }} />
                   <Text style={styles.text}>{data.title}</Text>
@@ -55,9 +65,10 @@ class SideBar extends Component {
   }
 }
 
-const mapStateToProps = ({ taskR }) => {
-  const { projects } = taskR;
-  return { projects };
+const mapStateToProps = ({ taskR, login }) => {
+  const { token } = login;
+  const { projects, loadingProjects } = taskR;
+  return { projects, token, loadingProjects };
 };
 
 export default connect(mapStateToProps, {closeDrawer})(SideBar);

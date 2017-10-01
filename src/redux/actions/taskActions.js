@@ -1,10 +1,30 @@
-import { SET_TASKS_AND_PROJECTS, SET_TASK_ATTRIBUTES, START_LOADING, SET_TASKS, EDIT_TASK_LIST, ADD_TO_TASK_LIST, DELETE_TASK } from '../types';
+import { SET_TASK_ATTRIBUTES, START_LOADING, SET_TASKS, SET_PROJECTS, EDIT_TASK_LIST, ADD_TO_TASK_LIST, DELETE_TASK, START_LOADING_PROJECTS,
+  START_LOADING_SEARCH,SET_SEARCH_ATTRIBUTES
+  } from '../types';
 import { PROJECT_LIST,USERS_LIST, COMPANIES_LIST, STATUSES_LIST, TASK_LIST, TAG_LIST } from '../urls';
+import {processRESTinput} from '../../helperFunctions';
+export const startLoadingSearch = () => {
+  return (dispatch) => {
+    dispatch({type: START_LOADING_SEARCH });
+  };
+};
 
-export const getTasksAndProjects = (token) => {
+export const getSearchAttributes = (token) => {
   return (dispatch) => {
     Promise.all([
-      fetch(TASK_LIST, {
+      fetch(USERS_LIST, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+      }),
+      fetch(COMPANIES_LIST, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+      }),
+      fetch(STATUSES_LIST, {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
@@ -15,21 +35,73 @@ export const getTasksAndProjects = (token) => {
         headers: {
             'Authorization': 'Bearer ' + token
         }
+      }),
+      fetch(TAG_LIST, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
       })])
-    .then(([response1,response2]) =>
-    {
-      Promise.all([response1.json(),response2.json()]).then(([data1,data2]) => {
-        dispatch({type: SET_TASKS_AND_PROJECTS, payload:{tasks:data1.data,projects:data2.data}});
-      }).catch(function (error) {
-          console.log(error);
-        });
+    .then(([response1,response2,response3,response4,response5]) =>
+      {
+        Promise.all([response1.json(),response2.json(),response3.json(),response4.json(),response5.json()]).then(([users,companies,statuses,projects,labels]) => {
+          dispatch({type: SET_SEARCH_ATTRIBUTES,payload:{users:users.data,companies:companies.data,statuses:statuses.data,projects:projects.data,labels:labels.data}});
+        }).catch(function (error) {
+            console.log(error);
+          });
+      }
+    ).catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+
+
+export const startLoadingProjects = () => {
+  return (dispatch) => {
+    dispatch({type: START_LOADING_PROJECTS });
+  };
+};
+export const getProjects = (token) => {
+  return (dispatch) => {
+    fetch(PROJECT_LIST, {
+      method: 'GET',
+      headers: {
+          'Authorization': 'Bearer ' + token
+      }
+    }).then((response) =>{
+      response.json().then((data) => {
+        dispatch({type: SET_PROJECTS, payload:{projects:data.data}});
+      });
     }
   ).catch(function (error) {
-    console.log('Failed to load projects and tasks');
     console.log(error);
   });
   };
-};
+}
+
+export const getTasks = (token,filter) => {
+  console.log(filter);
+  return (dispatch) => {
+    if(!filter){
+      dispatch({type: SET_TASKS, payload:{tasks:[]}});
+      return;
+    }
+    fetch(TASK_LIST+'?'+processRESTinput(filter), {
+      method: 'GET',
+      headers: {
+          'Authorization': 'Bearer ' + token
+      }
+    }).then((response) =>{
+      response.json().then((data) => {
+        dispatch({type: SET_TASKS, payload:{tasks:data.data}});
+      });
+    }
+  ).catch(function (error) {
+    console.log(error);
+  });
+  };
+}
 export const getTaskAttributes = (id, token) => {
   return (dispatch) => {
     let taskURL = TASK_LIST+'/'+id;

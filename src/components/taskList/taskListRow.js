@@ -12,7 +12,7 @@ class TaskListRow extends Component {
     let project=this.props.task.project;
     let assigned=this.props.task.taskHasAssignedUsers?this.props.task.taskHasAssignedUsers[0]:false;
     return (
-      <ListItem button onPress={()=>{this.props.startLoading();Actions.taskEdit({id:this.props.task.id,fromFilter:false})}} >
+      <ListItem button onPress={()=>{this.props.startLoading();Actions.taskEdit({id:this.props.task.id})}} >
               <Body>
                 <Text>{this.props.task.title?this.props.task.title:''}</Text>
                 <Text numberOfLines={1} note>

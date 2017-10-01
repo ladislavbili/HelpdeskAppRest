@@ -20,3 +20,16 @@ export const processInteger = (input)=>{
     return input;
   }
 }
+
+export const processRESTinput = (input)=>{
+  if(!input){
+    return '';
+  }
+  let result='';
+  for ( item in input) {
+    if(item && input[item] ){
+      result+=(item+'='+input[item]+'&');
+    }
+  }
+  return result.substring(0,result.length-1);
+}

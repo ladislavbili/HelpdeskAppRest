@@ -1,4 +1,4 @@
-import {LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_LOGOUT, START_LOADING } from '../types';
+import {LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_LOGOUT, START_LOADING, START_LOADING_PROJECTS } from '../types';
 import {LOGIN_URL} from '../urls';
 import { Actions } from 'react-native-router-flux';
 import { AsyncStorage } from 'react-native';
@@ -31,9 +31,6 @@ export const loginUser = (username, password) => {
             dispatch({
                 type: LOGIN_SUCCESS,
                 payload: {user,token:response.token}
-            });
-            dispatch({
-                type: START_LOADING,
             });
             Actions.taskList();
           }
