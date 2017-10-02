@@ -40,6 +40,7 @@ class SideBar extends Component {
           </Body>
           <Right />
         </Header>
+          <Text>PROJECTS</Text>
           <List
             dataArray={this.props.projects} renderRow={data =>
               <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filter:{project:''+data.id}});}} >

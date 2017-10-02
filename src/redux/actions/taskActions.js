@@ -81,7 +81,6 @@ export const getProjects = (token) => {
 }
 
 export const getTasks = (token,filter) => {
-  console.log(filter);
   return (dispatch) => {
     if(!filter){
       dispatch({type: SET_TASKS, payload:{tasks:[]}});

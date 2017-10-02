@@ -4,7 +4,7 @@ import { Actions } from 'react-native-router-flux';
 
 export const getUsers = (token) => {
   return (dispatch) => {
-    fetch(USERS_LIST, {
+    fetch(USERS_LIST+'?limit=999', {
       method: 'GET',
       headers: {
           'Authorization': 'Bearer ' + token
