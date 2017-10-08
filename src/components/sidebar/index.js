@@ -27,7 +27,6 @@ class SideBar extends Component {
         color='#007299' />
       )
     }
-
     return (
       <Container>
         <Content
@@ -40,26 +39,37 @@ class SideBar extends Component {
           </Body>
           <Right />
         </Header>
-          <Text>PROJECTS</Text>
-          <List
-            dataArray={this.props.projects} renderRow={data =>
-              <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filter:{project:''+data.id}});}} >
-                <Left>
-                  <Icon active name={data.id=='REQUESTED'||data.id=='INBOX'?'ios-color-filter-outline':'ios-folder-outline'} style={{ color: '#777', fontSize: 26, width: 30 }} />
-                  <Text style={styles.text}>{data.title}</Text>
-                </Left>
-                {(data.numberOfTasks>0) &&
-                <Right style={{ flex: 1 }}>
-                  <Badge
-                    style={{ borderRadius: 3, height: 25, backgroundColor: '#477EEA' }}
-                  >
-                    <Text style={styles.badgeText}>{data.numberOfTasks.toString()}</Text>
-                  </Badge>
-                </Right>
-                }
-              </ListItem>
-            }
-          />
+        <Text>Projects</Text>
+        <List
+          dataArray={this.props.projects} renderRow={data =>
+            <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filter:{project:''+data.id}});}} >
+              <Left>
+                <Icon active name={data.id=='REQUESTED'||data.id=='INBOX'?'ios-color-filter-outline':'ios-folder-outline'} style={{ color: '#777', fontSize: 26, width: 30 }} />
+                <Text style={styles.text}>{data.title}</Text>
+              </Left>
+              {(data.numberOfTasks>0) &&
+              <Right style={{ flex: 1 }}>
+                <Badge
+                  style={{ borderRadius: 3, height: 25, backgroundColor: '#477EEA' }}
+                >
+                  <Text style={styles.badgeText}>{data.numberOfTasks.toString()}</Text>
+                </Badge>
+              </Right>
+              }
+            </ListItem>
+          }
+        />
+        <Text>Filters</Text>
+        <List
+          dataArray={this.props.filters} renderRow={data =>
+            <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filterId:data.id});}} >
+              <Left>
+                <Icon active name={data.id=='REQUESTED'||data.id=='INBOX'?'ios-color-filter-outline':'ios-folder-outline'} style={{ color: '#777', fontSize: 26, width: 30 }} />
+                <Text style={styles.text}>{data.title}</Text>
+              </Left>
+            </ListItem>
+          }
+        />
         </Content>
       </Container>
     );
@@ -68,8 +78,8 @@ class SideBar extends Component {
 
 const mapStateToProps = ({ taskR, login }) => {
   const { token } = login;
-  const { projects, loadingProjects } = taskR;
-  return { projects, token, loadingProjects };
+  const { projects, loadingProjects,filters } = taskR;
+  return { projects, token, loadingProjects, filters };
 };
 
 export default connect(mapStateToProps, {closeDrawer})(SideBar);

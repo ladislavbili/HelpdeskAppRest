@@ -38,7 +38,6 @@ class TabAtributes extends Component {
       modalLabel:false,
       labels:[]
     }
-    console.log(this.props.labels);
   }
   componentDidMount(){
     this.props.saveFunction(this.submitForm.bind(this));

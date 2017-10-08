@@ -9,7 +9,6 @@ class Label extends Component {
  }
 
   render() {
-    console.log(this.props.item.color);
     return (
       <ListItem thumbnail onPress={()=>{this.props.setLabel(this.state.selected,this.props.item);this.setState({selected:!this.state.selected});}}>
         <Left>

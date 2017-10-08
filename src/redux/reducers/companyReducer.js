@@ -1,8 +1,9 @@
-import { EDIT_COMPANY_LIST, SET_COMPANY, ADD_COMPANY, SET_USER_ATTRIBUTES, SET_COMPANIES, SET_TASK_ATTRIBUTES, SET_SEARCH_ATTRIBUTES } from '../types';
+import { EDIT_COMPANY_LIST, SET_COMPANY, ADD_COMPANY, SET_USER_ATTRIBUTES, SET_COMPANIES, SET_TASK_ATTRIBUTES, SET_SEARCH_ATTRIBUTES, START_LOADING_COMPANY } from '../types';
 
 const initialState = {
   companies:[],
-  company:null
+  company:null,
+  loadingCompany:false,
 };
 
 export default function reducer (state = initialState, action) {
@@ -18,9 +19,15 @@ export default function reducer (state = initialState, action) {
     case SET_COMPANY:{
       return {
         ...state,
-        company:action.payload.company
+        company:action.company,
+        loadingCompany:false
       };
     }
+    case START_LOADING_COMPANY:
+      return {
+        ...state,
+        loadingCompany: true,
+      };
     case ADD_COMPANY:{
       return {
         ...state,

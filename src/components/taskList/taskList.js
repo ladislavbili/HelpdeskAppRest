@@ -16,6 +16,9 @@ class TaskList extends Component {
             this.props.tasks.map((task) => <TaskListRow task={task} key={task.id} />)
           }
           </List>
+          {
+            this.props.tasks.length==0 && <Text style={{padding:20}}>This list of tasks is empty</Text>
+          }
         </Content>
       { this.props.ACL.includes('create_tasks_in_all_projects') &&
         <Footer>

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Input, Item, Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import I18n from '../../translations/';
-import {getCompanies,startLoading,openEditingOfCompany} from '../../redux/actions';
+import {getCompanies,startLoading,startLoadingCompany} from '../../redux/actions';
 
 
 class CompanyList extends Component {
@@ -50,7 +50,7 @@ componentWillMount(){
           dataArray={this.props.companies.filter((company)=>company.title.toLowerCase().includes(this.state.seached.toLowerCase()))}
           renderRow={(company)=>
             <ListItem
-              button onPress={()=>this.props.openEditingOfCompany(company.id)}
+              button onPress={()=>{this.props.startLoadingCompany();Actions.companyEdit({id:company.id});}}
             >
               <Body>
                 <Text>{company.title}</Text>
@@ -82,4 +82,4 @@ const mapStateToProps = ({ taskR, companyR, login }) => {
   return { companies, loadingData, token };
 };
 
-export default connect(mapStateToProps, {getCompanies,startLoading,openEditingOfCompany})(CompanyList);
+export default connect(mapStateToProps, {getCompanies,startLoading,startLoadingCompany})(CompanyList);

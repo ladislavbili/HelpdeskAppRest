@@ -5,12 +5,18 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { ActivityIndicator } from 'react-native';
 import TaskList from './taskList';
-import { openDrawer, closeDrawer, getTasks, getProjects, startLoading, startLoadingProjects } from '../../redux/actions';
+import { openDrawer, closeDrawer, getTasks, getFilteredTasks, getProjects,getFilters, startLoading, startLoadingProjects } from '../../redux/actions';
 class TaskListLoader extends Component {
   componentWillMount(){
-    this.props.startLoading();
-    this.props.startLoadingProjects();
-    this.props.getTasks(this.props.token,this.props.filter);
+    //this.props.startLoading();
+    //this.props.startLoadingProjects();
+    if(this.props.filterId){
+      this.props.getFilteredTasks(this.props.token,this.props.filterId);
+    }
+    else{
+      this.props.getTasks(this.props.token,this.props.filter);
+    }
+    this.props.getFilters(this.props.token);
     this.props.getProjects(this.props.token);
   }
   render() {
@@ -58,4 +64,4 @@ const mapStateToProps = ({taskR,login}) => {
   return {ACL:user.ACL,loadingData,tasks,projects,token};
 };
 
-export default connect(mapStateToProps,{openDrawer,getTasks, getProjects, startLoading, startLoadingProjects})(TaskListLoader);
+export default connect(mapStateToProps,{openDrawer,getTasks,getFilteredTasks, getProjects, getFilters, startLoading, startLoadingProjects})(TaskListLoader);

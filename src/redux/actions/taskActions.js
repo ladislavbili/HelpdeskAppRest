@@ -1,13 +1,15 @@
 import { SET_TASK_ATTRIBUTES, START_LOADING, SET_TASKS, SET_PROJECTS, EDIT_TASK_LIST, ADD_TO_TASK_LIST, DELETE_TASK, START_LOADING_PROJECTS,
-  START_LOADING_SEARCH,SET_SEARCH_ATTRIBUTES
+  START_LOADING_SEARCH,SET_SEARCH_ATTRIBUTES, SET_FILTERS
   } from '../types';
-import { PROJECT_LIST,USERS_LIST, COMPANIES_LIST, STATUSES_LIST, TASK_LIST, TAG_LIST } from '../urls';
+import { PROJECT_LIST,USERS_LIST, COMPANIES_LIST, STATUSES_LIST, TASK_LIST, TAG_LIST, FILTER_LIST} from '../urls';
 import {processRESTinput} from '../../helperFunctions';
 export const startLoadingSearch = () => {
   return (dispatch) => {
     dispatch({type: START_LOADING_SEARCH });
   };
 };
+
+
 
 export const getSearchAttributes = (token) => {
   return (dispatch) => {
@@ -80,6 +82,42 @@ export const getProjects = (token) => {
   };
 }
 
+export const getFilters = (token) => {
+  return (dispatch) => {
+    fetch(FILTER_LIST, {
+      method: 'GET',
+      headers: {
+          'Authorization': 'Bearer ' + token
+      }
+    }).then((response) =>{
+      response.json().then((data) => {
+        dispatch({type: SET_FILTERS, filters:data.data});
+      });
+    }
+  ).catch(function (error) {
+    console.log(error);
+  });
+  };
+}
+
+export const getFilteredTasks = (token,filterId) => {
+  return (dispatch) => {
+    fetch(TASK_LIST+'/filter/'+filterId, {
+      method: 'GET',
+      headers: {
+          'Authorization': 'Bearer ' + token
+      }
+    }).then((response) =>{
+      response.json().then((data) => {
+        dispatch({type: SET_TASKS, payload:{tasks:data.data}});
+      });
+    }
+  ).catch(function (error) {
+    console.log(error);
+  });
+  };
+}
+
 export const getTasks = (token,filter) => {
   return (dispatch) => {
     if(!filter){
@@ -93,6 +131,7 @@ export const getTasks = (token,filter) => {
       }
     }).then((response) =>{
       response.json().then((data) => {
+        console.log(data.data.length);
         dispatch({type: SET_TASKS, payload:{tasks:data.data}});
       });
     }

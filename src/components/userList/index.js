@@ -5,7 +5,7 @@ import {  Item, Footer, FooterTab, Container, Header, Title, Content, Button, Ic
 import { Actions } from 'react-native-router-flux';
 
 import I18n from '../../translations/';
-import {getUsers,startLoading,openAddingOfUser,openEditingOfUser} from '../../redux/actions';
+import {getUsers,startLoading,openAddingOfUser,startLoadingUser} from '../../redux/actions';
 
 
 class userList extends Component {
@@ -57,7 +57,7 @@ class userList extends Component {
               }
             renderRow={(user)=>
               <ListItem
-                button onPress={()=>this.props.openEditingOfUser(user.id)}
+                button onPress={()=>{this.props.startLoadingUser();Actions.userEdit({id:user.id});}}
               >
                 <Body>
                 {
@@ -92,4 +92,4 @@ const mapStateToProps = ({ taskR, userR, login }) => {
   return { users, loadingData, token };
 };
 
-export default connect(mapStateToProps, {getUsers,startLoading,openAddingOfUser,openEditingOfUser})(userList);
+export default connect(mapStateToProps, {getUsers,startLoading,openAddingOfUser,startLoadingUser})(userList);

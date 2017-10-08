@@ -27,8 +27,21 @@ export const processRESTinput = (input)=>{
   }
   let result='';
   for ( item in input) {
-    if(item && input[item] ){
+    if(item && input[item] && input[item]!='' ){
       result+=(item+'='+input[item]+'&');
+    }
+  }
+  return result.substring(0,result.length-1);
+}
+
+export const processDataWithPrefix = (input,prefix)=>{
+  if(!input){
+    return '';
+  }
+  let result='';
+  for ( item in input) {
+    if(item && input[item] && input[item]!='' ){
+      result+=(prefix+'['+item+']='+input[item]+'&');
     }
   }
   return result.substring(0,result.length-1);
