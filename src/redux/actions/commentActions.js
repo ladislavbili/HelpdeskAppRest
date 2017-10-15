@@ -1,5 +1,6 @@
 import { SET_COMMENTS, ADD_NEW_COMMENT, START_LOADING_COMMENTS } from '../types';
 import { TASK_LIST } from '../urls';
+import {processRESTinput} from '../../helperFunctions';
 
 export const getComments = (id,token) => {
   return (dispatch) => {
@@ -8,28 +9,29 @@ export const getComments = (id,token) => {
       headers: {
           'Authorization': 'Bearer ' + token
       }
-    }).then((response) =>response.json().then((response) => {
-      dispatch({type: SET_COMMENTS, payload:{comments:response.data}});
+    }).then((response) =>response.json().then((response2) => {
+      dispatch({type: SET_COMMENTS, payload:{comments:response2.data}});
     }))
     .catch(function (error) {
       console.log(error);
     });
   };
 };
-export const addComment = (comment) => {
+export const addComment = (comment,id,token) => {
   return (dispatch) => {
-    fetch(COMMENTS, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
+    fetch(TASK_LIST+'/'+id+'/comments', {
       method: 'POST',
-      body:JSON.stringify(comment),
+      headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body:processRESTinput(comment),
     }).then((response)=>response.json().then((response)=>{
-      dispatch({type: ADD_NEW_COMMENT, payload:{comment:Object.assign({},comment,{id:response.id})}});
+      dispatch({type: ADD_NEW_COMMENT, payload:{comment:response.data}});
     }))
   };
 };
+
 export const startLoadingComments = () => {
   return (dispatch) => {
     dispatch({type: START_LOADING_COMMENTS });

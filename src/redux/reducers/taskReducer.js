@@ -1,5 +1,5 @@
 import { SET_UNITS, SET_LABELS, DELETE_TASK, EDIT_TASK_LIST, ADD_TO_TASK_LIST, START_LOADING, START_LOADING_PROJECTS, SET_SEARCH_ATTRIBUTES,
-  SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_TASK, SET_TASK_ATTRIBUTES, SET_FILTERS } from '../types';
+  SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_TASK, SET_TASK_ATTRIBUTES, SET_FILTERS,SET_LAST_TASK } from '../types';
 
 const initialState = {
   statuses:[],
@@ -10,12 +10,18 @@ const initialState = {
   labels:[],
   project:null,
   projects:[],
-  loadingProjects:false,
-  filters:[]
+  loadingProjects:true,
+  filters:[],
+  currentTask:0,
 };
 
 export default function taskReducer (state = initialState, action) {
   switch (action.type) {
+    case SET_LAST_TASK:
+      return {
+        ...state,
+        currentTask: state.currentTask+1,
+      };
     case START_LOADING_PROJECTS:
       return {
         ...state,

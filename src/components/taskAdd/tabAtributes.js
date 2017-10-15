@@ -13,14 +13,14 @@ class TabAtributes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      title:'',
+      title:'task z mobilu',
       assignedTo:{id:null,name:I18n.t('nobody'), email:I18n.t('none')},
       requestedBy:this.props.users[this.props.users.findIndex((user)=>user.id==user.id)],
       status:this.props.statuses[0],
-      work_time:'0',
-      description:'',
+      work_time:'41',
+      description:'popis ulohy',
       descriptionHeight:100,
-      work:'',
+      work:'nic',
       workHeight:100,
       company:null,
       project:this.props.projectId?this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.props.projectId)]:this.props.projects[0].id,
@@ -62,25 +62,25 @@ class TabAtributes extends Component {
  }
 
   submitForm(){
-    // auto: createdAt, createdBy
-    const {title,description,work_time,deadline,startedAt,work, important} = this.state;
-    const assignedTo = this.state.assignedTo.id?{id:this.state.assignedTo.id}:null;
-    const requestedBy = this.state.requestedBy?{id:this.state.requestedBy.id}:null;
-    const status = {id:this.state.status.id};
-    const company = this.state.company?{id:this.state.company.id}:null;
-    const project = this.state.project?{id:this.state.project.id}:null;
-    const updatedAt = (new Date()).getTime();
-    const statusChangedAt = null;
-    const createdAt = (new Date()).getTime();
-    const createdBy = this.props.this.props.users[0];
-    const labels = this.state.labels.map((label)=>label.id);
+    const project = this.state.project;
+    const requester = this.state.requestedBy.id?this.state.requestedBy.id:null;
+    const company = this.state.company?this.state.company.id:null;
+    const assigned = '[userId => '+this.state.assignedTo.id+', statusId => '+this.state.status.id+']';
+    const startedAt = this.state.startedAt? Math.floor(this.state.startedAt/100): null;
+    const deadline = this.state.deadline? Math.floor(this.state.deadline/100): null;
+    const closedAt = null;
+    let tags = '';
+    this.state.labels.map((label)=>tags+=label.title+',')
+    const tag = '['+(tags.substring(0,tags.length-1))+']';
+    const {title,description,important,work} = this.state;
+    const workTime=this.state.work_time;
+    console.log(deadline);
     this.props.addTask(
-      {title,description,deadline,startedAt,important,work,work_time,labels,
-        createdAt,updatedAt,statusChangedAt,createdBy,requestedBy,project,company,assignedTo,
-        canEdit:true,status},this.state.assignedTo.id?this.state.assignedTo:null,
-        {id:this.state.project,title:this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.state.project)].title},
-        this.state.status
-      );
+      {
+        title,description,requester,project ,company,startedAt,deadline,important,work,workTime,assigned
+      },
+      this.props.token
+    );
     Actions.pop();
   }
 
@@ -410,9 +410,10 @@ class TabAtributes extends Component {
 
 const mapStateToProps = ({ taskR, login, companyR, userR }) => {
   const {users} = userR;
+  const {token} = login;
   const {companies} = companyR;
   const { statuses, projects,labels} = taskR;
-  return { users, companies,statuses, projects,labels};
+  return { users,token, companies,statuses, projects,labels};
 };
 
 export default connect(mapStateToProps,{addTask})(TabAtributes);

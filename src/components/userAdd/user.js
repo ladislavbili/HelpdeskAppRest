@@ -7,31 +7,29 @@ import {Modal} from 'react-native';
 
 
 import I18n from '../../translations/';
-import {editUser} from '../../redux/actions';
+import {addUser} from '../../redux/actions';
 
-class UserEdit extends Component {
+class UserAdd extends Component {
   constructor(props) {
     super(props);
-    let companyID=this.props.companies.findIndex((company)=>company.id==this.props.user.company.id);
-    let user_roleID=this.props.user_roles.findIndex((role)=>role.id==this.props.user.user_role.id);
     this.state = {
-      name:this.props.user.detailData.name?this.props.user.detailData.name:'',
-      surname:this.props.user.detailData.surname?this.props.user.detailData.surname:'',
-      email:this.props.user.email?this.props.user.email:'',
-      company:this.props.companies[companyID==-1?0:companyID],
+      name:'',
+      surname:'',
+      email:'',
+      company:this.props.companies[0],
       password:'',
-      signature:this.props.user.detailData.signature?this.props.user.detailData.signature:'',
+      signature:'',
       selectingCompany:false,
       filterWord:'',
-      active:this.props.user.is_active?this.props.user.is_active:false,
-      user_role:this.props.user_roles[user_roleID==-1?0:user_roleID],
+      active:false,
+      user_role:this.props.user_roles[0],
       selectingUserRole:false,
       filterWordUserRole:'',
       signatureHeight:0,
-      username:this.props.user.username?this.props.user.username:'',
-      func:this.props.user.detailData.function?this.props.user.detailData.function:'',
-      mobile:this.props.user.detailData.mobile?this.props.user.detailData.mobile:'',
-      tel:this.props.user.detailData.tel?this.props.user.detailData.tel:'',
+      username:'',
+      func:'',
+      mobile:'',
+      tel:'',
     };
   }
 
@@ -49,17 +47,7 @@ class UserEdit extends Component {
       mobile:this.state.mobile,
       tel:this.state.tel
     }
-    let originalDetailData=Object.assign({},this.props.user.detailData,detailData);
-    let userData=Object.assign(
-      {},
-      this.props.user,
-      {
-        detailData:originalDetailData,
-        email:this.state.email,
-        username:this.state.username
-      }
-    );
-    this.props.editUser(userData, user, detailData,this.state.company.id,this.state.user_role.id,this.props.token);
+    this.props.addUser( user, detailData,this.state.company.id,this.state.user_role.id,this.props.token);
     Actions.pop();
   }
   render() {
@@ -76,7 +64,7 @@ class UserEdit extends Component {
           </Body>
           <Right>
             {
-              (this.state.password==''||this.state.password.length>7) &&
+              (this.state.password.length>7) &&
               this.state.username.length!=0 &&
               this.state.email.length!=0 &&
               <Button transparent onPress={this.submit.bind(this)}>
@@ -124,17 +112,16 @@ class UserEdit extends Component {
 
           </View>
 
-          <Text note>{I18n.t('newPass')}</Text>
-          <Text note>Optional: Leave empty to keep current password</Text>
+          <Text note>Password</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
               secureTextEntry={true}
-              placeholder={I18n.t('newPass')}
+              placeholder="Password"
               value={this.state.password}
               onChangeText={(value)=>this.setState({password:value})}
             />
             {
-              (this.state.password.length<8 && this.state.password.length!='') && <Text note style={{color:'red'}}>Password has to be at least 8 characters</Text>
+              this.state.password.length<8  && <Text note style={{color:'red'}}>Password has to be at least 8 characters</Text>
             }
           </View>
 
@@ -292,10 +279,10 @@ class UserEdit extends Component {
 }
 
 const mapStateToProps = ({ companyR, userR,login }) => {
-  const { user_roles, user } = userR;
+  const { user_roles} = userR;
   const { companies } = companyR;
   const { token } = login;
-  return { companies, token, user_roles, user };
+  return { companies, token, user_roles};
 };
 
-export default connect(mapStateToProps, {editUser})(UserEdit);
+export default connect(mapStateToProps, {addUser})(UserAdd);

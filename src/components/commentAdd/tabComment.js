@@ -10,6 +10,7 @@ class TabComment extends Component { // eslint-disable-line
     constructor(props) {
       super(props);
       this.state = {
+        title:'',
         message:'',
         messageHeight:50,
         internal:false,
@@ -17,7 +18,7 @@ class TabComment extends Component { // eslint-disable-line
     }
 
     submitForm(){
-      this.props.addComment({createdBy:this.props.userData,createdAt:(new Date()).getTime(),title:null,body:this.state.message,internal:this.state.internal,email_to:null});
+      this.props.addComment({title:this.state.title,body:this.state.message,internal:this.state.internal,email:false},this.props.id,this.props.token);
       Actions.pop();
     }
 
@@ -34,6 +35,14 @@ class TabComment extends Component { // eslint-disable-line
             </Item>
 
           }
+          <Text note>Title</Text>
+          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15}}>
+            <Input
+              onChange={ event => this.setState({title:event.nativeEvent.text}) }
+              placeholder="Add title"
+              value={this.state.title}
+            />
+          </View>
 
             <Text note>{I18n.t('commentAddBody')}</Text>
             <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15}}>
@@ -66,7 +75,7 @@ class TabComment extends Component { // eslint-disable-line
     }
   }
   const mapStateToProps = ({ login }) => {
-    const {userData} = login;
-    return {userData};
+    const {userData,token} = login;
+    return {userData,token};
   };
   export default connect(mapStateToProps,{addComment})(TabComment);

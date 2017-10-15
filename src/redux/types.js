@@ -20,6 +20,7 @@ export const EDIT_TASK_LIST = 'EDIT_TASK_LIST';
 export const ADD_TO_TASK_LIST = 'ADD_TO_TASK_LIST';
 export const DELETE_TASK = 'DELETE_TASK';
 export const SET_FILTERS = 'SET_FILTERS';
+export const SET_LAST_TASK = 'SET_LAST_TASK';
 
 
 export const SET_COMMENTS = 'SET_COMMENTS';

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { View, Body, Container, Content, Icon, Input, Item, Label, Text, Footer, FooterTab, Button, Picker,  ListItem, Header,Title , Left, Right, List , CheckBox } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import I18n from '../../translations';
-import {saveEdit,deleteTask} from '../../redux/actions';
+import {editTask,deleteTask} from '../../redux/actions';
 import {formatDate,processInteger} from '../../helperFunctions';
 import TaskLabel from './label';
 
@@ -14,9 +14,9 @@ class TabAtributes extends Component {
     super(props);
     this.state = {
       title:this.props.task.title?this.props.task.title:'',
-      assignedTo:this.props.task.taskHasAssignedUsers?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.task.taskHasAssignedUsers[0].user.id)]:{id:null,name:I18n.t('nobody'), email:I18n.t('none')},
+      assignedTo:this.props.task.taskHasAssignedUsers.length!=0?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.task.taskHasAssignedUsers[0].user.id)]:{id:null,name:I18n.t('nobody'), email:I18n.t('none')},
       requestedBy:this.props.task.requestedBy?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.task.requestedBy.id)]:{id:null,name:I18n.t('nobody'), email:I18n.t('none')},
-      status:this.props.task.taskHasAssignedUsers && this.props.task.taskHasAssignedUsers[0].status ? this.props.statuses[this.props.statuses.findIndex((item)=>item.id==this.props.task.taskHasAssignedUsers[0].status.id)]:this.props.statuses[0],
+      status:this.props.task.taskHasAssignedUsers.length!=0 && this.props.task.taskHasAssignedUsers[0].status ? this.props.statuses[this.props.statuses.findIndex((item)=>item.id==this.props.task.taskHasAssignedUsers[0].status.id)]:this.props.statuses[0],
       work_time:this.props.task.work_time?this.props.task.work_time.toString():'0',
       description:this.props.task.description?this.props.task.description:'',
       descriptionHeight:100,
@@ -68,26 +68,25 @@ class TabAtributes extends Component {
 
   submitForm(){
     const id = this.props.task.id;
-    const {title,description,work_time,deadline,startedAt,work, important} = this.state;
-    const assignedTo = this.state.assignedTo.id?{id:this.state.assignedTo.id}:null;
-    const requestedBy = this.state.requestedBy.id?{id:this.state.requestedBy.id}:null;
-    const status = {id:this.state.status.id};
-    const company = this.state.company?{id:this.state.company.id}:null;
-    const project = {id:this.state.project};
-    const updatedAt = (new Date()).getTime();
-    const statusChangedAt = !this.props.task.status||status!=this.props.task.status.id?(new Date()).getTime():this.state.statusChangedAt;
-    const createdAt = this.props.task.createdAt;
-    const createdBy = this.props.task.createdBy;
-    const labels = this.state.labels.map((label)=>label.id);
+    const project = this.state.project;
+    const requester = this.state.requestedBy.id?this.state.requestedBy.id:null;
+    const company = this.state.company?this.state.company.id:null;
+    const assigned = '[userId => '+this.state.assignedTo.id+', statusId => '+this.state.status.id+']';
+    const startedAt = null;
+    const deadline = this.state.deadline? Math.floor(this.state.deadline/1000): null;
+    const closedAt = null;
+    let tags = '';
+    this.state.labels.map((label)=>tags+=label.title+',')
+    const tag = '['+(tags.substring(0,tags.length-1))+']';
+    const {title,description,important,work} = this.state;
+    const workTime=this.state.work_time;
 
-    this.props.saveEdit(
-      {id,title,description,deadline,startedAt,important,work,work_time,labels,
-        createdAt,updatedAt,statusChangedAt,createdBy,requestedBy,project,company,assignedTo,
-        canEdit:this.props.task.canEdit,status},this.state.assignedTo.id?this.state.assignedTo:null,
-        this.state.project?{id:this.state.project,title:this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.state.project)].title}:null,
-        this.state.status
-      );
-
+    this.props.editTask(
+      {
+        /*project,requester,company, assigned,startedAt,deadline,closedAt,tag,
+        */title/*,description,important,work,workTime*/
+      },id,this.props.token
+    );
     Actions.pop();
   }
 
@@ -98,7 +97,7 @@ class TabAtributes extends Component {
       [
         {text: I18n.t('cancel'), style: 'cancel'},
         {text: I18n.t('ok'), onPress: () =>{
-          this.props.deleteTask(this.props.task.id);
+          this.props.deleteTask(this.props.task.id,this.props.token);
           Actions.pop();
         }},
       ],
@@ -443,9 +442,10 @@ class TabAtributes extends Component {
 
 const mapStateToProps = ({ taskR, login, userR, companyR }) => {
   const { users } = userR;
+  const {token } = login;
   const { companies } = companyR;
   const { statuses, projects, task,labels} = taskR;
-  return { users, companies,statuses, projects, task,labels};
+  return { users, companies,statuses, projects, task,labels,token};
 };
 
-export default connect(mapStateToProps,{saveEdit, deleteTask})(TabAtributes);
+export default connect(mapStateToProps,{editTask, deleteTask})(TabAtributes);

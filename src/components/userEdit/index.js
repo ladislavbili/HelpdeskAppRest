@@ -8,7 +8,7 @@ import {getUser} from '../../redux/actions';
 
 class UserEditLoader extends Component {
   componentWillMount(){
-    this.props.getUser(this.props.id, this.props.token);
+    this.props.getUser(this.props.id,this.props.token);
   }
   render() {
     if(this.props.loadingUser){

@@ -20,10 +20,15 @@ export default function reducer (state = initialState, action) {
         loadingComments: true,
       };
     case ADD_NEW_COMMENT:{
-      return {
-        ...state,
-        comments:[action.payload.comment,...state.comments],
-      };
+      {
+        let comments=state.comments;
+        comments[action.payload.comment.id]=action.payload.comment;
+        console.log(comments);
+        return {
+          ...state,
+          comments,
+        };
+      }
     }
     default:
       return state;

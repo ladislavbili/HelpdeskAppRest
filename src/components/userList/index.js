@@ -5,7 +5,7 @@ import {  Item, Footer, FooterTab, Container, Header, Title, Content, Button, Ic
 import { Actions } from 'react-native-router-flux';
 
 import I18n from '../../translations/';
-import {getUsers,startLoading,openAddingOfUser,startLoadingUser} from '../../redux/actions';
+import {getUsers,startLoading,startLoadingUser} from '../../redux/actions';
 
 
 class userList extends Component {
@@ -74,7 +74,7 @@ class userList extends Component {
         </Content>
         <Footer>
           <FooterTab>
-            <Button onPress={this.props.openAddingOfUser} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
+            <Button onPress={()=>{this.props.startLoadingUser();Actions.userAdd();}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
               <Icon active style={{ color: 'white' }} name="add" />
               <Text style={{ color: 'white' }} >{I18n.t('settingsUser')}</Text>
             </Button>
@@ -92,4 +92,4 @@ const mapStateToProps = ({ taskR, userR, login }) => {
   return { users, loadingData, token };
 };
 
-export default connect(mapStateToProps, {getUsers,startLoading,openAddingOfUser,startLoadingUser})(userList);
+export default connect(mapStateToProps, {getUsers,startLoading,startLoadingUser})(userList);

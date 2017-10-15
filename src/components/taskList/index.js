@@ -5,22 +5,28 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { ActivityIndicator } from 'react-native';
 import TaskList from './taskList';
-import { openDrawer, closeDrawer, getTasks, getFilteredTasks, getProjects,getFilters, startLoading, startLoadingProjects } from '../../redux/actions';
+import { openDrawer, closeDrawer, getTasks, getFilteredTasks, getProjects,getFilters, startLoading, startLoadingProjects, setLastTask } from '../../redux/actions';
 class TaskListLoader extends Component {
   componentWillMount(){
-    //this.props.startLoading();
-    //this.props.startLoadingProjects();
-    if(this.props.filterId){
-      this.props.getFilteredTasks(this.props.token,this.props.filterId);
+    if(this.props.drawerState=='closed'){
+      if(this.props.id!=this.props.currentTask){
+        return;
+      }
+      this.props.setLastTask();
+      if(this.props.filterId){
+        this.props.getFilteredTasks(this.props.token,this.props.filterId);
+      }
+      else if(this.props.filter){
+        this.props.getTasks(this.props.token,this.props.filter);
+      }
     }
     else{
-      this.props.getTasks(this.props.token,this.props.filter);
+      this.props.getFilters(this.props.token);
+      this.props.getProjects(this.props.token);
     }
-    this.props.getFilters(this.props.token);
-    this.props.getProjects(this.props.token);
   }
   render() {
-    if(this.props.loadingData){
+    if(this.props.id+1!=this.props.currentTask && this.props.id ){
       return (
         <ActivityIndicator
         animating size={ 'large' }
@@ -36,7 +42,7 @@ class TaskListLoader extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>TaskList</Title>
+            <Title>{this.props.title?this.props.title:'TaskList'}</Title>
           </Body>
           <Right>
             <Button transparent style={{ marginTop: 8 }} onPress={Actions.search}>
@@ -58,10 +64,11 @@ class TaskListLoader extends Component {
   }
 }
 
-const mapStateToProps = ({taskR,login}) => {
-  const {loadingData,tasks,projects} = taskR;
+const mapStateToProps = ({taskR,login,drawer}) => {
+  const {loadingData,tasks,projects,currentTask} = taskR;
   const {user,token} = login;
-  return {ACL:user.ACL,loadingData,tasks,projects,token};
+  const{drawerState} = drawer;
+  return {ACL:user.ACL,loadingData,tasks,projects,token,drawerState,currentTask};
 };
 
-export default connect(mapStateToProps,{openDrawer,getTasks,getFilteredTasks, getProjects, getFilters, startLoading, startLoadingProjects})(TaskListLoader);
+export default connect(mapStateToProps,{openDrawer,getTasks,getFilteredTasks, getProjects, getFilters, startLoading, startLoadingProjects, setLastTask})(TaskListLoader);

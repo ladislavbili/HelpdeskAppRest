@@ -5,7 +5,7 @@ import { Title ,Header, Body, Content, Text, List, ListItem, Icon, Container, Le
 import { Actions } from 'react-native-router-flux';
 import { ActivityIndicator } from 'react-native';
 
-import { closeDrawer } from '../../redux/actions';
+import { closeDrawer, setLastTask } from '../../redux/actions';
 import styles from './style';
 import I18n from '../../translations/';
 
@@ -17,9 +17,7 @@ class SideBar extends Component {
       shadowRadius: 4,
     };
   }
-
   render() {
-
     if(this.props.loadingProjects){
       return (
         <ActivityIndicator
@@ -39,10 +37,21 @@ class SideBar extends Component {
           </Body>
           <Right />
         </Header>
+        <Text>Filters</Text>
+        <List
+          dataArray={this.props.filters} renderRow={data =>
+            <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filterId:data.id,filter:null,title:data.title,id:this.props.currentTask});}} >
+              <Left>
+                <Icon active name={data.id=='REQUESTED'||data.id=='INBOX'?'ios-color-filter-outline':'ios-folder-outline'} style={{ color: '#777', fontSize: 26, width: 30 }} />
+                <Text style={styles.text}>{data.title}</Text>
+              </Left>
+            </ListItem>
+          }
+        />
         <Text>Projects</Text>
         <List
           dataArray={this.props.projects} renderRow={data =>
-            <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filter:{project:''+data.id}});}} >
+            <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filter:{project:''+data.id},filterId:null,title:data.title,id:this.props.currentTask});}} >
               <Left>
                 <Icon active name={data.id=='REQUESTED'||data.id=='INBOX'?'ios-color-filter-outline':'ios-folder-outline'} style={{ color: '#777', fontSize: 26, width: 30 }} />
                 <Text style={styles.text}>{data.title}</Text>
@@ -59,17 +68,6 @@ class SideBar extends Component {
             </ListItem>
           }
         />
-        <Text>Filters</Text>
-        <List
-          dataArray={this.props.filters} renderRow={data =>
-            <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filterId:data.id});}} >
-              <Left>
-                <Icon active name={data.id=='REQUESTED'||data.id=='INBOX'?'ios-color-filter-outline':'ios-folder-outline'} style={{ color: '#777', fontSize: 26, width: 30 }} />
-                <Text style={styles.text}>{data.title}</Text>
-              </Left>
-            </ListItem>
-          }
-        />
         </Content>
       </Container>
     );
@@ -78,8 +76,8 @@ class SideBar extends Component {
 
 const mapStateToProps = ({ taskR, login }) => {
   const { token } = login;
-  const { projects, loadingProjects,filters } = taskR;
-  return { projects, token, loadingProjects, filters };
+  const { projects, loadingProjects,filters, currentTask } = taskR;
+  return { projects, token, loadingProjects, filters,currentTask };
 };
 
-export default connect(mapStateToProps, {closeDrawer})(SideBar);
+export default connect(mapStateToProps, {closeDrawer,setLastTask})(SideBar);

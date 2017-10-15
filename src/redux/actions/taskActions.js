@@ -1,14 +1,50 @@
 import { SET_TASK_ATTRIBUTES, START_LOADING, SET_TASKS, SET_PROJECTS, EDIT_TASK_LIST, ADD_TO_TASK_LIST, DELETE_TASK, START_LOADING_PROJECTS,
-  START_LOADING_SEARCH,SET_SEARCH_ATTRIBUTES, SET_FILTERS
+  START_LOADING_SEARCH,SET_SEARCH_ATTRIBUTES, SET_FILTERS, SET_LAST_TASK
   } from '../types';
 import { PROJECT_LIST,USERS_LIST, COMPANIES_LIST, STATUSES_LIST, TASK_LIST, TAG_LIST, FILTER_LIST} from '../urls';
 import {processRESTinput} from '../../helperFunctions';
+
+export const addTask = (task,token) => {
+  return (dispatch) => {
+      fetch(TASK_LIST, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Bearer ' + token
+        },
+        method: 'POST',
+        body:processRESTinput(task),
+      });
+  };
+};
+export const deleteTask = (id,token) => {
+  return (dispatch) => {
+    fetch( TASK_LIST+ '/' + id, {
+      method: 'DELETE',
+      headers: {
+          'Authorization': 'Bearer ' + token
+      }
+    })
+    .then((response)=>{
+      dispatch({type: DELETE_TASK, payload:{id}});
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+
 export const startLoadingSearch = () => {
   return (dispatch) => {
     dispatch({type: START_LOADING_SEARCH });
   };
 };
 
+export const setLastTask = () => {
+  return (dispatch) => {
+    dispatch({type: SET_LAST_TASK });
+  };
+};
 
 
 export const getSearchAttributes = (token) => {
@@ -120,10 +156,6 @@ export const getFilteredTasks = (token,filterId) => {
 
 export const getTasks = (token,filter) => {
   return (dispatch) => {
-    if(!filter){
-      dispatch({type: SET_TASKS, payload:{tasks:[]}});
-      return;
-    }
     fetch(TASK_LIST+'?'+processRESTinput(filter), {
       method: 'GET',
       headers: {
@@ -131,7 +163,6 @@ export const getTasks = (token,filter) => {
       }
     }).then((response) =>{
       response.json().then((data) => {
-        console.log(data.data.length);
         dispatch({type: SET_TASKS, payload:{tasks:data.data}});
       });
     }
@@ -244,85 +275,21 @@ export const startLoading = () => {
     dispatch({type: START_LOADING });
   };
 };
-export const saveEdit = (task,assignedTo,project,status) => {
+export const editTask = (task,id,token) => {
   return (dispatch) => {
-    let taskURL = TASK + '/'+ task.id;
-    let taskListURL = TASK_LIST + '/'+ task.id;
-    Promise.all([
-      fetch(taskURL, {
+    console.log(processRESTinput(task));
+      fetch(TASK_LIST+'/quick-update/'+id, {
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Bearer ' + token
         },
         method: 'PATCH',
-        body:JSON.stringify(task),
-      }),
-      fetch(taskListURL, {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        method: 'PATCH',
-        body:JSON.stringify(Object.assign({},task,{assignedTo,project,status})),
+        body:processRESTinput(task),
       })
-    ])
-    .then((responses) =>
-      dispatch({type: EDIT_TASK_LIST, payload:{taskInList:Object.assign({},task,{assignedTo,project,status})} })
-    )
-    .catch(function (error) {
-      console.log(error);
-    });
-  };
-};
-export const addTask = (task,assignedTo,project,status) => {
-  return (dispatch) => {
-    let ACL = {
-      create_task: true,
-      resolve_task: true,
-      delete_task: true,
-      view_internal_note: false
-    };
-    Promise.all([
-      fetch(TASK, {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body:JSON.stringify(Object.assign({},task,{ACL})),
-      }),
-      fetch(TASK_LIST, {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        method: 'POST',
-
-        body:JSON.stringify(Object.assign({},task,{assignedTo,project,status})),
-      })
-    ])
-    .then(([response1,response2]) =>Promise.all([response1.json(),response2.json()]).then(([response1,response2]) =>{
-      dispatch({type: ADD_TO_TASK_LIST, payload:{taskInList:Object.assign({},task,{assignedTo,id:response1.id,project,status})} });
-      }
-    ))
-    .catch(function (error) {
-      console.log(error);
-    });
-  };
-};
-export const deleteTask = (id) => {
-  return (dispatch) => {
-    let taskListURL= TASK_LIST+ '/' + id
-    let taskURL= TASK+ '/' + id
-    Promise.all([
-      fetch(taskListURL, {
-        method: 'DELETE',
-      }),
-      fetch(taskURL, {
-        method: 'DELETE',
-      })
-    ]).then(([response1,response2])=>Promise.all([response1.json(),response2.json()]).then(([response1,response2])=>{
-      dispatch({type: DELETE_TASK, payload:{id}});
+    .then((response) =>response.json().then((response)=>{
+      console.log(response);
+      dispatch({type: EDIT_TASK_LIST, payload:{taskInList:Object.assign({},response.data,{id})} });
     }))
     .catch(function (error) {
       console.log(error);
