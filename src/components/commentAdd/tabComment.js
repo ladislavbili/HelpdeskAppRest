@@ -35,23 +35,23 @@ class TabComment extends Component { // eslint-disable-line
             </Item>
 
           }
-          <Text note>Title</Text>
+          <Text note>{I18n.t('emailSubject')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15}}>
             <Input
               onChange={ event => this.setState({title:event.nativeEvent.text}) }
-              placeholder="Add title"
+              placeholder={I18n.t('enterEmailSubject')}
               value={this.state.title}
             />
           </View>
 
-            <Text note>{I18n.t('commentAddBody')}</Text>
+            <Text note>{I18n.t('emailMessage')}</Text>
             <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15}}>
               <Input
                 style={{height:Math.max(35, this.state.messageHeight)}}
                 multiline={true}
                 onContentSizeChange={(event) => this.setState({ messageHeight: event.nativeEvent.contentSize.height })}
                 onChange={ event => this.setState({message:event.nativeEvent.text}) }
-                placeholder={I18n.t('commentAddMessagePlaceholder')}
+                placeholder={I18n.t('enterEmailMessage')}
                 value={this.state.message}
               />
             </View>
@@ -66,7 +66,7 @@ class TabComment extends Component { // eslint-disable-line
             <FooterTab>
               <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }} onPress={this.submitForm.bind(this)}>
                 <Icon active style={{ color: 'white' }} name="add" />
-                <Text style={{ color: 'white' }} >{I18n.t('add')}</Text>
+                <Text style={{ color: 'white' }} >{I18n.t('send')}</Text>
               </Button>
             </FooterTab>
           </Footer>

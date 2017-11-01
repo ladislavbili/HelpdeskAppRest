@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
 
 import Search from './search';
-import { startLoadingSearch, getSearchAttributes } from '../../redux/actions';
+import { getSearchAttributes } from '../../redux/actions';
 
 class SearchLoader extends Component {
   componentWillMount(){
-    this.props.startLoadingSearch();
     this.props.getSearchAttributes(this.props.token);
   }
   render() {
+    console.log(this.props.loadingSearch);
     if(this.props.loadingSearch){
       return (
         <ActivityIndicator
@@ -31,4 +31,4 @@ const mapStateToProps = ({login, taskR}) => {
   return {token, loadingSearch};
 };
 
-export default connect(mapStateToProps,{startLoadingSearch,getSearchAttributes})(SearchLoader);
+export default connect(mapStateToProps,{getSearchAttributes})(SearchLoader);

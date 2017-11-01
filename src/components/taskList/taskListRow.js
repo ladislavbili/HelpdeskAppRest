@@ -16,10 +16,10 @@ class TaskListRow extends Component {
               <Body>
                 <Text>{this.props.task.title?this.props.task.title:''}</Text>
                 <Text numberOfLines={1} note>
-                  {I18n.t('project')}: {project?project.title:'None'}
+                  {I18n.t('project')}: {project?project.title:I18n.t('noProject')}
                 </Text>
-                <Text numberOfLines={1} note>{I18n.t('assignedTo')}: {assigned?assigned.user.username:I18n.t('nobody')}</Text>
-                <Text numberOfLines={1} note>{I18n.t('deadline')}: {this.props.task?'tu bude deadline':I18n.t('noDate')}</Text>
+                <Text numberOfLines={1} note>{I18n.t('assignedTo')}: {assigned?assigned.user.username:I18n.t('noUser')}</Text>
+                <Text numberOfLines={1} note>{I18n.t('deadline')}: {this.props.task?'tu bude deadline':I18n.t('noDeadline')}</Text>
                 { assigned &&
                   <Item style={{backgroundColor:assigned.status.color,flex:1,flexDirection:'column'}}>
                     <Text style={{color:'white',paddingLeft:10,paddingRight:10,flex:1,flexDirection:'column'}}>{assigned.status.title}</Text>

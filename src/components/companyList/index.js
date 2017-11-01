@@ -36,7 +36,7 @@ componentWillMount(){
             </Button>
           </Left>
           <Body>
-            <Title>{I18n.t('settingsCompaniesListTitle')}</Title>
+            <Title>{I18n.t('companyList')}</Title>
           </Body>
         </Header>
         <Content>

@@ -12,18 +12,13 @@ class CompanyEdit extends Component {
       super(props);
       this.state = {
         title:this.props.company.title,
-        //subscription_time:this.props.company.subscription_time.toString(),
-        subscription_time:'',
         ico:this.props.company.ico,
         dic:this.props.company.dic,
         ic_dph:this.props.company.ic_dph,
         street:this.props.company.street,
         city:this.props.company.city,
         zip:this.props.company.zip,
-        country:this.props.company.country,
-        is_active:this.props.company.is_active,
-        //phone:this.props.company.phone,
-        phone:'',
+        country:this.props.company.country
       };
     }
     checkIfNumber(value){
@@ -40,7 +35,6 @@ class CompanyEdit extends Component {
       city:this.state.city,
       zip:this.state.zip,
       country:this.state.country
-      //is_active:this.state.is_active,
     };
     this.props.editCompany(company,this.props.token,this.props.company.id);
     Actions.pop();
@@ -56,34 +50,35 @@ class CompanyEdit extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{I18n.t('settingsAddCompanyTitle')}</Title>
+            <Title>{I18n.t('editCompany')}</Title>
           </Body>
           <Right>
-            <Button transparent onPress={this.submit.bind(this)}>
+            {this.state.title.length!=0 &&
+              <Button transparent onPress={this.submit.bind(this)}>
               <Icon active style={{ color: 'white', padding:10 }} name="ios-checkmark-circle-outline" />
-            </Button>
+              </Button>
+            }
           </Right>
         </Header>
         <Content style={{ padding: 15 }}>
 
-          <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
-          <CheckBox checked={this.state.is_active} color='#3F51B5' onPress={()=>this.setState({is_active:!this.state.is_active})}/>
-            <Label style={{marginLeft:15}}>{I18n.t('settingsActive')}</Label>
-          </Item>
+        <Text note>{I18n.t('companyName')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Input
+          placeholder={I18n.t('enterCompanyName')}
+          value={this.state.title}
+          onChangeText={(value)=>this.setState({title:value})}
+          />
+          {
+            this.state.title.length==0 && <Text note style={{color:'red'}}>You must set name of the company</Text>
+          }
 
-          <Text note>{I18n.t('settingsCompanyName')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Input
-            placeholder={I18n.t('settingsCompanyName')}
-            value={this.state.title}
-            onChangeText={(value)=>this.setState({title:value})}
-            />
-          </View>
+        </View>
 
           <Text note>{I18n.t('street')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-          placeholder={I18n.t('street')}
+          placeholder={I18n.t('enterStreet')}
           value={this.state.street}
           onChangeText={(value)=>this.setState({street:value})}
           />
@@ -92,7 +87,7 @@ class CompanyEdit extends Component {
           <Text note>{I18n.t('city')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-          placeholder={I18n.t('city')}
+          placeholder={I18n.t('enterCity')}
           value={this.state.city}
           onChangeText={(value)=>this.setState({city:value})}
           />
@@ -101,19 +96,9 @@ class CompanyEdit extends Component {
           <Text note>{I18n.t('country')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-          placeholder={I18n.t('country')}
+          placeholder={I18n.t('enterCountry')}
           value={this.state.country}
           onChangeText={(value)=>this.setState({country:value})}
-          />
-          </View>
-
-          <Text note>{I18n.t('subscriptionTime')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-          <Input
-          placeholder={I18n.t('subscriptionTime')}
-          keyboardType='numeric'
-          value={this.state.subscription_time}
-          onChangeText={ value => {let result = processInteger(value);this.setState({subscription_time:(result?result:this.state.subscription_time)})} }
           />
           </View>
 
@@ -121,17 +106,17 @@ class CompanyEdit extends Component {
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
           keyboardType='numeric'
-          placeholder={I18n.t('ico')}
+          placeholder={I18n.t('enterIco')}
           value={this.state.ico}
           onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ico:(result?value:this.state.ico)})} }
           />
           </View>
 
-          <Text note>{I18n.t('ic_dph')}</Text>
+          <Text note>{I18n.t('icDph')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
           keyboardType='numeric'
-          placeholder={I18n.t('ic_dph')}
+          placeholder={I18n.t('enterIcDph')}
           value={this.state.ic_dph}
           onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ic_dph:(result?value:this.state.ic_dph)})}}
           />
@@ -140,7 +125,7 @@ class CompanyEdit extends Component {
           <Text note>{I18n.t('dic')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-          placeholder={I18n.t('dic')}
+          placeholder={I18n.t('enterDic')}
           value={this.state.dic}
           onChangeText={(value)=>this.setState({dic:value})}
           />
@@ -149,20 +134,10 @@ class CompanyEdit extends Component {
           <Text note>{I18n.t('zipCode')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-          placeholder={I18n.t('zipCode')}
+          placeholder={I18n.t('enterZipCode')}
           keyboardType='numeric'
           value={this.state.zip}
           onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({zip:(result?value:this.state.zip)})}}
-          />
-          </View>
-
-          <Text note>{I18n.t('phone')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-          <Input
-          placeholder={I18n.t('phone')}
-          keyboardType='numeric'
-          value={this.state.phone}
-          onChangeText={value => this.setState({phone:value})}
           />
           </View>
 

@@ -12,12 +12,12 @@ class CommentAdd extends Component {
     return (
       <Container>
         <Tabs>
-            <Tab heading={I18n.t('commentAddtabComment')}>
+            <Tab heading={'+' + I18n.t('comment')}>
                 <TabComment id={this.props.id} ACL={this.props.ACL} />
             </Tab>
             {
               this.props.ACL.includes('sent_emails_from_comments') &&
-              <Tab heading="+ Email">
+              <Tab heading={"+"+ I18n.t('comment')}>
                   <TabEmail id={this.props.id} ACL={this.props.ACL} />
               </Tab>
           }

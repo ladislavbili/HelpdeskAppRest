@@ -3,7 +3,7 @@ import {LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_LOGOUT} from '../types'
 const initialState = {
   authenticated: false,
   user: null,
-  error: '',
+  error: false,
   token:null,
   loading:false
 };
@@ -11,14 +11,14 @@ const initialState = {
 export default function loginReducer(state = initialState, action) {
   switch (action.type) {
     case LOGIN_START:
-      return { ...state, loading: true, error: '' };
+      return { ...state, loading: true, error: false };
     case LOGIN_SUCCESS:
       return {
         ...state,
         authenticated: true,
         user: action.payload.user,
         token: action.payload.token,
-        error: '',
+        error: false,
         loading:false,
       };
     case LOGIN_FAIL:
@@ -26,7 +26,7 @@ export default function loginReducer(state = initialState, action) {
         ...state,
         authenticated: false,
         user: null,
-        error: 'Login failed, invalid name or password',
+        error: true,
         loading:false,
       };
     case LOGIN_LOGOUT:
@@ -34,7 +34,7 @@ export default function loginReducer(state = initialState, action) {
         ...state,
         authenticated: false,
         user: null,
-        error: '',
+        error: false,
         loading:false,
       };
     default:

@@ -4,8 +4,11 @@ import { Container, Header, Title, Button, Icon, Left, Right, Body } from 'nativ
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { ActivityIndicator } from 'react-native';
+
 import TaskList from './taskList';
-import { openDrawer, closeDrawer, getTasks, getFilteredTasks, getProjects,getFilters, startLoading, startLoadingProjects, setLastTask } from '../../redux/actions';
+import { startLoadingSearch,openDrawer, closeDrawer, getTasks, getFilteredTasks, getProjects,getFilters, startLoading, startLoadingProjects, setLastTask } from '../../redux/actions';
+import I18n from '../../translations/';
+
 class TaskListLoader extends Component {
   componentWillMount(){
     if(this.props.drawerState=='closed'){
@@ -42,10 +45,10 @@ class TaskListLoader extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{this.props.title?this.props.title:'TaskList'}</Title>
+            <Title>{this.props.title?this.props.title:I18n.t('taskList')}</Title>
           </Body>
           <Right>
-            <Button transparent style={{ marginTop: 8 }} onPress={Actions.search}>
+            <Button transparent style={{ marginTop: 8 }} onPress={()=>{this.props.startLoadingSearch();Actions.search();}}>
               <Icon name="search" style={{ color: 'white' }} />
             </Button>
             <Button transparent style={{ marginTop: 8 }} onPress={Actions.messages}>
@@ -71,4 +74,4 @@ const mapStateToProps = ({taskR,login,drawer}) => {
   return {ACL:user.ACL,loadingData,tasks,projects,token,drawerState,currentTask};
 };
 
-export default connect(mapStateToProps,{openDrawer,getTasks,getFilteredTasks, getProjects, getFilters, startLoading, startLoadingProjects, setLastTask})(TaskListLoader);
+export default connect(mapStateToProps,{openDrawer,getTasks,getFilteredTasks, getProjects, getFilters, startLoading, startLoadingProjects, setLastTask, startLoadingSearch})(TaskListLoader);

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
 
 import TabAtributes from './tabAtributes';
-
+import I18n from '../../translations/';
 import {getAttributes} from '../../redux/actions';
 
 class TaskAdd extends Component {
@@ -39,7 +39,7 @@ class TaskAdd extends Component {
           </Button>
           </Left>
           <Body>
-            <Title>Task Add</Title>
+            <Title>{I18n.t('addTask')}</Title>
           </Body>
           <Right>
             <Button transparent onPress={()=>this.state.saveFunction?this.state.saveFunction():()=>{}}>
@@ -48,7 +48,7 @@ class TaskAdd extends Component {
           </Right>
           </Header>
            <Tabs>
-             <Tab heading="Attributes">
+             <Tab heading={I18n.t('attributes')}>
                  <TabAtributes projectId={this.props.projectId} saveFunction={this.setFunction.bind(this)} />
              </Tab>
            </Tabs>

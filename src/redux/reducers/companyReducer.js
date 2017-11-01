@@ -50,11 +50,12 @@ export default function reducer (state = initialState, action) {
         ...state,
         companies:action.payload.companies
       };
-    case SET_SEARCH_ATTRIBUTES:
+    case SET_SEARCH_ATTRIBUTES:{
       return {
         ...state,
         companies:action.payload.companies
       };
+    }
     default:
       return state;
   }

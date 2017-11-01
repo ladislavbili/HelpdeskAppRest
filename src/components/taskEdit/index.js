@@ -7,7 +7,7 @@ import { ActivityIndicator } from 'react-native';
 import TabAtributes from './tabAtributes';
 import TabComments from './tabComments';
 import TabItems from './tabItems';
-
+import I18n from '../../translations/';
 import {getTaskAttributes} from '../../redux/actions';
 
 
@@ -46,7 +46,7 @@ class TaskEdit extends Component {
           </Button>
           </Left>
           <Body>
-            <Title>Task Edit</Title>
+            <Title>{I18n.t('editTask')}</Title>
           </Body>
           {
             this.state.canSave && this.state.changed && (<Right>
@@ -57,14 +57,14 @@ class TaskEdit extends Component {
           }
           </Header>
            <Tabs>
-             <Tab heading="Attributes">
-                 <TabAtributes id={this.props.id} saveFunction={this.setFunction.bind(this)} inputChanged={this.inputChanged.bind(this)} />
+             <Tab heading={I18n.t('attributes')}>
+               <TabAtributes id={this.props.id} saveFunction={this.setFunction.bind(this)} inputChanged={this.inputChanged.bind(this)} />
              </Tab>
-             <Tab heading="Comments">
-                 <TabComments id={this.props.id} />
+             <Tab heading={I18n.t('comments')}>
+               <TabComments id={this.props.id} />
              </Tab>
-             <Tab heading="Items">
-                 <TabItems id={this.props.id} />
+             <Tab heading={I18n.t('items')}>
+               <TabItems id={this.props.id} />
              </Tab>
            </Tabs>
       </Container>

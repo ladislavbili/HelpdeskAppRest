@@ -1,20 +1,21 @@
-import home from './home';
-import taskList from './taskList';
+import comment from './comment';
+import company from './company';
 import general from './general';
-import attributes from './attributes';
-import projectAdd from './projectAdd';
-import taskAdd from './taskAdd';
-import taskEdit from './taskEdit';
-import commentAdd from './commentAdd';
-import settings from './settings';
+import item from './item';
+import login from './login';
+import search from './search';
+import sidebar from './sidebar';
+import task from './task';
+import user from './user';
+
 export default Object.assign(
-  home,
+  comment,
+  company,
   general,
-  attributes,
-  projectAdd,
-  taskList,
-  taskAdd,
-  taskEdit,
-  commentAdd,
-  settings
+  item,
+  login,
+  search,
+  sidebar,
+  task,
+  user,
 );

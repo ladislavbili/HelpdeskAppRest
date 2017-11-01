@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { View, Container, Button, Text, Content, Item, Form, Input, Label, Header, Body, Title } from 'native-base';
+
 import styles from './styles';
 import {loginUser} from '../../redux/actions';
+import I18n from '../../translations/';
 
 class Login extends Component {
   constructor(props){
@@ -19,13 +21,13 @@ class Login extends Component {
         <Content padder style={{ backgroundColor: '#FFF', padding: 20 }}>
           <Header>
             <Body>
-              <Title>HelpdeskApp</Title>
+              <Title>{I18n.t('appName')}</Title>
             </Body>
           </Header>
           <Form>
             <Item inlineLabel>
               <Input
-                placeholder="Username"
+                placeholder={I18n.t('enterUsername')}
                 value={this.state.username}
                  onChangeText={(value)=>this.setState({username:value})}
               />
@@ -33,7 +35,7 @@ class Login extends Component {
             <Item inlineLabel last>
               <Input
                 secureTextEntry={true}
-                placeholder="Password"
+                placeholder={I18n.t('enterPassword')}
                 value={this.state.password}
                 onChangeText={(value)=>this.setState({password:value})}
               />
@@ -51,10 +53,13 @@ class Login extends Component {
               <ActivityIndicator
               animating size={ 'large' }
               color='#007299' /> :
-              <Text>Login</Text>
+              <Text>{I18n.t('login')}</Text>
             }
             </Button>
-              <Text style={styles.errorMessage}>{this.props.error}</Text>
+              {
+                this.props.error &&
+                <Text style={styles.errorMessage}>{I18n.t('loginError')}</Text>
+              }
           </View>
         </Content>
       </Container>

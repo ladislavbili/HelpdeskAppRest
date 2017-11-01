@@ -11,17 +11,17 @@ import {startLoadingItems, getItemsAndUnits, openAddingOfItem, deleteItem, openE
 class TabItems extends Component{
   componentDidMount(){
     this.props.startLoadingItems();
-    this.props.getItemsAndUnits();
+    this.props.getItemsAndUnits(this.props.id, this.props.token);
   }
 
   deleteInvoiceItem(id,title){
     Alert.alert(
-      I18n.t('taskEditdeletingItem'),
-      I18n.t('taskEditdeletingItemMessage')+title,
+      I18n.t('deletingItem'),
+      I18n.t('deletingItemMessage')+title,
       [
         {text: I18n.t('cancel'), style: 'cancel'},
         {text: I18n.t('ok'), onPress: () =>{
-          this.props.deleteItem(id);
+          this.props.deleteItem(id,this.props.id,this.props.token);
         }},
       ],
       { cancelable: false }
@@ -33,7 +33,7 @@ class TabItems extends Component{
       return (<ActivityIndicator animating size={ 'large' } color='#007299' />);
     }
     let total=0;
-    this.props.items.map((item)=>total+=item.amount*item.price);
+    this.props.items.map((item)=>total+=item.amount*item.unit_price);
     return (
       <Container>
         <Content padder style={{ marginTop: 0 }}>
@@ -50,23 +50,23 @@ class TabItems extends Component{
               </CardItem>
               <CardItem>
                 <Left>
-                  <Text note>{I18n.t('taskEditPricePerUnit')}</Text>
+                  <Text note>{I18n.t('pricePerUnit')}</Text>
                 </Left>
                 <Right>
-                  <Text>{(item.price).toString()}</Text>
+                  <Text>{(item.unit_price).toString()}</Text>
                 </Right>
               </CardItem>
               <CardItem>
                 <Left>
-                  <Text note>{I18n.t('taskEditUnit')}</Text>
+                  <Text note>{I18n.t('unit')}</Text>
                 </Left>
                 <Right>
-                  <Text>{item.unit?this.props.units[this.props.units.findIndex((unit)=>unit.id==item.unit.id)].shortcut:'None'}</Text>
+                  <Text>{item.unit?this.props.units[this.props.units.findIndex((unit)=>unit.id==item.unit.id)].shortcut:'Missing unit'}</Text>
                 </Right>
               </CardItem>
               <CardItem>
                 <Left>
-                  <Text note>{I18n.t('taskEditQuantity')}</Text>
+                  <Text note>{I18n.t('quantity')}</Text>
                 </Left>
                 <Right>
                   <Text>{(item.amount).toString()}</Text>
@@ -74,13 +74,14 @@ class TabItems extends Component{
               </CardItem>
               <CardItem>
                 <Left>
-                  <Text note>{I18n.t('taskEditPriceTotal')}</Text>
+                  <Text note>{I18n.t('totalPrice')}</Text>
                 </Left>
                 <Right>
-                  <Text>{(item.amount*item.price).toString()}</Text>
+                  <Text>{(item.amount*item.unit_price).toString()}</Text>
                 </Right>
               </CardItem>
-            { (this.props.ACL.resolve_task || this.props.userACL.update_all_tasks) &&
+            {
+              (this.props.ACL.includes('resolve_task') || this.props.ACL.includes('update_all_tasks')) &&
               <CardItem>
                 <Left>
                   <Button active block onPress={()=>this.deleteInvoiceItem(item.id,item.title)}>
@@ -89,7 +90,7 @@ class TabItems extends Component{
                   </Button>
                 </Left>
                 <Right>
-                  <Button active block onPress={()=>this.props.openEditingOfItem(item.id,this.props.id)}>
+                  <Button active block onPress={()=>{Actions.itemEdit({data:item,taskId:this.props.task.id});}}>
                   <Icon name="open" />
                   <Text>{I18n.t('edit')}</Text>
                   </Button>
@@ -103,7 +104,7 @@ class TabItems extends Component{
           <Card>
             <CardItem>
             <Left>
-              <Text note>{I18n.t('taskEditTotalPrice')}</Text>
+              <Text note>{I18n.t('totalPrice')}</Text>
             </Left>
             <Right>
               <Text>{total}</Text>
@@ -113,12 +114,12 @@ class TabItems extends Component{
 
 
       </Content>
-      { (this.props.ACL.resolve_task || this.props.userACL.update_all_tasks) &&
+      { (this.props.ACL.includes('resolve_task') || this.props.ACL.includes('update_all_tasks')) &&
       <Footer>
         <FooterTab>
-          <Button onPress={()=>this.props.openAddingOfItem(this.props.id)} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
+          <Button onPress={()=>Actions.itemAdd({id:this.props.id}) } iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
             <Icon active style={{ color: 'white' }} name="md-add" />
-            <Text style={{ color: 'white' }}>{I18n.t('taskEditItem')}</Text>
+            <Text style={{ color: 'white' }}>{I18n.t('item')}</Text>
           </Button>
         </FooterTab>
       </Footer>
@@ -130,7 +131,10 @@ class TabItems extends Component{
 const mapStateToProps = ({ taskR, login, itemR }) => {
   const { items, loadingItems ,units } = itemR;
   const { task } = taskR;
-  return { items, loadingItems, units, ACL:task.ACL ,userACL:login.ACL };
+  const { token } = login;
+  return { items, loadingItems,token, units, task, ACL:task.loggedUserProjectAcl.concat(task.loggedUserRoleAcl) };
 };
+
+
 
 export default connect(mapStateToProps,{startLoadingItems,getItemsAndUnits,openAddingOfItem, deleteItem, openEditingOfItem})(TabItems);

@@ -36,7 +36,7 @@ class userList extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{I18n.t('settingsUsersListTitle')}</Title>
+            <Title>{I18n.t('usersList')}</Title>
           </Body>
         </Header>
         <Content>
@@ -76,7 +76,7 @@ class userList extends Component {
           <FooterTab>
             <Button onPress={()=>{this.props.startLoadingUser();Actions.userAdd();}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
               <Icon active style={{ color: 'white' }} name="add" />
-              <Text style={{ color: 'white' }} >{I18n.t('settingsUser')}</Text>
+              <Text style={{ color: 'white' }} >{I18n.t('user')}</Text>
             </Button>
           </FooterTab>
         </Footer>

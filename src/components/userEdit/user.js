@@ -23,7 +23,6 @@ class UserEdit extends Component {
       signature:this.props.user.detailData.signature?this.props.user.detailData.signature:'',
       selectingCompany:false,
       filterWord:'',
-      active:this.props.user.is_active?this.props.user.is_active:false,
       user_role:this.props.user_roles[user_roleID==-1?0:user_roleID],
       selectingUserRole:false,
       filterWordUserRole:'',
@@ -72,7 +71,7 @@ class UserEdit extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{I18n.t('settingsAddUserTitle')}</Title>
+            <Title>{I18n.t('editUser')}</Title>
           </Body>
           <Right>
             {
@@ -87,34 +86,29 @@ class UserEdit extends Component {
         </Header>
         <Content style={{ padding: 15 }}>
 
-        <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
-        <CheckBox checked={this.state.active} color='#3F51B5' onPress={()=>this.setState({active:!this.state.active})}/>
-          <Label style={{marginLeft:15}}>{I18n.t('settingsActive')}</Label>
-        </Item>
-
-        <Text note>First Name</Text>
+        <Text note>{I18n.t('firstName')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-            placeholder="First Name"
+            placeholder={I18n.t('enterFirstName')}
             value={this.state.name}
             onChangeText={(value)=>this.setState({name:value})}
           />
         </View>
 
-        <Text note>Surname</Text>
+        <Text note>{I18n.t('surname')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-            placeholder="Surname"
+            placeholder={I18n.t('enterSurname')}
             value={this.state.surname}
             onChangeText={(value)=>this.setState({surname:value})}
           />
         </View>
 
 
-          <Text note>{I18n.t('homeMail')}</Text>
+          <Text note>{I18n.t('email')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
-            placeholder={I18n.t('homeMail')}
+            placeholder={I18n.t('enterEmail')}
             value={this.state.email}
             onChangeText={(value)=>this.setState({email:value})}
             />
@@ -124,12 +118,12 @@ class UserEdit extends Component {
 
           </View>
 
-          <Text note>{I18n.t('newPass')}</Text>
+          <Text note>{I18n.t('password')}</Text>
           <Text note>Optional: Leave empty to keep current password</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
               secureTextEntry={true}
-              placeholder={I18n.t('newPass')}
+              placeholder={I18n.t('enterNewPassword')}
               value={this.state.password}
               onChangeText={(value)=>this.setState({password:value})}
             />
@@ -142,7 +136,7 @@ class UserEdit extends Component {
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingCompany:true})}>
               <Left>
-                <Text style={{textAlign:'left',color:'black'}}>{this.state.company==null ? I18n.t('taskAddCompanySelect') : this.state.company.title}</Text>
+                <Text style={{textAlign:'left',color:'black'}}>{this.state.company==null ? I18n.t('selectCompany') : this.state.company.title}</Text>
               </Left>
             </Button>
           </View>
@@ -159,20 +153,20 @@ class UserEdit extends Component {
           <Text note>{I18n.t('username')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
-            placeholder={I18n.t('username')}
+            placeholder={I18n.t('enterNewUsername')}
             value={this.state.username}
             onChangeText={(value)=>this.setState({username:value})}
             />
             {
-              this.state.username.length==0 && <Text note style={{color:'red'}}>You must have an username</Text>
+              this.state.username.length==0 && <Text note style={{color:'red'}}>{I18n.t('usernameError')}</Text>
             }
 
           </View>
 
-          <Text note>{I18n.t('func')}</Text>
+          <Text note>{I18n.t('function')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
-            placeholder={I18n.t('func')}
+            placeholder={I18n.t('enterFunction')}
             value={this.state.func}
             onChangeText={(value)=>this.setState({func:value})}
             />
@@ -181,30 +175,30 @@ class UserEdit extends Component {
           <Text note>{I18n.t('mobile')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
-            placeholder={I18n.t('mobile')}
+            placeholder={I18n.t('enterMobile')}
             value={this.state.mobile}
             keyboardType="numeric"
             onChangeText={(value)=>this.setState({mobile:value})}
             />
           </View>
 
-          <Text note>{I18n.t('tel')}</Text>
+          <Text note>{I18n.t('telephone')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
-            placeholder={I18n.t('tel')}
+            placeholder={I18n.t('enterTelephone')}
             value={this.state.tel}
             onChangeText={(value)=>this.setState({tel:value})}
             keyboardType="numeric"
             />
           </View>
 
-          <Text note>{I18n.t('settingsSignature')}</Text>
+          <Text note>{I18n.t('signature')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
             style={{height:Math.max(35, this.state.signatureHeight)}}
             onContentSizeChange={(event) => this.setState({ signatureHeight: event.nativeEvent.contentSize.height })}
             multiline={true}
-            placeholder={I18n.t('settingsSignature')}
+            placeholder={I18n.t('enterSignature')}
             value={this.state.signature}
             onChangeText={(value)=>this.setState({signature:value})}
 
@@ -219,7 +213,7 @@ class UserEdit extends Component {
               onRequestClose={() => this.setState({selectingCompany:false})}>
             <Header>
               <Body>
-              <Title>{I18n.t('taskAddCompanySelect')}</Title>
+              <Title>{I18n.t('selectCompany')}</Title>
               </Body>
             </Header>
             <Content style={{ padding: 15 }}>
@@ -256,7 +250,7 @@ class UserEdit extends Component {
               onRequestClose={() => this.setState({selectingUserRole:false})}>
             <Header>
               <Body>
-              <Title>{I18n.t('taskAddUserRoleSelect')}</Title>
+              <Title>{I18n.t('selectUserRole')}</Title>
               </Body>
             </Header>
             <Content style={{ padding: 15 }}>

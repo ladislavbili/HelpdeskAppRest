@@ -1,100 +1,114 @@
 import { SET_UNITS, START_LOADING_ITEMS, SET_ITEM, SET_ITEMS, ADD_NEW_ITEM, DELETE_ITEM, EDIT_ITEM_LIST } from '../types';
-import { UNITS_LIST, ITEMS_LIST,  } from '../urls';
+import { UNITS_LIST, TASK_LIST  } from '../urls';
 import { Actions } from 'react-native-router-flux';
+import {processRESTinput} from '../../helperFunctions';
 
-export const openAddingOfItem = (id) => {
-  return (dispatch) => {
-    fetch(UNITS_LIST, {
-      method: 'GET',
-    }).then((response)=> response.json().then(response => {
-      dispatch({type: SET_UNITS, payload:{units:response}});
-      Actions.itemAdd({id});
-    }))
-    .catch(function (error) {
-      console.log(error);
-    });
-  };
-};
 export const startLoadingItems = () => {
   return (dispatch) => {
     dispatch({type: START_LOADING_ITEMS });
   };
 };
-export const openEditingOfItem = (id,projectID) => {
-  return (dispatch) => {
-    let url = ITEMS_LIST+ '/' + id;
-    fetch(url, {
-      method: 'GET',
-    }).then((response)=> response.json().then(response => {
-      dispatch({type: SET_ITEM, payload:{item:response}});
-      Actions.itemEdit({projectID});
-    }))
-    .catch(function (error) {
-      console.log(error);
-    });
-  };
-};
-export const getItemsAndUnits = () => {
+export const getItemsAndUnits = (id,token) => {
   return (dispatch) => {
     Promise.all([
-      fetch(ITEMS_LIST, {
+      fetch(TASK_LIST+'/'+id+'/invoiceable-items', {
         method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
       }),
       fetch(UNITS_LIST, {
         method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
       })
     ])
     .then(([response1,response2]) =>Promise.all([response1.json(),response2.json()]).then(([response1,response2]) => {
-      dispatch({type: SET_ITEMS, payload:{items:response1,units:response2}});
+      dispatch({type: SET_ITEMS, payload:{items:response1.data,units:response2.data}});
     }))
     .catch(function (error) {
       console.log(error);
     });
   };
 };
-export const addItem = (item) => {
+export const addItem = (item,taskId,unitId,token) => {
   return (dispatch) => {
-    fetch(ITEMS_LIST, {
+    requestBody=processRESTinput(item);
+    if(item.amount==0){
+      requestBody+='&amount=0';
+    }
+    if(item.unit_price==0){
+      requestBody+='&unit_price=0';
+    }
+    fetch(TASK_LIST+'/'+taskId+'/invoiceable-items/unit/'+unitId, {
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Bearer ' + token
       },
       method: 'POST',
-      body:JSON.stringify(item),
-    }).then((response)=>response.json().then((response)=>{
-      dispatch({type: ADD_NEW_ITEM, payload:{item:Object.assign({},item,{id:response.id})}});
-    }))
+      body:requestBody,
+    }).then((response)=>{
+      console.log(response);
+      response.json().then((response2)=>{
+        console.log(response2);
+      }).catch((error)=>console.log(error));
+      dispatch({type: ADD_NEW_ITEM, payload:{items:response.data.invoiceableItems}});
+    })
     .catch(function (error) {
       console.log(error);
     });
   };
 };
-export const deleteItem = (id) => {
+
+export const deleteItem = (id,taskId,token) => {
   return (dispatch) => {
-    let url= ITEMS_LIST+ '/' + id
+    let url= TASK_LIST+'/'+taskId+'/invoiceable-items/'+id
     fetch(url, {
       method: 'DELETE',
-    }).then((response)=>response.json().then((response)=>{
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+    }).then((response)=>{
       dispatch({type: DELETE_ITEM, payload:{id}});
-    }))
+    })
     .catch(function (error) {
       console.log(error);
     });
   };
 };
-export const saveItemEdit = (item) => {
+
+export const getUnits = (token) => {
   return (dispatch) => {
-    let url = ITEMS_LIST + '/' + item.id;
+    fetch(UNITS_LIST, {
+      method: 'GET',
+      headers: {
+          'Authorization': 'Bearer ' + token
+      }
+    }).then((response)=>response.json().then((response)=>{
+      dispatch({type: SET_UNITS, payload:{units:response.data}});
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+
+  };
+};
+export const saveItemEdit = (item,id,unitId,taskId,token) => {
+  return (dispatch) => {
+    let url = TASK_LIST+'/'+taskId+'/invoiceable-items/'+id+'/unit/'+unitId;
     fetch(url, {
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Bearer ' + token
       },
       method: 'PATCH',
-      body:JSON.stringify(item),
+      body:processRESTinput(item),
     }).then((response)=>response.json().then((response)=>{
-      console.log(response);
-      dispatch({type: EDIT_ITEM_LIST, payload:{item}});
+      dispatch({type: EDIT_ITEM_LIST, payload:{item:Object.assign({},item,{id,unit:{id:unitId}})}});
     }))
     .catch(function (error) {
       console.log(error);

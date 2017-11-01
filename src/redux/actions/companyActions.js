@@ -30,7 +30,6 @@ export const editCompany = (company,token,id) => {
         body:processRESTinput(company),
       })
     .then((response)=>response.json().then((response)=>{
-      console.log(response);
       dispatch({type: EDIT_COMPANY_LIST, payload:{company:Object.assign({},company,{id})}});
     }))
     .catch(function (error) {
@@ -51,7 +50,6 @@ export const addCompany = (newCompany,token) => {
         body:processRESTinput(newCompany),
       })
       .then((response1)=>response1.json().then((response2)=>{
-        console.log(response2);
       dispatch({type: ADD_COMPANY, payload:{company:Object.assign(newCompany,{id:response2.data.id})}});
     }))
     .catch(function (error) {

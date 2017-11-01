@@ -15,6 +15,8 @@ class SideBar extends Component {
     this.state = {
       shadowOffsetWidth: 1,
       shadowRadius: 4,
+      showProjects:true,
+      showFilters:true
     };
   }
   render() {
@@ -37,37 +39,46 @@ class SideBar extends Component {
           </Body>
           <Right />
         </Header>
-        <Text>Filters</Text>
-        <List
-          dataArray={this.props.filters} renderRow={data =>
-            <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filterId:data.id,filter:null,title:data.title,id:this.props.currentTask});}} >
-              <Left>
-                <Icon active name={data.id=='REQUESTED'||data.id=='INBOX'?'ios-color-filter-outline':'ios-folder-outline'} style={{ color: '#777', fontSize: 26, width: 30 }} />
-                <Text style={styles.text}>{data.title}</Text>
-              </Left>
-            </ListItem>
-          }
-        />
-        <Text>Projects</Text>
-        <List
-          dataArray={this.props.projects} renderRow={data =>
-            <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filter:{project:''+data.id},filterId:null,title:data.title,id:this.props.currentTask});}} >
-              <Left>
-                <Icon active name={data.id=='REQUESTED'||data.id=='INBOX'?'ios-color-filter-outline':'ios-folder-outline'} style={{ color: '#777', fontSize: 26, width: 30 }} />
-                <Text style={styles.text}>{data.title}</Text>
-              </Left>
-              {(data.numberOfTasks>0) &&
-              <Right style={{ flex: 1 }}>
-                <Badge
-                  style={{ borderRadius: 3, height: 25, backgroundColor: '#477EEA' }}
-                >
-                  <Text style={styles.badgeText}>{data.numberOfTasks.toString()}</Text>
-                </Badge>
-              </Right>
-              }
-            </ListItem>
-          }
-        />
+        <ListItem button noBorder onPress={() => this.setState({showFilters:!this.state.showFilters})} >
+          <Text>{I18n.t('filters')}</Text>
+        </ListItem>
+        {
+          this.state.showFilters &&
+          <List
+            dataArray={this.props.filters} renderRow={data =>
+              <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filterId:data.id,filter:null,title:data.title,id:this.props.currentTask});}} >
+                <Left>
+                  <Icon active name="ios-color-filter-outline" style={{ color: '#777', fontSize: 26, width: 30 }} />
+                  <Text style={styles.text}>{data.title}</Text>
+                </Left>
+              </ListItem>
+            }
+          />
+        }
+        <ListItem button noBorder onPress={() => this.setState({showProjects:!this.state.showProjects})} >
+          <Text>{I18n.t('projects')}</Text>
+        </ListItem>
+        {this.state.showProjects &&
+          <List
+            dataArray={this.props.projects} renderRow={data =>
+              <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filter:{project:''+data.id},filterId:null,title:data.title,id:this.props.currentTask});}} >
+                <Left>
+                  <Icon active name="ios-folder-outline" style={{ color: '#777', fontSize: 26, width: 30 }} />
+                  <Text style={styles.text}>{data.title}</Text>
+                </Left>
+                {(data.numberOfTasks>0) &&
+                <Right style={{ flex: 1 }}>
+                  <Badge
+                    style={{ borderRadius: 3, height: 25, backgroundColor: '#477EEA' }}
+                  >
+                    <Text style={styles.badgeText}>{data.numberOfTasks.toString()}</Text>
+                  </Badge>
+                </Right>
+                }
+              </ListItem>
+            }
+          />
+        }
         </Content>
       </Container>
     );

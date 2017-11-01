@@ -39,7 +39,7 @@ class TabEmail extends Component { // eslint-disable-line
             </Item>
           }
 
-          <Text note>{I18n.t('commentAddEmails')}</Text>
+          <Text note>{I18n.t('addEmails')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <List
           dataArray={this.state.email_to}
@@ -51,7 +51,7 @@ class TabEmail extends Component { // eslint-disable-line
             <Input
             keyboardType="email-address"
             style={{flex:1,flexDirection:'row'}}
-            placeholder={I18n.t('commentAddEmail')}
+            placeholder={I18n.t('enterEmail')}
             value={ this.state.newMail }
             onChangeText={ value => this.setState({newMail:value}) }
             />
@@ -64,23 +64,23 @@ class TabEmail extends Component { // eslint-disable-line
             </View>
             </View>
 
-          <Text note>{I18n.t('commentAddTitle')}</Text>
+          <Text note>{I18n.t('emailSubject')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
-              placeholder={I18n.t('commentAddTitle')}
+              placeholder={I18n.t('enterEmailSubject')}
               value={ this.state.title }
               onChangeText={ value => this.setState({title:value}) }
             />
           </View>
 
-            <Text note>{I18n.t('commentAddBody')}</Text>
+            <Text note>{I18n.t('emailMessage')}</Text>
             <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15}}>
               <Input
                 style={{height:Math.max(35, this.state.messageHeight)}}
                 multiline={true}
                 onContentSizeChange={(event) => this.setState({ messageHeight: event.nativeEvent.contentSize.height })}
                 onChange={ event => this.setState({message:event.nativeEvent.text}) }
-                placeholder={I18n.t('commentAddMessagePlaceholder')}
+                placeholder={I18n.t('enterEmailMessage')}
                 value={this.state.message}
               />
             </View>
@@ -95,7 +95,7 @@ class TabEmail extends Component { // eslint-disable-line
             <FooterTab>
               <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }} onPress={this.submitForm.bind(this)}>
                 <Icon active style={{ color: 'white' }} name="add" />
-                <Text style={{ color: 'white' }} >{I18n.t('add')}</Text>
+                <Text style={{ color: 'white' }} >{I18n.t('send')}</Text>
               </Button>
             </FooterTab>
           </Footer>

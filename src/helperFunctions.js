@@ -46,3 +46,7 @@ export const processDataWithPrefix = (input,prefix)=>{
   }
   return result.substring(0,result.length-1);
 }
+
+export const compactUserForSearch = (item)=>{
+  return ((item.email?item.email:'')+ (item.detailData.name?item.detailData.name:'')+' '+ (item.detailData.surname?item.detailData.surname:'')+ ' ' + (item.detailData.name?item.detailData.name:'')).toLowerCase();
+}

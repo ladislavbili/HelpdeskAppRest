@@ -2,7 +2,7 @@ import { SET_UNITS, SET_ITEM, SET_ITEMS, DELETE_ITEM, EDIT_ITEM_LIST, ADD_NEW_IT
 
 const initialState = {
   units:[],
-  loadingitems:false,
+  loadingItems:false,
   items:[],
   item:null
 };
@@ -12,7 +12,8 @@ export default function reducer (state = initialState, action) {
     case SET_UNITS:
         return {
           ...state,
-          units: action.payload.units
+          units: action.payload.units,
+          loadingItems:false,
         };
     case SET_ITEM:{
       return {
@@ -47,7 +48,7 @@ export default function reducer (state = initialState, action) {
     case ADD_NEW_ITEM:{
       return {
         ...state,
-        items:[action.payload.item,...state.items],
+        items:action.payload.items,
       };
     }
     case START_LOADING_ITEMS:

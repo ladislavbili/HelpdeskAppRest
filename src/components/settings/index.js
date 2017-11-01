@@ -18,7 +18,7 @@ class Settings extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{I18n.t('settingsTitle')}</Title>
+            <Title>{I18n.t('settings')}</Title>
           </Body>
           <Right>
          </Right>
@@ -30,7 +30,7 @@ class Settings extends Component {
               <Icon name="person" />
             </Left>
             <Body>
-              <Text>{I18n.t('settingsUsers')}</Text>
+              <Text>{I18n.t('users')}</Text>
             </Body>
             <Right>
               <Icon name="arrow-forward" />
@@ -43,7 +43,7 @@ class Settings extends Component {
               <Icon name="people" />
             </Left>
             <Body>
-              <Text>{I18n.t('settingsCompanies')}</Text>
+              <Text>{I18n.t('companies')}</Text>
             </Body>
             <Right>
               <Icon name="arrow-forward" />
@@ -56,7 +56,7 @@ class Settings extends Component {
           <FooterTab>
             <Button onPress={()=>{this.props.startLoadingUser();Actions.userAdd();}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
               <Icon active style={{ color: 'white' }} name="add" />
-              <Text style={{ color: 'white' }} >{I18n.t('settingsUser')}</Text>
+              <Text style={{ color: 'white' }} >{I18n.t('user')}</Text>
             </Button>
           </FooterTab>
         }

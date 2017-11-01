@@ -1,0 +1,32 @@
+export default {
+  //add user
+  addUser:'Add user',
+  firstName:'First name',
+  enterFirstName:'Enter user\'s name',
+  surname:'Surname',
+  enterSurname:'Enter user\' surname',
+  email:'E-mail',
+  password:'Password',
+  enterNewPassword:'Enter user\' password',
+  selectCompany:'Select Company',
+  userRole:'User\'s role',
+  username:'Username',
+  enterNewUsername:'Enter user\'s username',
+  usernameError:'User must have an username!',
+  function:'Function',
+  enterFunction:'Enter user\'s function',
+  mobile:'Mobile',
+  enterMobile:'Enter user\'s mobile number',
+  telephone:'Telephone',
+  enterTelephone:'Enter user\'s telephone number',
+  signature:'Signature',
+  enterSignature:'Enter user\'s signature',
+  selectUsersCompany:'Select user\'s company',
+  selectUserRole:'Select user\' role',
+  //edit user
+  editUser:'Edit user',
+  //list
+  users:'Users',
+  usersList:'List of users',
+  user:'User',
+  };

@@ -5,6 +5,7 @@ import { Footer, FooterTab, Container, Content, Button, Icon, Text, List } from 
 import { Actions } from 'react-native-router-flux';
 import { startLoading } from '../../redux/actions';
 import TaskListRow from './taskListRow';
+import I18n from '../../translations/';
 
 class TaskList extends Component {
   render() {
@@ -17,7 +18,7 @@ class TaskList extends Component {
           }
           </List>
           {
-            this.props.tasks.length==0 && <Text style={{padding:20}}>This list of tasks is empty</Text>
+            this.props.tasks.length==0 && <Text style={{padding:20}}>{I18n.t('emptyTaskList')}</Text>
           }
         </Content>
       { this.props.ACL.includes('create_tasks_in_all_projects') &&
@@ -25,7 +26,7 @@ class TaskList extends Component {
           <FooterTab>
             <Button vertical onPress={()=>{this.props.startLoading();Actions.taskAdd({projectId:this.props.projectId?this.props.projectId:null});}}>
               <Icon name="md-add" style={{ color: 'white' }} />
-              <Text style={{ color: 'white' }} >Task</Text>
+              <Text style={{ color: 'white' }} >{I18n.t('task')}</Text>
             </Button>
           </FooterTab>
         </Footer>

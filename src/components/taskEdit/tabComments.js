@@ -30,7 +30,7 @@ class TabComments extends Component {
             (<ListItem key={data.id} style={{flexDirection:'column',justifyContent:'flex-start',alignItems:'flex-start',flex:1}}>
               <View style={{flex:1,flexDirection:'row'}}>
                <Left>
-                 <Text note>{data.createdBy?(data.createdBy.name?data.createdBy.name:data.createdBy.email):I18n.t('nobody')}</Text>
+                 <Text note>{data.createdBy?(data.createdBy.name?data.createdBy.name:data.createdBy.email):I18n.t('noUser')}</Text>
                </Left>
                <Right>
                  <Text note>{data.internal?<Text style={{textAlign:'right',color:'red'}}>i </Text>:null}{formatDate(data.createdAt)}</Text>
@@ -38,7 +38,7 @@ class TabComments extends Component {
               </View>
             <View style={{flex:1}}>
              {data.email_to &&
-               <Text>Mailed to: <Text note>{data.email_to.join(', ')}</Text></Text>
+               <Text>{I18n.t('mailedTo')} <Text note>{data.email_to.join(', ')}</Text></Text>
              }
               {data.title &&
                 <Text style={{color:'#007299'}}> {data.title}</Text>
@@ -54,7 +54,7 @@ class TabComments extends Component {
         <FooterTab>
           <Button onPress={()=>{Actions.commentAdd({id:this.props.id,ACL:this.props.ACL})}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
             <Icon active style={{ color: 'white' }} name="md-add" />
-            <Text style={{ color: 'white' }} >{I18n.t('taskEditComment')}</Text>
+            <Text style={{ color: 'white' }} >{I18n.t('comment')}</Text>
           </Button>
         </FooterTab>
       </Footer>
