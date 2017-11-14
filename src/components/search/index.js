@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
@@ -11,7 +10,6 @@ class SearchLoader extends Component {
     this.props.getSearchAttributes(this.props.token);
   }
   render() {
-    console.log(this.props.loadingSearch);
     if(this.props.loadingSearch){
       return (
         <ActivityIndicator

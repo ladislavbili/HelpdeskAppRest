@@ -5,8 +5,9 @@ import { Input, Picker, Item, Container, Header, Title, Content, Button, Icon, T
 import { Actions } from 'react-native-router-flux';
 
 import I18n from '../../translations/';
-import {compactUserForSearch} from '../../helperFunctions';
+import { getTasks } from '../../redux/actions';
 
+import {compactUserForSearch} from '../../helperFunctions';
 
 class Search extends Component {
 
@@ -60,8 +61,9 @@ class Search extends Component {
     let createdBy = "";
     this.state.createdBy.map((item)=> createdBy+= item.id+',');
 
-    Actions.taskList({
-      filter:{
+    this.props.getTasks(this.props.token,
+      I18n.t('search'),
+      {
         search:this.state.title,
         tag:labels.substring(0,labels.length-1),
         company:companies.substring(0,companies.length-1),
@@ -70,7 +72,8 @@ class Search extends Component {
         assigned:assignedTo.substring(0,assignedTo.length-1),
         requester:requestedBy.substring(0,requestedBy.length-1),
         creator:createdBy.substring(0,createdBy.length-1),
-    }});
+    });
+    Actions.pop();
   }
 
   render() {
@@ -654,8 +657,10 @@ class Search extends Component {
 const mapStateToProps = ({ taskR, login, userR, companyR }) => {
   const { users } = userR;
   const { companies } = companyR;
-  const { statuses, projects,labels} = taskR;
-  return { users, companies,statuses, projects, labels};
+  const { token } = login;
+  const { statuses, projects,labels, currentTask} = taskR;
+
+  return { users, companies,statuses, projects, labels, currentTask, token};
 };
 
-export default connect(mapStateToProps,{})(Search);
+export default connect(mapStateToProps,{getTasks})(Search);

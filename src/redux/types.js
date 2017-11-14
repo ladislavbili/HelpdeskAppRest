@@ -17,10 +17,11 @@ export const SET_UNITS = 'SET_UNITS';
 export const START_LOADING = 'START_LOADING';
 export const SET_TASK_ATTRIBUTES = 'SET_TASK_ATTRIBUTES';
 export const EDIT_TASK_LIST = 'EDIT_TASK_LIST';
-export const ADD_TO_TASK_LIST = 'ADD_TO_TASK_LIST';
 export const DELETE_TASK = 'DELETE_TASK';
 export const SET_FILTERS = 'SET_FILTERS';
 export const SET_LAST_TASK = 'SET_LAST_TASK';
+export const ADD_TASKS = 'ADD_TASKS';
+export const ADD_NEW_TASK = 'ADD_NEW_TASK';
 
 
 export const SET_COMMENTS = 'SET_COMMENTS';

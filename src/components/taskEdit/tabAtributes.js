@@ -24,7 +24,7 @@ class TabAtributes extends Component {
       workHeight:100,
       company:this.props.task.company?this.props.companies[this.props.companies.findIndex((item)=>item.id==this.props.task.company.id)]:null,
       project:this.props.task.project?this.props.task.project.id:this.props.projects[0].id,
-      statusChangedAt:this.props.task.statusChangedAt?formatDate(this.props.task.statusChangedAt):'',
+      statusChangedAt:this.props.task.statusChangedAt?formatDate(this.props.task.statusChangedAt*1000):'',
       disabled:!(this.props.task.canEdit||this.props.task.loggedUserProjectAcl.includes('update_all_tasks')||this.props.task.loggedUserRoleAcl.includes('update_all_tasks')||this.props.task.loggedUserProjectAcl.includes('resolve_task')||this.props.task.loggedUserRoleAcl.includes('resolve_task')),
       important:this.props.task.important?true:false,
       selectingCompany:false,
@@ -34,9 +34,9 @@ class TabAtributes extends Component {
       selectingAssignedTo:false,
       filterWordAssignedTo:'',
       selectingDeadline:false,
-      deadline:this.props.task.deadline?this.props.task.deadline:null,
+      deadline:this.props.task.deadline?this.props.task.deadline*1000:null,
       selectingStartedAt:false,
-      startedAt:this.props.task.startedAt?this.props.task.startedAt:null,
+      startedAt:this.props.task.startedAt?this.props.task.startedAt*1000:null,
       modalLabel:false,
       labels:this.props.task.tags?this.props.labels.filter(
         (label)=>this.props.task.tags.some((tag)=>tag.id==label.id)):[]
@@ -71,8 +71,8 @@ class TabAtributes extends Component {
     const project = this.state.project;
     const requester = this.state.requestedBy.id?this.state.requestedBy.id:null;
     const company = this.state.company?this.state.company.id:null;
-    const assigned = '[userId => '+this.state.assignedTo.id+', statusId => '+this.state.status.id+']';
-    const startedAt = null;
+    const assigned = this.state.assignedTo && this.state.assignedTo.id && this.state.status ? '[{userId:'+this.state.assignedTo.id+', statusId:'+this.state.status.id+'}]':null;
+    const startedAt = this.state.startedAt? Math.floor(this.state.startedAt/1000): null;
     const deadline = this.state.deadline? Math.floor(this.state.deadline/1000): null;
     const closedAt = null;
     let tags = '';
@@ -83,8 +83,8 @@ class TabAtributes extends Component {
 
     this.props.editTask(
       {
-        /*project,requester,company, assigned,startedAt,deadline,closedAt,tag,
-        */title/*,description,important,work,workTime*/
+        project,requester,company,startedAt,deadline,closedAt,
+        title,description,important,work,workTime,//tag,assigned,
       },id,this.props.token
     );
     Actions.pop();

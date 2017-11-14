@@ -11,6 +11,7 @@ class TaskListRow extends Component {
   render() {
     let project=this.props.task.project;
     let assigned=this.props.task.taskHasAssignedUsers?this.props.task.taskHasAssignedUsers[0]:false;
+    let deadline=this.props.task.deadline?this.props.task.deadline:false;
     return (
       <ListItem button onPress={()=>{this.props.startLoading();Actions.taskEdit({id:this.props.task.id})}} >
               <Body>
@@ -19,7 +20,7 @@ class TaskListRow extends Component {
                   {I18n.t('project')}: {project?project.title:I18n.t('noProject')}
                 </Text>
                 <Text numberOfLines={1} note>{I18n.t('assignedTo')}: {assigned?assigned.user.username:I18n.t('noUser')}</Text>
-                <Text numberOfLines={1} note>{I18n.t('deadline')}: {this.props.task?'tu bude deadline':I18n.t('noDeadline')}</Text>
+                <Text numberOfLines={1} note>{I18n.t('deadline')}: {deadline?formatDate(deadline*1000):I18n.t('noDeadline')}</Text>
                 { assigned &&
                   <Item style={{backgroundColor:assigned.status.color,flex:1,flexDirection:'column'}}>
                     <Text style={{color:'white',paddingLeft:10,paddingRight:10,flex:1,flexDirection:'column'}}>{assigned.status.title}</Text>

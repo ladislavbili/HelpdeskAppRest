@@ -14,14 +14,14 @@ class TabAtributes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      title:'',
+      title:'abc',
       assignedTo:{id:null,name:I18n.t('noUser'), email:I18n.t('noMail')},
       requestedBy:this.props.users[this.props.users.findIndex((user)=>user.id==user.id)],
       status:this.props.statuses[0],
-      work_time:'',
-      description:'',
+      work_time:'11',
+      description:'cba',
       descriptionHeight:100,
-      work:'',
+      work:'cab',
       workHeight:100,
       company:null,
       project:this.props.projectId?this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.props.projectId)]:this.props.projects[0].id,
@@ -67,8 +67,8 @@ class TabAtributes extends Component {
     const requester = this.state.requestedBy.id?this.state.requestedBy.id:null;
     const company = this.state.company?this.state.company.id:null;
     const assigned = '[userId => '+this.state.assignedTo.id+', statusId => '+this.state.status.id+']';
-    const startedAt = this.state.startedAt? Math.floor(this.state.startedAt/100): null;
-    const deadline = this.state.deadline? Math.floor(this.state.deadline/100): null;
+    const startedAt = this.state.startedAt? Math.floor(this.state.startedAt/1000): null;
+    const deadline = this.state.deadline? Math.floor(this.state.deadline/1000): null;
     const closedAt = null;
     let tags = '';
     this.state.labels.map((label)=>tags+=label.title+',')
@@ -77,7 +77,7 @@ class TabAtributes extends Component {
     const workTime=this.state.work_time;
     this.props.addTask(
       {
-        title,description,requester,project ,company,startedAt,deadline,important,work,workTime,assigned
+        title,description,requester,project ,company,startedAt,deadline,important,work,workTime//,assigned,tag
       },
       this.props.token
     );

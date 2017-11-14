@@ -11,13 +11,13 @@ export const startLoadingUser = () => {
 export const getUserAttributes = (token) => {
   return (dispatch) => {
     Promise.all([
-      fetch(COMPANIES_LIST, {
+      fetch(COMPANIES_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(ROLES_LIST, {
+      fetch(ROLES_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
@@ -77,13 +77,13 @@ export const getUsers = (token) => {
 export const getUser = (id,token) => {
   return (dispatch) => {
     Promise.all([
-      fetch(COMPANIES_LIST, {
+      fetch(COMPANIES_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(ROLES_LIST, {
+      fetch(ROLES_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token

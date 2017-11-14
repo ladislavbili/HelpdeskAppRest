@@ -11,13 +11,13 @@ export const startLoadingItems = () => {
 export const getItemsAndUnits = (id,token) => {
   return (dispatch) => {
     Promise.all([
-      fetch(TASK_LIST+'/'+id+'/invoiceable-items', {
+      fetch(TASK_LIST+'/'+id+'/invoiceable-items'+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(UNITS_LIST, {
+      fetch(UNITS_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
@@ -50,9 +50,7 @@ export const addItem = (item,taskId,unitId,token) => {
       method: 'POST',
       body:requestBody,
     }).then((response)=>{
-      console.log(response);
       response.json().then((response2)=>{
-        console.log(response2);
       }).catch((error)=>console.log(error));
       dispatch({type: ADD_NEW_ITEM, payload:{items:response.data.invoiceableItems}});
     })
@@ -82,7 +80,7 @@ export const deleteItem = (id,taskId,token) => {
 
 export const getUnits = (token) => {
   return (dispatch) => {
-    fetch(UNITS_LIST, {
+    fetch(UNITS_LIST+'?limit=999', {
       method: 'GET',
       headers: {
           'Authorization': 'Bearer ' + token

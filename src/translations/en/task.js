@@ -38,4 +38,5 @@ export default {
   noDeadline:'No deadline entered',
   emptyTaskList:'List of tasks is empty',
   task:'Task',
+  loadMoreTasks:'Load more tasks..',
   };

@@ -5,7 +5,7 @@ import { Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Tex
 import { Actions } from 'react-native-router-flux';
 
 import I18n from '../../translations/';
-import {startLoadingUser} from '../../redux/actions';
+import {startLoadingUser,logoutUser} from '../../redux/actions';
 
 class Settings extends Component {
   render() {
@@ -27,7 +27,7 @@ class Settings extends Component {
           { this.props.ACL.includes('user_settings') &&
           <ListItem button onPress={Actions.userList} icon>
             <Left>
-              <Icon name="person" />
+              <Icon name="people" />
             </Left>
             <Body>
               <Text>{I18n.t('users')}</Text>
@@ -40,7 +40,7 @@ class Settings extends Component {
           { this.props.ACL.includes('company_settings') &&
           <ListItem button onPress={Actions.companyList} icon>
             <Left>
-              <Icon name="people" />
+              <Icon name="home" />
             </Left>
             <Body>
               <Text>{I18n.t('companies')}</Text>
@@ -50,6 +50,21 @@ class Settings extends Component {
             </Right>
           </ListItem>
         }
+        <ListItem button onPress={Actions.account} icon>
+          <Left>
+            <Icon name="person" />
+          </Left>
+          <Body>
+            <Text>{I18n.t('account')}</Text>
+          </Body>
+          <Right>
+            <Icon name="arrow-forward" />
+          </Right>
+        </ListItem>
+        <Button danger block onPress={()=>{this.props.logoutUser();Actions.login()}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', margin:20, borderWidth: 0.5 }}>
+          <Icon active style={{ color: 'white' }} name="power" />
+          <Text style={{ color: 'white' }} >{I18n.t('logout')}</Text>
+        </Button>
         </Content>
         <Footer>
         { this.props.ACL.includes('user_settings') &&
@@ -73,9 +88,9 @@ class Settings extends Component {
     );
   }
 }
-const mapStateToProps = ({ login }) => {
+const mapStateToProps = ({ login,navigation }) => {
   const {user} = login;
-  return {ACL:user.ACL};
+  return {ACL:user?user.ACL:[],data:navigation};
 };
 
-export default connect(mapStateToProps,{startLoadingUser})(Settings);
+export default connect(mapStateToProps,{startLoadingUser,logoutUser})(Settings);

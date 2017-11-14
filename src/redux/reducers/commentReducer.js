@@ -23,7 +23,6 @@ export default function reducer (state = initialState, action) {
       {
         let comments=state.comments;
         comments[action.payload.comment.id]=action.payload.comment;
-        console.log(comments);
         return {
           ...state,
           comments,

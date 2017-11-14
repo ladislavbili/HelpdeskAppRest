@@ -15,6 +15,7 @@ import TaskEdit from './components/taskEdit';
 import TaskAdd from './components/taskAdd';
 import CommentAdd from './components/commentAdd';
 import ItemAdd from './components/itemAdd';
+import Account from './components/account';
 import ItemEdit from './components/itemEdit';
 import UserList from './components/userList';
 import UserAdd from './components/userAdd';
@@ -26,7 +27,9 @@ import Search from './components/search';
 const RouterWithRedux = connect()(Router);
 
 class AppNavigator extends Component {
+  componentWillMount(){
 
+  }
   render() {
     return (
       <StyleProvider style={getTheme((this.props.themeState === 'material') ? material : undefined)}>
@@ -39,6 +42,7 @@ class AppNavigator extends Component {
             <Scene key="root" hideNavBar>
               <Scene key="login" component={Login} initial={true} />
               <Scene key="settings" component={Settings} />
+              <Scene key="account" component={Account} />
               <Scene key="taskList" component={TaskList} />
               <Scene key="taskEdit" component={TaskEdit} />
               <Scene key="taskAdd" component={TaskAdd} />

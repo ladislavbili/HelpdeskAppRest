@@ -4,7 +4,7 @@ import {processRESTinput} from '../../helperFunctions';
 
 export const getComments = (id,token) => {
   return (dispatch) => {
-    fetch(TASK_LIST+'/'+id+'/comments', {
+    fetch(TASK_LIST+'/'+id+'/comments'+'?limit=999', {
       method: 'GET',
       headers: {
           'Authorization': 'Bearer ' + token

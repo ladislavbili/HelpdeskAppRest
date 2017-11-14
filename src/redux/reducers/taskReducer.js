@@ -1,32 +1,42 @@
-import { SET_UNITS, SET_LABELS, DELETE_TASK, EDIT_TASK_LIST, ADD_TO_TASK_LIST, START_LOADING, START_LOADING_PROJECTS, SET_SEARCH_ATTRIBUTES,
-  SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_TASK, SET_TASK_ATTRIBUTES, SET_FILTERS,SET_LAST_TASK, START_LOADING_SEARCH } from '../types';
+import { SET_UNITS, SET_LABELS, DELETE_TASK, EDIT_TASK_LIST, START_LOADING, START_LOADING_PROJECTS, SET_SEARCH_ATTRIBUTES,ADD_NEW_TASK,
+  SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_TASK, SET_TASK_ATTRIBUTES, SET_FILTERS,SET_LAST_TASK, START_LOADING_SEARCH,ADD_TASKS } from '../types';
 
 const initialState = {
   statuses:[],
   loadingData:false,
   tasks:[],
+  nextTasks:false,
   task:null,
   loadingSearch:false,
   labels:[],
   project:null,
   projects:[],
+  listName:null,
   loadingProjects:true,
   filters:[],
-  currentTask:0,
 };
 
 export default function taskReducer (state = initialState, action) {
   switch (action.type) {
-
+    case ADD_NEW_TASK:{
+        return {
+          ...state,
+          tasks: [action.payload.task,...state.tasks],
+        };
+    }
+    case ADD_TASKS:{
+      if(action.payload.url==state.nextTasks){
+        return {
+          ...state,
+          tasks: state.tasks.concat(action.payload.tasks),
+          nextTasks: action.payload.nextTasks,
+        };
+      }
+    }
     case START_LOADING_SEARCH:
       return {
         ...state,
         loadingSearch: true
-      };
-    case SET_LAST_TASK:
-      return {
-        ...state,
-        currentTask: state.currentTask+1,
       };
     case START_LOADING_PROJECTS:
       return {
@@ -74,12 +84,6 @@ export default function taskReducer (state = initialState, action) {
         tasks:newTasks
       };
       }
-    case ADD_TO_TASK_LIST:{
-      return {
-        ...state,
-        tasks:[action.payload.taskInList,...state.tasks]
-      };
-    }
     case START_LOADING:
       return {
         ...state,
@@ -89,6 +93,8 @@ export default function taskReducer (state = initialState, action) {
     return {
       ...state,
       tasks: action.payload.tasks,
+      nextTasks: action.payload.nextTasks,
+      listName: action.payload.listName,
       loadingData:false,
     };
     case SET_PROJECTS:

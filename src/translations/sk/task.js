@@ -38,4 +38,5 @@ export default {
   noDeadline:'Žiadny deadline',
   emptyTaskList:'Zoznam úloh je prázdny',
   task:'Úloha',
+  loadMoreTasks:'Načítať ďaľšie úlohy..',
   };

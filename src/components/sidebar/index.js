@@ -5,7 +5,7 @@ import { Title ,Header, Body, Content, Text, List, ListItem, Icon, Container, Le
 import { Actions } from 'react-native-router-flux';
 import { ActivityIndicator } from 'react-native';
 
-import { closeDrawer, setLastTask } from '../../redux/actions';
+import { closeDrawer, getFilteredTasks, getTasks } from '../../redux/actions';
 import styles from './style';
 import I18n from '../../translations/';
 
@@ -46,7 +46,7 @@ class SideBar extends Component {
           this.state.showFilters &&
           <List
             dataArray={this.props.filters} renderRow={data =>
-              <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filterId:data.id,filter:null,title:data.title,id:this.props.currentTask});}} >
+              <ListItem button noBorder onPress={() => {this.props.closeDrawer();this.props.getFilteredTasks(this.props.token,data.title,data.id);}} >
                 <Left>
                   <Icon active name="ios-color-filter-outline" style={{ color: '#777', fontSize: 26, width: 30 }} />
                   <Text style={styles.text}>{data.title}</Text>
@@ -61,7 +61,7 @@ class SideBar extends Component {
         {this.state.showProjects &&
           <List
             dataArray={this.props.projects} renderRow={data =>
-              <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filter:{project:''+data.id},filterId:null,title:data.title,id:this.props.currentTask});}} >
+              <ListItem button noBorder onPress={() => {this.props.closeDrawer();this.props.getTasks(this.props.token,data.title,{project:''+data.id});}} >
                 <Left>
                   <Icon active name="ios-folder-outline" style={{ color: '#777', fontSize: 26, width: 30 }} />
                   <Text style={styles.text}>{data.title}</Text>
@@ -91,4 +91,4 @@ const mapStateToProps = ({ taskR, login }) => {
   return { projects, token, loadingProjects, filters,currentTask };
 };
 
-export default connect(mapStateToProps, {closeDrawer,setLastTask})(SideBar);
+export default connect(mapStateToProps, {closeDrawer, getFilteredTasks, getTasks})(SideBar);

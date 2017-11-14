@@ -36,6 +36,7 @@ export default function loginReducer(state = initialState, action) {
         user: null,
         error: false,
         loading:false,
+        token:null,
       };
     default:
       return state;

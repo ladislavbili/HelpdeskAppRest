@@ -4,7 +4,7 @@ import {processRESTinput} from '../../helperFunctions';
 
 export const getCompanies = (token) => {
   return (dispatch) => {
-    fetch(COMPANIES_LIST, {
+    fetch(COMPANIES_LIST+'?limit=999', {
       method: 'GET',
       headers: {
           'Authorization': 'Bearer ' + token

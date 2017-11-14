@@ -6,36 +6,12 @@ import { Actions } from 'react-native-router-flux';
 import { ActivityIndicator } from 'react-native';
 
 import TaskList from './taskList';
-import { startLoadingSearch,openDrawer, closeDrawer, getTasks, getFilteredTasks, getProjects,getFilters, startLoading, startLoadingProjects, setLastTask } from '../../redux/actions';
+import { startLoadingSearch,openDrawer, closeDrawer } from '../../redux/actions';
 import I18n from '../../translations/';
 
 class TaskListLoader extends Component {
-  componentWillMount(){
-    if(this.props.drawerState=='closed'){
-      if(this.props.id!=this.props.currentTask){
-        return;
-      }
-      this.props.setLastTask();
-      if(this.props.filterId){
-        this.props.getFilteredTasks(this.props.token,this.props.filterId);
-      }
-      else if(this.props.filter){
-        this.props.getTasks(this.props.token,this.props.filter);
-      }
-    }
-    else{
-      this.props.getFilters(this.props.token);
-      this.props.getProjects(this.props.token);
-    }
-  }
+
   render() {
-    if(this.props.id+1!=this.props.currentTask && this.props.id ){
-      return (
-        <ActivityIndicator
-        animating size={ 'large' }
-        color='#007299' />
-      )
-    }
     return (
       <Container>
         <Header>
@@ -45,7 +21,7 @@ class TaskListLoader extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{this.props.title?this.props.title:I18n.t('taskList')}</Title>
+            <Title>{this.props.listName?this.props.listName:I18n.t('taskList')}</Title>
           </Body>
           <Right>
             <Button transparent style={{ marginTop: 8 }} onPress={()=>{this.props.startLoadingSearch();Actions.search();}}>
@@ -68,10 +44,10 @@ class TaskListLoader extends Component {
 }
 
 const mapStateToProps = ({taskR,login,drawer}) => {
-  const {loadingData,tasks,projects,currentTask} = taskR;
+  const {loadingData,tasks,projects,currentTask,listName} = taskR;
   const {user,token} = login;
   const{drawerState} = drawer;
-  return {ACL:user.ACL,loadingData,tasks,projects,token,drawerState,currentTask};
+  return {ACL:user?user.ACL:[],loadingData,tasks,projects,token,drawerState,currentTask,listName};
 };
 
-export default connect(mapStateToProps,{openDrawer,getTasks,getFilteredTasks, getProjects, getFilters, startLoading, startLoadingProjects, setLastTask, startLoadingSearch})(TaskListLoader);
+export default connect(mapStateToProps,{openDrawer, startLoadingSearch})(TaskListLoader);

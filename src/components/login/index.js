@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, BackHandler, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
-import { View, Container, Button, Text, Content, Item, Form, Input, Label, Header, Body, Title } from 'native-base';
+import { View, Container, Button, Text, Content, Item, Form, Input, Label, Header, Body, Title,ListItem,Right, Icon } from 'native-base';
+import jwt_decode from 'jwt-decode';
 
 import styles from './styles';
-import {loginUser} from '../../redux/actions';
+import {loginUser,loginUserWithToken} from '../../redux/actions';
 import I18n from '../../translations/';
 
 class Login extends Component {
@@ -13,8 +14,25 @@ class Login extends Component {
     this.state={
       username:'admin',
       password:'admin',
+      user:null,
+      token:null,
     }
+    this.getToken.bind(this);
   }
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      return !this.props.authenticated;
+  });
+  this.getToken();
+}
+
+async getToken(){
+  token = await AsyncStorage.getItem('lansystem-v1-token');
+  if(token){
+    this.setState({user:jwt_decode(token),token});
+  }
+}
+
   render() {
       return (
       <Container>
@@ -60,6 +78,22 @@ class Login extends Component {
                 this.props.error &&
                 <Text style={styles.errorMessage}>{I18n.t('loginError')}</Text>
               }
+            {
+              this.state.user &&
+              <ListItem button onPress={()=>this.props.loginUserWithToken(this.state.token)}>
+                <Body>
+                <Text style={{fontSize:17,color:'#007299'}}>Login as</Text>
+                {
+                  (this.state.user.name||this.state.user.surname)?<Text>Name: {this.state.user.name?this.state.user.name+' ':''}{this.state.user.surname?this.state.user.surname:''}</Text>:null
+                }
+                <Text>Username: {this.state.user.username}</Text>
+                <Text note>E-mail: {this.state.user.email}</Text>
+                </Body>
+                <Right>
+                  <Icon name="arrow-forward" />
+                </Right>
+              </ListItem>
+            }
           </View>
         </Content>
       </Container>
@@ -72,4 +106,4 @@ const mapStateToProps = ({ login }) => {
   return { error, loading, authenticated } = login;
 };
 
-export default connect(mapStateToProps,{loginUser})(Login);
+export default connect(mapStateToProps,{loginUser,loginUserWithToken})(Login);

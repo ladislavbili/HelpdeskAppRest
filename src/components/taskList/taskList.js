@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Footer, FooterTab, Container, Content, Button, Icon, Text, List } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import { startLoading } from '../../redux/actions';
+import { startLoading,getMoreTasks } from '../../redux/actions';
 import TaskListRow from './taskListRow';
 import I18n from '../../translations/';
 
@@ -19,6 +19,16 @@ class TaskList extends Component {
           </List>
           {
             this.props.tasks.length==0 && <Text style={{padding:20}}>{I18n.t('emptyTaskList')}</Text>
+          }
+          {
+            this.props.nextTasks &&
+            <Button
+              block
+              primary
+              onPress={()=>this.props.getMoreTasks(this.props.nextTasks,this.props.token)}
+              style={{margin:15}}>
+              <Text>{I18n.t('loadMoreTasks')}</Text>
+            </Button>
           }
         </Content>
       { this.props.ACL.includes('create_tasks_in_all_projects') &&
@@ -37,9 +47,9 @@ class TaskList extends Component {
 }
 
 const mapStateToProps = ({ taskR, login }) => {
-  const { tasks } = taskR;
-  const { user } = login;
-  return {tasks, ACL:user.ACL};
+  const { tasks, nextTasks } = taskR;
+  const { user,token } = login;
+  return {tasks, token, ACL:user?user.ACL:[],nextTasks};
 };
 
-export default connect(mapStateToProps, {startLoading})(TaskList);
+export default connect(mapStateToProps, {startLoading,getMoreTasks})(TaskList);

@@ -1,8 +1,25 @@
-import { SET_TASK_ATTRIBUTES, START_LOADING, SET_TASKS, SET_PROJECTS, EDIT_TASK_LIST, ADD_TO_TASK_LIST, DELETE_TASK, START_LOADING_PROJECTS,
-  START_LOADING_SEARCH,SET_SEARCH_ATTRIBUTES, SET_FILTERS, SET_LAST_TASK
+import { SET_TASK_ATTRIBUTES, START_LOADING, SET_TASKS, SET_PROJECTS, EDIT_TASK_LIST, DELETE_TASK, START_LOADING_PROJECTS,
+  START_LOADING_SEARCH,SET_SEARCH_ATTRIBUTES, SET_FILTERS, SET_LAST_TASK, ADD_TASKS,ADD_NEW_TASK
   } from '../types';
-import { PROJECT_LIST,USERS_LIST, COMPANIES_LIST, STATUSES_LIST, TASK_LIST, TAG_LIST, FILTER_LIST} from '../urls';
+import { PROJECT_LIST,USERS_LIST, COMPANIES_LIST, STATUSES_LIST, TASK_LIST, TAG_LIST, FILTER_LIST, HOST_URL} from '../urls';
 import {processRESTinput} from '../../helperFunctions';
+export const getMoreTasks = (url,token) => {
+    return (dispatch) => {
+      fetch(HOST_URL+url, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+      }).then((response) =>{
+        response.json().then((data) => {
+          dispatch({type: ADD_TASKS, payload:{tasks:data.data,nextTasks:data._links.next,url}});
+        });
+      }
+    ).catch(function (error) {
+      console.log(error);
+    });
+    };
+}
 
 export const addTask = (task,token) => {
   return (dispatch) => {
@@ -14,7 +31,14 @@ export const addTask = (task,token) => {
         },
         method: 'POST',
         body:processRESTinput(task),
-      });
+      }).then((response) =>{
+        response.json().then((data) => {
+          dispatch({type: ADD_NEW_TASK, payload:{task:data.data}});
+        });
+      }
+    ).catch(function (error) {
+      console.log(error);
+    });
   };
 };
 export const deleteTask = (id,token) => {
@@ -40,41 +64,34 @@ export const startLoadingSearch = () => {
   };
 };
 
-export const setLastTask = () => {
-  return (dispatch) => {
-    dispatch({type: SET_LAST_TASK });
-  };
-};
-
-
 export const getSearchAttributes = (token) => {
   return (dispatch) => {
     Promise.all([
-      fetch(USERS_LIST, {
+      fetch(USERS_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(COMPANIES_LIST, {
+      fetch(COMPANIES_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(STATUSES_LIST, {
+      fetch(STATUSES_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(PROJECT_LIST, {
+      fetch(PROJECT_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(TAG_LIST, {
+      fetch(TAG_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
@@ -102,7 +119,7 @@ export const startLoadingProjects = () => {
 };
 export const getProjects = (token) => {
   return (dispatch) => {
-    fetch(PROJECT_LIST, {
+    fetch(PROJECT_LIST+'?limit=999', {
       method: 'GET',
       headers: {
           'Authorization': 'Bearer ' + token
@@ -120,7 +137,7 @@ export const getProjects = (token) => {
 
 export const getFilters = (token) => {
   return (dispatch) => {
-    fetch(FILTER_LIST, {
+    fetch(FILTER_LIST+'?limit=999', {
       method: 'GET',
       headers: {
           'Authorization': 'Bearer ' + token
@@ -136,7 +153,7 @@ export const getFilters = (token) => {
   };
 }
 
-export const getFilteredTasks = (token,filterId) => {
+export const getFilteredTasks = (token,listName,filterId) => {
   return (dispatch) => {
     fetch(TASK_LIST+'/filter/'+filterId, {
       method: 'GET',
@@ -145,7 +162,7 @@ export const getFilteredTasks = (token,filterId) => {
       }
     }).then((response) =>{
       response.json().then((data) => {
-        dispatch({type: SET_TASKS, payload:{tasks:data.data}});
+        dispatch({type: SET_TASKS, payload:{tasks:data.data,nextTasks:data._links.next,listName}});
       });
     }
   ).catch(function (error) {
@@ -154,7 +171,7 @@ export const getFilteredTasks = (token,filterId) => {
   };
 }
 
-export const getTasks = (token,filter) => {
+export const getTasks = (token,listName,filter) => {
   return (dispatch) => {
     fetch(TASK_LIST+'?'+processRESTinput(filter), {
       method: 'GET',
@@ -163,7 +180,7 @@ export const getTasks = (token,filter) => {
       }
     }).then((response) =>{
       response.json().then((data) => {
-        dispatch({type: SET_TASKS, payload:{tasks:data.data}});
+        dispatch({type: SET_TASKS, payload:{tasks:data.data,nextTasks:data._links.next,listName}});
       });
     }
   ).catch(function (error) {
@@ -175,25 +192,25 @@ export const getTaskAttributes = (id, token) => {
   return (dispatch) => {
     let taskURL = TASK_LIST+'/'+id;
     Promise.all([
-      fetch(USERS_LIST, {
+      fetch(USERS_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(COMPANIES_LIST, {
+      fetch(COMPANIES_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(STATUSES_LIST, {
+      fetch(STATUSES_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(PROJECT_LIST, {
+      fetch(PROJECT_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
@@ -205,7 +222,7 @@ export const getTaskAttributes = (id, token) => {
             'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(TAG_LIST, {
+      fetch(TAG_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
@@ -227,31 +244,31 @@ export const getTaskAttributes = (id, token) => {
 export const getAttributes = (token) => {
   return (dispatch) => {
     Promise.all([
-      fetch(USERS_LIST, {
+      fetch(USERS_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(COMPANIES_LIST, {
+      fetch(COMPANIES_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(STATUSES_LIST, {
+      fetch(STATUSES_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(PROJECT_LIST, {
+      fetch(PROJECT_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(TAG_LIST, {
+      fetch(TAG_LIST+'?limit=999', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
@@ -278,6 +295,7 @@ export const startLoading = () => {
 export const editTask = (task,id,token) => {
   return (dispatch) => {
     console.log(processRESTinput(task));
+    console.log(id);
       fetch(TASK_LIST+'/quick-update/'+id, {
         headers: {
           'Accept': 'application/json',
