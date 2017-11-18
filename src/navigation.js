@@ -6,7 +6,6 @@ import { Router, Scene } from 'react-native-router-flux';
 import { closeDrawer } from './redux/actions';
 import material from '../native-base-theme/variables/material';
 import getTheme from '../native-base-theme/components';
-
 import SideBar from './components/sidebar';
 import Login from './components/login';
 import Settings from './components/settings';
@@ -24,12 +23,18 @@ import CompanyList from './components/companyList';
 import CompanyAdd from './components/companyAdd';
 import CompanyEdit from './components/companyEdit';
 import Search from './components/search';
+
+/**
+ * Contains router that was connected to the redux storage
+ * @type {[router]}
+*/
 const RouterWithRedux = connect()(Router);
 
+/**
+ * Navigator that setups all the Scenes(screens) and Sidebar for the application.
+ * @extends Component
+*/
 class AppNavigator extends Component {
-  componentWillMount(){
-
-  }
   render() {
     return (
       <StyleProvider style={getTheme((this.props.themeState === 'material') ? material : undefined)}>
@@ -37,7 +42,7 @@ class AppNavigator extends Component {
           ref={(ref) => { this._drawer = ref; }}
           content={<SideBar navigator={this._navigator} />}
           onClose={() => this.closeDrawer()}
-        >
+          >
           <RouterWithRedux>
             <Scene key="root" hideNavBar>
               <Scene key="login" component={Login} initial={true} />
@@ -62,7 +67,10 @@ class AppNavigator extends Component {
       </StyleProvider>
     );
   }
-
+  /**
+   * Checks, if sidebar was openned or closed, if yes, it triggers the correct action
+   * @return {null}
+   */
   componentDidUpdate() {
     if (this.props.drawerState === 'opened') {
       this.openDrawer();
@@ -73,10 +81,17 @@ class AppNavigator extends Component {
     }
   }
 
+  /**
+   * Opens sidebar
+   * @return {null}
+   */
   openDrawer() {
     this._drawer._root.open();
   }
-
+/**
+ * Closes sidebar
+ * @return {null}
+ */
   closeDrawer() {
     if (this.props.drawerState === 'opened') {
       this.props.closeDrawer();
@@ -84,9 +99,10 @@ class AppNavigator extends Component {
   }
 }
 
+//create function that's able to connect part of the redux store to the Component
 const mapStateToProps = ({ drawer, navigation }) => {
   return { drawerState: drawer.drawerState, themeState:drawer.themeState, navigation };
 };
 
-
+//exports created Component connected to the redux store and redux actions
 export default connect(mapStateToProps, {closeDrawer})(AppNavigator);

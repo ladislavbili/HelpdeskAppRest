@@ -2,13 +2,22 @@ import { SET_USER_ATTRIBUTES, ADD_USER, EDIT_USER_LIST, SET_USERS, START_LOADING
 import { COMPANIES_LIST,ROLES_LIST, USERS_LIST } from '../urls';
 import {processRESTinput,processDataWithPrefix} from '../../helperFunctions';
 import queryString from 'query-string';
+//All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
+
+/**
+ * Set's user loading to true
+ */
 export const startLoadingUser = () => {
   return (dispatch) => {
     dispatch({type: START_LOADING_USER });
   };
 };
 
-export const getUserAttributes = (token) => {
+/**
+ * Get's all attributes needed for the user adding
+ * @param  {string} token Token for the REST API
+ */
+ export const getUserAttributes = (token) => {
   return (dispatch) => {
     Promise.all([
       fetch(COMPANIES_LIST+'?limit=999', {
@@ -32,6 +41,14 @@ export const getUserAttributes = (token) => {
   };
 };
 
+/**
+  * Adds new user
+ * @param {User} user       Object containing all of the user data except for the detailData
+ * @param {DetailData} detailData Object that contains all of the userData
+ * @param {int} company     ID of the users company
+ * @param {int} role        ID of the users role
+ * @param {string} token      Token for the REST API
+ */
 export const addUser = (user,detailData,company,role,token) => {
   return (dispatch) => {
     let userREST=processRESTinput(user);
@@ -58,6 +75,10 @@ export const addUser = (user,detailData,company,role,token) => {
   };
 };
 
+/**
+ * Get's all of the visible users
+ * @param  {[type]} token Token for the REST API
+ */
 export const getUsers = (token) => {
   return (dispatch) => {
     fetch(USERS_LIST+'?limit=999', {
@@ -73,7 +94,11 @@ export const getUsers = (token) => {
     });
   };
 };
-
+/**
+  * Get's user and all needed data to open user editting
+ * @param  {int} id    User ID
+ * @param  {[type]} token Token for the REST API
+ */
 export const getUser = (id,token) => {
   return (dispatch) => {
     Promise.all([
@@ -104,6 +129,15 @@ export const getUser = (id,token) => {
   };
 };
 
+/**
+ * Saves editted user
+ * @param  {UserData} userData   Complete user data, used only for optimistic response
+ * @param {User} user       Object containing all of the user data except for the detailData
+ * @param {DetailData} detailData Object that contains all of the userData
+ * @param {int} company     ID of the users company
+ * @param {int} role        ID of the users role
+ * @param {string} token      Token for the REST API
+ */
 export const editUser = (userData,user,detailData,company,role,token) => {
   return (dispatch) => {
     let userREST=processRESTinput(user);

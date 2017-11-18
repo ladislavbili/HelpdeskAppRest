@@ -2,6 +2,7 @@ import { SET_UNITS, START_LOADING_ITEMS, SET_ITEM, SET_ITEMS, ADD_NEW_ITEM, DELE
 import { UNITS_LIST, TASK_LIST  } from '../urls';
 import { Actions } from 'react-native-router-flux';
 import {processRESTinput} from '../../helperFunctions';
+//All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
 
 export const startLoadingItems = () => {
   return (dispatch) => {
@@ -14,13 +15,13 @@ export const getItemsAndUnits = (id,token) => {
       fetch(TASK_LIST+'/'+id+'/invoiceable-items'+'?limit=999', {
         method: 'GET',
         headers: {
-            'Authorization': 'Bearer ' + token
+          'Authorization': 'Bearer ' + token
         }
       }),
       fetch(UNITS_LIST+'?limit=999', {
         method: 'GET',
         headers: {
-            'Authorization': 'Bearer ' + token
+          'Authorization': 'Bearer ' + token
         }
       })
     ])
@@ -83,7 +84,7 @@ export const getUnits = (token) => {
     fetch(UNITS_LIST+'?limit=999', {
       method: 'GET',
       headers: {
-          'Authorization': 'Bearer ' + token
+        'Authorization': 'Bearer ' + token
       }
     }).then((response)=>response.json().then((response)=>{
       dispatch({type: SET_UNITS, payload:{units:response.data}});

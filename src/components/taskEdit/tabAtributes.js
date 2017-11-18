@@ -40,145 +40,145 @@ class TabAtributes extends Component {
       modalLabel:false,
       labels:this.props.task.tags?this.props.labels.filter(
         (label)=>this.props.task.tags.some((tag)=>tag.id==label.id)):[]
+      }
     }
-  }
 
-  componentDidMount(){
-    this.props.saveFunction(this.submitForm.bind(this),(this.props.task.canEdit||this.props.task.loggedUserProjectAcl.includes('update_all_tasks')||this.props.task.loggedUserRoleAcl.includes('update_all_tasks')||this.props.task.loggedUserProjectAcl.includes('resolve_task')||this.props.task.loggedUserRoleAcl.includes('resolve_task')));
-  }
+    componentDidMount(){
+      this.props.saveFunction(this.submitForm.bind(this),(this.props.task.canEdit||this.props.task.loggedUserProjectAcl.includes('update_all_tasks')||this.props.task.loggedUserRoleAcl.includes('update_all_tasks')||this.props.task.loggedUserProjectAcl.includes('resolve_task')||this.props.task.loggedUserRoleAcl.includes('resolve_task')));
+    }
 
-  setLabel(removing,label){
-    this.props.inputChanged();
-   if(removing){
-     let index=this.state.labels.findIndex((item)=>item.id==label.id);
-     if(index==-1){
-       return;
-     }
-     let newLabels=[...this.state.labels];
-     newLabels.splice(index,1);
-     this.setState({labels:newLabels});
-   }
-   else{
-     let index=this.state.labels.findIndex((item)=>item.id==label.id);
-     if(index==-1){
-       this.setState({labels:[...this.state.labels,label]});
-     }
-   }
- }
+    setLabel(removing,label){
+      this.props.inputChanged();
+      if(removing){
+        let index=this.state.labels.findIndex((item)=>item.id==label.id);
+        if(index==-1){
+          return;
+        }
+        let newLabels=[...this.state.labels];
+        newLabels.splice(index,1);
+        this.setState({labels:newLabels});
+      }
+      else{
+        let index=this.state.labels.findIndex((item)=>item.id==label.id);
+        if(index==-1){
+          this.setState({labels:[...this.state.labels,label]});
+        }
+      }
+    }
 
-  submitForm(){
-    const id = this.props.task.id;
-    const project = this.state.project;
-    const requester = this.state.requestedBy.id?this.state.requestedBy.id:null;
-    const company = this.state.company?this.state.company.id:null;
-    const assigned = this.state.assignedTo && this.state.assignedTo.id && this.state.status ? '[{userId:'+this.state.assignedTo.id+', statusId:'+this.state.status.id+'}]':null;
-    const startedAt = this.state.startedAt? Math.floor(this.state.startedAt/1000): null;
-    const deadline = this.state.deadline? Math.floor(this.state.deadline/1000): null;
-    const closedAt = null;
-    let tags = '';
-    this.state.labels.map((label)=>tags+=label.title+',')
-    const tag = '['+(tags.substring(0,tags.length-1))+']';
-    const {title,description,important,work} = this.state;
-    const workTime=this.state.work_time;
+    submitForm(){
+      const id = this.props.task.id;
+      const project = this.state.project;
+      const requester = this.state.requestedBy.id?this.state.requestedBy.id:null;
+      const company = this.state.company?this.state.company.id:null;
+      const assigned = this.state.assignedTo && this.state.assignedTo.id && this.state.status ? '[{"userId":'+this.state.assignedTo.id+', "statusId":'+this.state.status.id+'}]':null;
+      const startedAt = this.state.startedAt? Math.floor(this.state.startedAt/1000): null;
+      const deadline = this.state.deadline? Math.floor(this.state.deadline/1000): null;
+      const closedAt = null;
+      let tags = '"';
+      this.state.labels.map((label)=>tags+=label.title+'","');
+      const tag = '['+(tags.substring(0,tags.length-2))+']';
+      const {title,description,important,work} = this.state;
+      const workTime=this.state.work_time;
 
-    this.props.editTask(
-      {
-        project,requester,company,startedAt,deadline,closedAt,
-        title,description,important,work,workTime,//tag,assigned,
-      },id,this.props.token
-    );
-    Actions.pop();
-  }
+      this.props.editTask(
+        {
+          project,requester,company,startedAt,deadline,closedAt,
+          title,description,important,work,workTime,tag,assigned,
+        },id,this.props.token
+      );
+      Actions.pop();
+    }
 
-  deleteTask(){
-    Alert.alert(
-      I18n.t('deletingTask'),
-      I18n.t('deletingTaskMessage'),
-      [
-        {text: I18n.t('cancel'), style: 'cancel'},
-        {text: I18n.t('ok'), onPress: () =>{
-          this.props.deleteTask(this.props.task.id,this.props.token);
-          Actions.pop();
-        }},
-      ],
-      { cancelable: false }
-    )
-  }
+    deleteTask(){
+      Alert.alert(
+        I18n.t('deletingTask'),
+        I18n.t('deletingTaskMessage'),
+        [
+          {text: I18n.t('cancel'), style: 'cancel'},
+          {text: I18n.t('ok'), onPress: () =>{
+            this.props.deleteTask(this.props.task.id,this.props.token);
+            Actions.pop();
+          }},
+        ],
+        { cancelable: false }
+      )
+    }
 
-  render() {
-    let statusButtonStyle={backgroundColor:this.state.status.color,flex:1};
-    return (
-      <Container>
-        <Content style={{ padding: 15 }}>
+    render() {
+      let statusButtonStyle={backgroundColor:this.state.status.color,flex:1};
+      return (
+        <Container>
+          <Content style={{ padding: 15 }}>
 
-          <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
-          <CheckBox checked={this.state.important} disabled={this.state.disabled} color='#3F51B5' onPress={()=>this.setState({important:!this.state.important})}/>
-            <Label style={{marginLeft:15}}>Important</Label>
-          </Item>
+            <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
+              <CheckBox checked={this.state.important} disabled={this.state.disabled} color='#3F51B5' onPress={()=>this.setState({important:!this.state.important})}/>
+              <Label style={{marginLeft:15}}>Important</Label>
+            </Item>
 
-          <Text note>{I18n.t('taskName')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Input
-              disabled={this.state.disabled}
-              placeholder={I18n.t('enterTaskName')}
-              value={ this.state.title }
-              onChangeText={ value => {this.setState({title:value}); this.props.inputChanged();} }
-            />
-          </View>
-          <View style={{flexDirection:'row'}}>
-            <Text note>{I18n.t('status')}</Text>
-            <Text note  style={{textAlign: 'right',flex:1}}>{this.state.statusChangedAt}</Text>
-          </View>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button style={statusButtonStyle} disabled={this.state.disabled} onPress={()=>this.setState({pickingStatus:!this.state.pickingStatus})}><Text style={{color:'white',flex:1,textAlign:'center'}}>{this.state.status.title}</Text></Button>
+            <Text note>{I18n.t('taskName')}</Text>
+            <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+              <Input
+                disabled={this.state.disabled}
+                placeholder={I18n.t('enterTaskName')}
+                value={ this.state.title }
+                onChangeText={ value => {this.setState({title:value}); this.props.inputChanged();} }
+                />
+            </View>
+            <View style={{flexDirection:'row'}}>
+              <Text note>{I18n.t('status')}</Text>
+              <Text note  style={{textAlign: 'right',flex:1}}>{this.state.statusChangedAt}</Text>
+            </View>
+            <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+              <Button style={statusButtonStyle} disabled={this.state.disabled} onPress={()=>this.setState({pickingStatus:!this.state.pickingStatus})}><Text style={{color:'white',flex:1,textAlign:'center'}}>{this.state.status.title}</Text></Button>
               {
-                  this.state.pickingStatus && this.props.statuses.map((status)=>
-                      !(this.state.status.id==status.id) &&
-                      <Button style={{backgroundColor:status.color,flex:1}} onPress={()=>{this.setState({status:status,pickingStatus:false});this.props.inputChanged();}} key={status.id} >
-                        <Text style={{color:'white',flex:1,textAlign:'center'}}>{status.title}</Text>
-                      </Button>)
+                this.state.pickingStatus && this.props.statuses.map((status)=>
+                !(this.state.status.id==status.id) &&
+                <Button style={{backgroundColor:status.color,flex:1}} onPress={()=>{this.setState({status:status,pickingStatus:false});this.props.inputChanged();}} key={status.id} >
+                  <Text style={{color:'white',flex:1,textAlign:'center'}}>{status.title}</Text>
+                </Button>)
               }
-          </View>
+            </View>
 
-          <Text note>{I18n.t('taskDescription')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Input
-              style={{height:Math.max(35, this.state.descriptionHeight)}}
-              multiline={true}
-              disabled={this.state.disabled}
-              onChange={ event => {this.setState({description:event.nativeEvent.text});this.props.inputChanged();} }
-              onContentSizeChange={(event) => this.setState({ descriptionHeight: event.nativeEvent.contentSize.height })}
-              value={ this.state.description }
-              placeholder={I18n.t('enterTaskDescription')}
-            />
-          </View>
+            <Text note>{I18n.t('taskDescription')}</Text>
+            <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+              <Input
+                style={{height:Math.max(35, this.state.descriptionHeight)}}
+                multiline={true}
+                disabled={this.state.disabled}
+                onChange={ event => {this.setState({description:event.nativeEvent.text});this.props.inputChanged();} }
+                onContentSizeChange={(event) => this.setState({ descriptionHeight: event.nativeEvent.contentSize.height })}
+                value={ this.state.description }
+                placeholder={I18n.t('enterTaskDescription')}
+                />
+            </View>
 
-          <Text note>{I18n.t('taskWork')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Input
-              style={{height:Math.max(35, this.state.workHeight)}}
-              multiline={true}
-              disabled={this.state.disabled}
-              onChange={ event => {this.setState({work:event.nativeEvent.text});this.props.inputChanged();} }
-              onContentSizeChange={(event) => this.setState({ workHeight: event.nativeEvent.contentSize.height })}
-              value={ this.state.work }
-              placeholder={I18n.t('enterTaskWork')}
-            />
-          </View>
+            <Text note>{I18n.t('taskWork')}</Text>
+            <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+              <Input
+                style={{height:Math.max(35, this.state.workHeight)}}
+                multiline={true}
+                disabled={this.state.disabled}
+                onChange={ event => {this.setState({work:event.nativeEvent.text});this.props.inputChanged();} }
+                onContentSizeChange={(event) => this.setState({ workHeight: event.nativeEvent.contentSize.height })}
+                value={ this.state.work }
+                placeholder={I18n.t('enterTaskWork')}
+                />
+            </View>
 
-          <Text note>{I18n.t('project')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Picker
-              enabled={!this.state.disabled}
-              supportedOrientations={['portrait', 'landscape']}
-              iosHeader={I18n.t('selectOne')}
-              mode="dropdown"
-              selectedValue={this.state.project}
-              onValueChange={(value)=>{this.setState({project : value});this.props.inputChanged();}}>
-              {
-                this.props.projects.map((project)=>
-                    (<Item label={project.title?project.title:''} key={project.id} value={project.id} />)
-                  )
+            <Text note>{I18n.t('project')}</Text>
+            <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+              <Picker
+                enabled={!this.state.disabled}
+                supportedOrientations={['portrait', 'landscape']}
+                iosHeader={I18n.t('selectOne')}
+                mode="dropdown"
+                selectedValue={this.state.project}
+                onValueChange={(value)=>{this.setState({project : value});this.props.inputChanged();}}>
+                {
+                  this.props.projects.map((project)=>
+                  (<Item label={project.title?project.title:''} key={project.id} value={project.id} />)
+                )
               }
             </Picker>
           </View>
@@ -188,250 +188,250 @@ class TabAtributes extends Component {
             <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingRequester:true})}>
               <Left>
                 <Text style={{textAlign:'left',color:'black'}}>{this.state.requestedBy==null ? I18n.t('selectRequester') : (
-                  (this.state.requestedBy.name)?
-                  <Text>{this.state.requestedBy.name}</Text>:
-                <Text>{this.state.requestedBy.email}</Text>
+                    (this.state.requestedBy.name)?
+                    <Text>{this.state.requestedBy.name}</Text>:
+                      <Text>{this.state.requestedBy.email}</Text>
 
-                )}</Text>
-              </Left>
-            </Button>
-          </View>
+                    )}</Text>
+                  </Left>
+                </Button>
+              </View>
 
-          <Text note>{I18n.t('company')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingCompany:true})}>
-              <Left>
-                <Text style={{textAlign:'left',color:'black'}}>{this.state.company==null ? I18n.t('selectCompany') : this.state.company.title}</Text>
-              </Left>
-            </Button>
-          </View>
+              <Text note>{I18n.t('company')}</Text>
+              <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingCompany:true})}>
+                  <Left>
+                    <Text style={{textAlign:'left',color:'black'}}>{this.state.company==null ? I18n.t('selectCompany') : this.state.company.title}</Text>
+                  </Left>
+                </Button>
+              </View>
 
-          <Text note>{I18n.t('assignedTo')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>{this.setState({selectingAssignedTo:true});this.props.inputChanged();}}>
-            <Left>
-              <Text style={{textAlign:'left',color:'black'}}>{this.state.assignedTo==null ? I18n.t('selectAssignedTo') : (
-                (this.state.assignedTo.name)?
-                <Text>{this.state.assignedTo.name}</Text>:
-              <Text>{this.state.assignedTo.email}</Text>
+              <Text note>{I18n.t('assignedTo')}</Text>
+              <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>{this.setState({selectingAssignedTo:true});this.props.inputChanged();}}>
+                  <Left>
+                    <Text style={{textAlign:'left',color:'black'}}>{this.state.assignedTo==null ? I18n.t('selectAssignedTo') : (
+                        (this.state.assignedTo.name)?
+                        <Text>{this.state.assignedTo.name}</Text>:
+                          <Text>{this.state.assignedTo.email}</Text>
 
-              )}</Text>
-            </Left>
-            </Button>
-          </View>
+                        )}</Text>
+                      </Left>
+                    </Button>
+                  </View>
 
-          <Text note>{I18n.t('deadline')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingDeadline:true})}>
-              <Left>
-                <Text style={{textAlign:'left',color:'black'}}>{this.state.deadline==null ? I18n.t('selectDeadline') : formatDate(this.state.deadline)}</Text>
-              </Left>
-            </Button>
-            <DateTimePicker
-              mode="datetime"
-              isVisible={this.state.selectingDeadline}
-              onConfirm={(date)=>{this.setState({deadline:(new Date(date)).getTime()});this.props.inputChanged();}}
-              onCancel={()=>this.setState({selectingDeadline:false})}
-            />
-          </View>
+                  <Text note>{I18n.t('deadline')}</Text>
+                  <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                    <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingDeadline:true})}>
+                      <Left>
+                        <Text style={{textAlign:'left',color:'black'}}>{this.state.deadline==null ? I18n.t('selectDeadline') : formatDate(this.state.deadline)}</Text>
+                      </Left>
+                    </Button>
+                    <DateTimePicker
+                      mode="datetime"
+                      isVisible={this.state.selectingDeadline}
+                      onConfirm={(date)=>{this.setState({deadline:(new Date(date)).getTime()});this.props.inputChanged();}}
+                      onCancel={()=>this.setState({selectingDeadline:false})}
+                      />
+                  </View>
 
-          <Text note>{I18n.t('pendingAt')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingStartedAt:true})}>
-              <Left>
-                <Text style={{textAlign:'left',color:'black'}}>{this.state.startedAt==null ? I18n.t('selectPendingAt') : formatDate(this.state.startedAt)}</Text>
-              </Left>
-            </Button>
-            <DateTimePicker
-              mode="datetime"
-              isVisible={this.state.selectingStartedAt}
-              onConfirm={(date)=>{this.setState({startedAt:(new Date(date)).getTime()});this.props.inputChanged();}}
-              onCancel={()=>this.setState({selectingStartedAt:false})}
-            />
-          </View>
+                  <Text note>{I18n.t('pendingAt')}</Text>
+                  <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                    <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>this.setState({selectingStartedAt:true})}>
+                      <Left>
+                        <Text style={{textAlign:'left',color:'black'}}>{this.state.startedAt==null ? I18n.t('selectPendingAt') : formatDate(this.state.startedAt)}</Text>
+                      </Left>
+                    </Button>
+                    <DateTimePicker
+                      mode="datetime"
+                      isVisible={this.state.selectingStartedAt}
+                      onConfirm={(date)=>{this.setState({startedAt:(new Date(date)).getTime()});this.props.inputChanged();}}
+                      onCancel={()=>this.setState({selectingStartedAt:false})}
+                      />
+                  </View>
 
-          <Text note>{I18n.t('workHours')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Input
-              disabled={this.state.disabled}
-              value={this.state.work_time}
-              keyboardType='numeric'
-              placeholder={I18n.t('enterWorkHours')}
-              onChangeText={ value => {let result = processInteger(value);this.setState({work_time:(result?result:this.state.work_time)});this.props.inputChanged();} }
-            />
-          </View>
+                  <Text note>{I18n.t('workHours')}</Text>
+                  <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                    <Input
+                      disabled={this.state.disabled}
+                      value={this.state.work_time}
+                      keyboardType='numeric'
+                      placeholder={I18n.t('enterWorkHours')}
+                      onChangeText={ value => {let result = processInteger(value);this.setState({work_time:(result?result:this.state.work_time)});this.props.inputChanged();} }
+                      />
+                  </View>
 
-          <Text note>{I18n.t('labels')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-          <Button block onPress={()=>{this.setState({modalLabel:true})}}><Text>{I18n.t('selectLabels')}</Text></Button>
-          <List
-            dataArray={this.state.labels}
-            renderRow={label =>
-              <ListItem>
-                <View style={{backgroundColor:((label.color.includes('#')?'':'#')+label.color),paddingLeft:10}}>
-                  <Text style={{color:'white'}}>{label.title}</Text>
-                </View>
-              </ListItem>
-              }
-          />
-        </View>
+                  <Text note>{I18n.t('labels')}</Text>
+                  <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                    <Button block onPress={()=>{this.setState({modalLabel:true})}}><Text>{I18n.t('selectLabels')}</Text></Button>
+                    <List
+                      dataArray={this.state.labels}
+                      renderRow={label =>
+                        <ListItem>
+                          <View style={{backgroundColor:((label.color.includes('#')?'':'#')+label.color),paddingLeft:10}}>
+                            <Text style={{color:'white'}}>{label.title}</Text>
+                          </View>
+                        </ListItem>
+                      }
+                      />
+                  </View>
 
-          {
-            (this.props.task.loggedUserProjectAcl.includes('delete_task')||this.props.task.loggedUserRoleAcl.includes('delete_task'))&&
-            <Button danger block onPress={this.deleteTask.bind(this)} iconLeft style={{ flexDirection: 'row', borderColor: 'white', marginTop:5, marginBottom:20, borderWidth: 0.5 }}>
-              <Icon active style={{ color: 'white' }} name="trash" />
-              <Text style={{ color: 'white' }} >{I18n.t('delete')}</Text>
-            </Button>
-          }
-          <Modal
-            animationType={"fade"}
-            transparent={false}
-            style={{flex:1}}
-            visible={this.state.modalLabel}
-            onRequestClose={() => this.setState({modalLabel:false})}
-            >
-            <Content style={{ padding: 15 }}>
-            <Header>
-              <Body>
-                <Title>{I18n.t('selectTaskLabels')}</Title>
-              </Body>
-            </Header>
+                  {
+                    (this.props.task.loggedUserProjectAcl.includes('delete_task')||this.props.task.loggedUserRoleAcl.includes('delete_task'))&&
+                    <Button danger block onPress={this.deleteTask.bind(this)} iconLeft style={{ flexDirection: 'row', borderColor: 'white', marginTop:5, marginBottom:20, borderWidth: 0.5 }}>
+                      <Icon active style={{ color: 'white' }} name="trash" />
+                      <Text style={{ color: 'white' }} >{I18n.t('delete')}</Text>
+                    </Button>
+                  }
+                  <Modal
+                    animationType={"fade"}
+                    transparent={false}
+                    style={{flex:1}}
+                    visible={this.state.modalLabel}
+                    onRequestClose={() => this.setState({modalLabel:false})}
+                    >
+                    <Content style={{ padding: 15 }}>
+                      <Header>
+                        <Body>
+                          <Title>{I18n.t('selectTaskLabels')}</Title>
+                        </Body>
+                      </Header>
 
-           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-             <List
-               dataArray={this.props.labels}
-               renderRow={item =>
-                 <TaskLabel item={item} setLabel={this.setLabel.bind(this)} inputChanged={this.props.inputChanged} selected={this.state.labels.some((label)=>item.id==label.id)}/>
-                 }
-             />
-           </View>
-           </Content>
-           <Footer>
+                      <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                        <List
+                          dataArray={this.props.labels}
+                          renderRow={item =>
+                            <TaskLabel item={item} setLabel={this.setLabel.bind(this)} inputChanged={this.props.inputChanged} selected={this.state.labels.some((label)=>item.id==label.id)}/>
+                          }
+                          />
+                      </View>
+                    </Content>
+                    <Footer>
 
-             <FooterTab>
-               <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
-                 onPress={()=>this.setState({modalLabel:false})}>
-                 <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
-               </Button>
-             </FooterTab>
-           </Footer>
-         </Modal>
-          <Modal
-              animationType={"fade"}
-              transparent={false}
-              style={{flex:1}}
-              visible={this.state.selectingCompany}
-              onRequestClose={() => this.setState({selectingCompany:false})}>
-            <Header>
-              <Body>
-              <Title>{I18n.t('selectCompany')}</Title>
-              </Body>
-            </Header>
-            <Content style={{ padding: 15 }}>
+                      <FooterTab>
+                        <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
+                          onPress={()=>this.setState({modalLabel:false})}>
+                          <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                        </Button>
+                      </FooterTab>
+                    </Footer>
+                  </Modal>
+                  <Modal
+                    animationType={"fade"}
+                    transparent={false}
+                    style={{flex:1}}
+                    visible={this.state.selectingCompany}
+                    onRequestClose={() => this.setState({selectingCompany:false})}>
+                    <Header>
+                      <Body>
+                        <Title>{I18n.t('selectCompany')}</Title>
+                      </Body>
+                    </Header>
+                    <Content style={{ padding: 15 }}>
 
-            <ListItem>
-              <Item rounded>
-                <Icon name="ios-search" />
-                <Input placeholder={I18n.t('search')} value={this.state.filterWord} onChangeText={((value)=>this.setState({filterWord:value}))} />
-              </Item>
-            </ListItem>
+                      <ListItem>
+                        <Item rounded>
+                          <Icon name="ios-search" />
+                          <Input placeholder={I18n.t('search')} value={this.state.filterWord} onChangeText={((value)=>this.setState({filterWord:value}))} />
+                        </Item>
+                      </ListItem>
 
-            <List>
-            {
-              this.props.companies.map((company) =>
-              company.title.toLowerCase().includes(this.state.filterWord.toLowerCase()) && <ListItem button key={company.id} onPress={()=>{this.setState({company:company,selectingCompany:false});this.props.inputChanged();}} >
-                <Body>
-                  <Text>{company.title}</Text>
-                </Body>
-                <Right>
-                  <Icon name="arrow-forward" />
-                </Right>
-              </ListItem>
-            )
-            }
-            </List>
-            </Content>
-          </Modal>
+                      <List>
+                        {
+                          this.props.companies.map((company) =>
+                          company.title.toLowerCase().includes(this.state.filterWord.toLowerCase()) && <ListItem button key={company.id} onPress={()=>{this.setState({company:company,selectingCompany:false});this.props.inputChanged();}} >
+                          <Body>
+                            <Text>{company.title}</Text>
+                          </Body>
+                          <Right>
+                            <Icon name="arrow-forward" />
+                          </Right>
+                        </ListItem>
+                      )
+                    }
+                  </List>
+                </Content>
+              </Modal>
 
-          <Modal
-              animationType={"fade"}
-              transparent={false}
-              style={{flex:1}}
-              visible={this.state.selectingRequester}
-              onRequestClose={() => this.setState({selectingRequester:false})}>
-            <Header>
-              <Body>
-              <Title>{I18n.t('selectRequester')}</Title>
-              </Body>
-            </Header>
-            <Content style={{ padding: 15 }}>
+              <Modal
+                animationType={"fade"}
+                transparent={false}
+                style={{flex:1}}
+                visible={this.state.selectingRequester}
+                onRequestClose={() => this.setState({selectingRequester:false})}>
+                <Header>
+                  <Body>
+                    <Title>{I18n.t('selectRequester')}</Title>
+                  </Body>
+                </Header>
+                <Content style={{ padding: 15 }}>
 
-            <ListItem>
-              <Item rounded>
-                <Icon name="ios-search" />
-                <Input placeholder={I18n.t('search')} value={this.state.filterWordRequester} onChangeText={((value)=>this.setState({filterWordRequester:value}))} />
-              </Item>
-            </ListItem>
+                  <ListItem>
+                    <Item rounded>
+                      <Icon name="ios-search" />
+                      <Input placeholder={I18n.t('search')} value={this.state.filterWordRequester} onChangeText={((value)=>this.setState({filterWordRequester:value}))} />
+                    </Item>
+                  </ListItem>
 
-            <List>
-            {
-              (([{id:null,name:I18n.t('noUser'), email:I18n.t('noMail')}]).concat(this.props.users)).map((user) =>
-              (user.email+user.name).toLowerCase().includes(this.state.filterWordRequester.toLowerCase()) &&
-              <ListItem button key={user.id} onPress={()=>{this.setState({requestedBy:user,selectingRequester:false});this.props.inputChanged();}} >
-                <Body>
-                {
-                  (user.name)?<Text>{user.name}</Text>:null
-                }
-                <Text note>{user.email}</Text>
-                </Body>
-                <Right>
-                  <Icon name="arrow-forward" />
-                </Right>
-              </ListItem>
-            )
-            }
-            </List>
-            </Content>
-          </Modal>
+                  <List>
+                    {
+                      (([{id:null,name:I18n.t('noUser'), email:I18n.t('noMail')}]).concat(this.props.users)).map((user) =>
+                      (user.email+user.name).toLowerCase().includes(this.state.filterWordRequester.toLowerCase()) &&
+                      <ListItem button key={user.id} onPress={()=>{this.setState({requestedBy:user,selectingRequester:false});this.props.inputChanged();}} >
+                        <Body>
+                          {
+                            (user.name)?<Text>{user.name}</Text>:null
+                          }
+                          <Text note>{user.email}</Text>
+                        </Body>
+                        <Right>
+                          <Icon name="arrow-forward" />
+                        </Right>
+                      </ListItem>
+                    )
+                  }
+                </List>
+              </Content>
+            </Modal>
 
-          <Modal
+            <Modal
               animationType={"fade"}
               transparent={false}
               style={{flex:1}}
               visible={this.state.selectingAssignedTo}
               onRequestClose={() => this.setState({selectingAssignedTo:false})}>
-            <Header>
-              <Body>
-              <Title>{I18n.t('selectAssignedTo')}</Title>
-              </Body>
-            </Header>
-            <Content style={{ padding: 15 }}>
-
-            <ListItem>
-              <Item rounded>
-                <Icon name="ios-search" />
-                <Input placeholder={I18n.t('search')} value={this.state.filterWordAssignedTo} onChangeText={(value)=>this.setState({filterWordAssignedTo:value})} />
-              </Item>
-            </ListItem>
-
-            <List>
-            {
-              (([{id:null,name:I18n.t('noUser'), email:I18n.t('noMail')}]).concat(this.props.users)).map((user) =>
-              (user.email+user.name).toLowerCase().includes(this.state.filterWordAssignedTo.toLowerCase()) &&
-              <ListItem button key={user.id} onPress={()=>{this.setState({assignedTo:user,selectingAssignedTo:false});this.props.inputChanged();}} >
+              <Header>
                 <Body>
-                {
-                  (user.name)?<Text>{user.name}</Text>:null
-                }
-                <Text note>{user.email}</Text>
+                  <Title>{I18n.t('selectAssignedTo')}</Title>
                 </Body>
-                <Right>
-                  <Icon name="arrow-forward" />
-                </Right>
-              </ListItem>
-            )
-            }
-            </List>
+              </Header>
+              <Content style={{ padding: 15 }}>
+
+                <ListItem>
+                  <Item rounded>
+                    <Icon name="ios-search" />
+                    <Input placeholder={I18n.t('search')} value={this.state.filterWordAssignedTo} onChangeText={(value)=>this.setState({filterWordAssignedTo:value})} />
+                  </Item>
+                </ListItem>
+
+                <List>
+                  {
+                    (([{id:null,name:I18n.t('noUser'), email:I18n.t('noMail')}]).concat(this.props.users)).map((user) =>
+                    (user.email+user.name).toLowerCase().includes(this.state.filterWordAssignedTo.toLowerCase()) &&
+                    <ListItem button key={user.id} onPress={()=>{this.setState({assignedTo:user,selectingAssignedTo:false});this.props.inputChanged();}} >
+                      <Body>
+                        {
+                          (user.name)?<Text>{user.name}</Text>:null
+                        }
+                        <Text note>{user.email}</Text>
+                      </Body>
+                      <Right>
+                        <Icon name="arrow-forward" />
+                      </Right>
+                    </ListItem>
+                  )
+                }
+              </List>
             </Content>
           </Modal>
 

@@ -10,10 +10,10 @@ const initialState = {
 export default function reducer (state = initialState, action) {
   switch (action.type) {
     case START_LOADING_USER:
-      return {
-        ...state,
-        loadingUser: true,
-      };
+    return {
+      ...state,
+      loadingUser: true,
+    };
     case SET_USER_ATTRIBUTES:{
       return {
         ...state,
@@ -37,21 +37,21 @@ export default function reducer (state = initialState, action) {
       };
     }
     case SET_USERS:
-      return {
-        ...state,
-        users: action.payload.users
-      };
+    return {
+      ...state,
+      users: action.payload.users
+    };
     case SET_TASK_ATTRIBUTES:
-      return {
-        ...state,
-        users:action.payload.users
-      };
+    return {
+      ...state,
+      users:action.payload.users
+    };
     case SET_SEARCH_ATTRIBUTES:
-      return {
-        ...state,
-        users:action.payload.users,
-      };
+    return {
+      ...state,
+      users:action.payload.users,
+    };
     default:
-      return state;
+    return state;
   }
 }

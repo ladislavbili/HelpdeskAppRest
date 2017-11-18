@@ -1,3 +1,5 @@
+//collection of the all action types, used for better code consistency
+
 export const LOGIN_START = 'AUTH_LOGIN_START';
 export const LOGIN_SUCCESS = 'AUTH_LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'AUTH_LOGIN_FAIL';

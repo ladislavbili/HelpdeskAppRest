@@ -9,6 +9,7 @@ import task from './task';
 import user from './user';
 import account from './account';
 
+//connects partial translations into one lagunage pack
 export default Object.assign(
   account,
   comment,

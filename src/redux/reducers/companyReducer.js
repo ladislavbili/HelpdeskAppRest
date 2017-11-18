@@ -24,10 +24,10 @@ export default function reducer (state = initialState, action) {
       };
     }
     case START_LOADING_COMPANY:
-      return {
-        ...state,
-        loadingCompany: true,
-      };
+    return {
+      ...state,
+      loadingCompany: true,
+    };
     case ADD_COMPANY:{
       return {
         ...state,
@@ -41,15 +41,15 @@ export default function reducer (state = initialState, action) {
       };
     }
     case SET_COMPANIES:
-      return {
-        ...state,
-        companies: action.payload.companies
-      };
+    return {
+      ...state,
+      companies: action.payload.companies
+    };
     case SET_TASK_ATTRIBUTES:
-      return {
-        ...state,
-        companies:action.payload.companies
-      };
+    return {
+      ...state,
+      companies:action.payload.companies
+    };
     case SET_SEARCH_ATTRIBUTES:{
       return {
         ...state,
@@ -57,6 +57,6 @@ export default function reducer (state = initialState, action) {
       };
     }
     default:
-      return state;
+    return state;
   }
 }

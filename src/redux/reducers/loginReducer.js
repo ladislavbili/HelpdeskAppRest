@@ -11,34 +11,34 @@ const initialState = {
 export default function loginReducer(state = initialState, action) {
   switch (action.type) {
     case LOGIN_START:
-      return { ...state, loading: true, error: false };
+    return { ...state, loading: true, error: false };
     case LOGIN_SUCCESS:
-      return {
-        ...state,
-        authenticated: true,
-        user: action.payload.user,
-        token: action.payload.token,
-        error: false,
-        loading:false,
-      };
+    return {
+      ...state,
+      authenticated: true,
+      user: action.payload.user,
+      token: action.payload.token,
+      error: false,
+      loading:false,
+    };
     case LOGIN_FAIL:
-      return {
-        ...state,
-        authenticated: false,
-        user: null,
-        error: true,
-        loading:false,
-      };
+    return {
+      ...state,
+      authenticated: false,
+      user: null,
+      error: true,
+      loading:false,
+    };
     case LOGIN_LOGOUT:
-      return {
-        ...state,
-        authenticated: false,
-        user: null,
-        error: false,
-        loading:false,
-        token:null,
-      };
+    return {
+      ...state,
+      authenticated: false,
+      user: null,
+      error: false,
+      loading:false,
+      token:null,
+    };
     default:
-      return state;
+    return state;
   }
 }

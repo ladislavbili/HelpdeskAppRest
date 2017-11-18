@@ -15,10 +15,10 @@ export default function reducer (state = initialState, action) {
       };
     }
     case START_LOADING_COMMENTS:
-      return {
-        ...state,
-        loadingComments: true,
-      };
+    return {
+      ...state,
+      loadingComments: true,
+    };
     case ADD_NEW_COMMENT:{
       {
         let comments=state.comments;
@@ -30,6 +30,6 @@ export default function reducer (state = initialState, action) {
       }
     }
     default:
-      return state;
+    return state;
   }
 }

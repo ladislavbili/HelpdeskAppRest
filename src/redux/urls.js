@@ -1,3 +1,4 @@
+//All URL adresses used to connect to the REST API
 export const HOST_URL = 'https://dev.lanhelpdesk.com';
 export const BASE_URL = HOST_URL + '/api/v1';
 export const LOGIN_URL = BASE_URL + '/token-authentication';
