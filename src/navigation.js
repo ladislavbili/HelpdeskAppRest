@@ -99,7 +99,7 @@ class AppNavigator extends Component {
   }
 }
 
-//create function that's able to connect part of the redux store to the Component
+//creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({ drawer, navigation }) => {
   return { drawerState: drawer.drawerState, themeState:drawer.themeState, navigation };
 };

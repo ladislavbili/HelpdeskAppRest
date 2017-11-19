@@ -9,6 +9,10 @@ import { getTasks } from '../../redux/actions';
 
 import {compactUserForSearch} from '../../helperFunctions';
 
+/**
+ * Allows user to seach for a specific tasks
+ * @extends Component
+ */
 class Search extends Component {
 
   constructor(props) {
@@ -39,6 +43,9 @@ class Search extends Component {
     }
   }
 
+  /**
+   * Gathers all of the data from the current state and sends them via actions to the redux. Then it returns user back to previous component
+   */
   submit(){
     let labels = "";
     this.state.labels.map((item)=> labels+= item.id+',');
@@ -72,350 +79,350 @@ class Search extends Component {
         assigned:assignedTo.substring(0,assignedTo.length-1),
         requester:requestedBy.substring(0,requestedBy.length-1),
         creator:createdBy.substring(0,createdBy.length-1),
-    });
-    Actions.pop();
-  }
+      });
+      Actions.pop();
+    }
 
-  render() {
-    return (
-      <Container>
-        <Header>
-          <Left>
-            <Button transparent onPress={() => Actions.pop()}>
-              <Icon name="arrow-back" />
-            </Button>
-          </Left>
-          <Body>
-            <Title>{I18n.t('search')}</Title>
-          </Body>
-        </Header>
-        <Content style={{ padding: 15 }}>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Input
-              placeholder={I18n.t('filterTaskTitle')}
-              value={ this.state.title }
-              onChangeText={ value => this.setState({title:value}) }
-            />
-          </View>
+    render() {
+      return (
+        <Container>
+          <Header>
+            <Left>
+              <Button transparent onPress={() => Actions.pop()}>
+                <Icon name="arrow-back" />
+              </Button>
+            </Left>
+            <Body>
+              <Title>{I18n.t('search')}</Title>
+            </Body>
+          </Header>
+          <Content style={{ padding: 15 }}>
+            <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+              <Input
+                placeholder={I18n.t('filterTaskTitle')}
+                value={ this.state.title }
+                onChangeText={ value => this.setState({title:value}) }
+                />
+            </View>
 
-          <Text note>{I18n.t('filterCreatedBy')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block onPress={()=>{this.setState({modalCreatedBy:true})}}><Text>{I18n.t('filterByCreatedBy')}</Text></Button>
-            <List
-              dataArray={this.state.createdBy}
-              renderRow={item =>
-                <ListItem>
-                <Body>
-                    {
-                      (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
-                    }
-                    <Text note>{item.email}</Text>
+            <Text note>{I18n.t('filterCreatedBy')}</Text>
+            <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+              <Button block onPress={()=>{this.setState({modalCreatedBy:true})}}><Text>{I18n.t('filterByCreatedBy')}</Text></Button>
+              <List
+                dataArray={this.state.createdBy}
+                renderRow={item =>
+                  <ListItem>
+                    <Body>
+                      {
+                        (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
+                      }
+                      <Text note>{item.email}</Text>
+                    </Body>
+                  </ListItem>
+                }
+                />
+            </View>
+            <Modal
+              animationType={"fade"}
+              transparent={false}
+              style={{flex:1}}
+              visible={this.state.modalCreatedBy}
+              onRequestClose={() => this.setState({modalCreatedBy:false})}
+              >
+              <Content style={{ padding: 15 }}>
+                <Header>
+                  <Body>
+                    <Title>{I18n.t('selectFilterCreatedBy')}</Title>
                   </Body>
-                </ListItem>
-                }
-            />
-          </View>
-          <Modal
-            animationType={"fade"}
-            transparent={false}
-            style={{flex:1}}
-            visible={this.state.modalCreatedBy}
-            onRequestClose={() => this.setState({modalCreatedBy:false})}
-            >
-            <Content style={{ padding: 15 }}>
-            <Header>
-              <Body>
-                <Title>{I18n.t('selectFilterCreatedBy')}</Title>
-              </Body>
-            </Header>
+                </Header>
 
-           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-           <ListItem>
-             <Item rounded>
-               <Icon name="ios-search" />
-               <Input placeholder={I18n.t('search')} value={this.state.createdBySearch} onChangeText={(value)=>this.setState({createdBySearch:value})} />
-             </Item>
-           </ListItem>
-           <List>
-             {this.props.users.filter((item)=>compactUserForSearch(item).includes(this.state.createdBySearch.toLowerCase())).map((item)=>
-               <ListItem thumbnail key={item.id} onPress={()=>{
-                 if(this.state.createdBy.includes(item)){
-                   let newCreatedBy=[...this.state.createdBy];
-                   newCreatedBy.splice(newCreatedBy.indexOf(item),1);
-                   this.setState({createdBy:newCreatedBy});
-                 }else{
-                   this.setState({createdBy:[item,...this.state.createdBy]});
-                 }}}>
-                 <Left>
-                     <CheckBox checked={this.state.createdBy.includes(item)}  onPress={()=>{
-                       if(this.state.createdBy.includes(item)){
-                         let newCreatedBy=[...this.state.createdBy];
-                         newCreatedBy.splice(newCreatedBy.indexOf(item),1);
-                         this.setState({createdBy:newCreatedBy});
-                       }else{
-                         this.setState({createdBy:[item,...this.state.createdBy]});
-                       }}} />
-                 </Left>
-                 <Body>
-                 {
-                   (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
-                 }
-                 <Text note>{item.email}</Text>
-                 </Body>
-               </ListItem>
-             )}
-             </List>
-           </View>
-           </Content>
-           <Footer>
-
-             <FooterTab>
-               <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
-                 onPress={()=>this.setState({modalCreatedBy:false})}>
-                 <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
-               </Button>
-             </FooterTab>
-           </Footer>
-          </Modal>
-
-          <Text note>{I18n.t('filterRequestedBy')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block onPress={()=>{this.setState({modalRequestedBy:true})}}><Text>{I18n.t('filterByRequestedBy')}</Text></Button>
-            <List
-              dataArray={this.state.requestedBy}
-              renderRow={item =>
-                <ListItem>
-                <Body>
-                    {
-                      (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
-                    }
-                    <Text note>{item.email}</Text>
-                  </Body>
-                </ListItem>
-                }
-            />
-          </View>
-          <Modal
-            animationType={"fade"}
-            transparent={false}
-            style={{flex:1}}
-            visible={this.state.modalRequestedBy}
-            onRequestClose={() => this.setState({modalRequestedBy:false})}
-            >
-            <Content style={{ padding: 15 }}>
-            <Header>
-              <Body>
-                <Title>{I18n.t('selectFilterRequestedBy')}</Title>
-              </Body>
-            </Header>
-
-           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-           <ListItem>
-             <Item rounded>
-               <Icon name="ios-search" />
-               <Input placeholder={I18n.t('search')} value={this.state.requestedBySearch} onChangeText={(value)=>this.setState({requestedBySearch:value})} />
-             </Item>
-           </ListItem>
-           <List>
-           {this.props.users.filter((item)=>compactUserForSearch(item).includes(this.state.requestedBySearch.toLowerCase())).map((item)=>
-             <ListItem thumbnail key={item.id} onPress={()=>{
-               if(this.state.requestedBy.includes(item)){
-                 let newRequestedBy=[...this.state.requestedBy];
-                 newRequestedBy.splice(newRequestedBy.indexOf(item),1);
-                 this.setState({requestedBy:newRequestedBy});
-               }else{
-                 this.setState({requestedBy:[item,...this.state.requestedBy]});
-               }}}>
-               <Left>
-                   <CheckBox checked={this.state.requestedBy.includes(item)}  onPress={()=>{
-                     if(this.state.requestedBy.includes(item)){
-                       let newRequestedBy=[...this.state.requestedBy];
-                       newRequestedBy.splice(newRequestedBy.indexOf(item),1);
-                       this.setState({requestedBy:newRequestedBy});
-                     }else{
-                       this.setState({requestedBy:[item,...this.state.requestedBy]});
-                     }}} />
-               </Left>
-               <Body>
-               {
-                 (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
-               }
-               <Text note>{item.email}</Text>
-               </Body>
-             </ListItem>
-           )}
-           </List>
-
-           </View>
-           </Content>
-           <Footer>
-
-             <FooterTab>
-               <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
-                 onPress={()=>this.setState({modalRequestedBy:false})}>
-                 <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
-               </Button>
-             </FooterTab>
-           </Footer>
-          </Modal>
-
-          <Text note>{I18n.t('filterAssignedTo')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block onPress={()=>{this.setState({modalAssignedTo:true})}}><Text>{I18n.t('filterByAssignedTo')}</Text></Button>
-            <List
-              dataArray={this.state.assignedTo}
-              renderRow={item =>
-                <ListItem>
-                <Body>
-                    {
-                      (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
-                    }
-                  <Text note>{item.email}</Text>
-                </Body>
-                </ListItem>
-                }
-            />
-          </View>
-          <Modal
-            animationType={"fade"}
-            transparent={false}
-            style={{flex:1}}
-            visible={this.state.modalAssignedTo}
-            onRequestClose={() => this.setState({modalAssignedTo:false})}
-            >
-            <Content style={{ padding: 15 }}>
-            <Header>
-              <Body>
-                <Title>{I18n.t('selectFilterAssignedTo')}</Title>
-              </Body>
-            </Header>
-
-           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-           <ListItem>
-             <Item rounded>
-               <Icon name="ios-search" />
-               <Input placeholder={I18n.t('search')} value={this.state.assignedToSearch} onChangeText={(value)=>this.setState({assignedToSearch:value})} />
-             </Item>
-           </ListItem>
-           <List>
-           {this.props.users.filter((item)=>compactUserForSearch(item).includes(this.state.assignedToSearch.toLowerCase())).map((item)=>
-             <ListItem thumbnail key={item.id} onPress={()=>{
-               if(this.state.assignedTo.includes(item)){
-                 let newAssignedTo=[...this.state.assignedTo];
-                 newAssignedTo.splice(newAssignedTo.indexOf(item),1);
-                 this.setState({assignedTo:newAssignedTo});
-               }else{
-                 this.setState({assignedTo:[item,...this.state.assignedTo]});
-               }}}>
-               <Left>
-                   <CheckBox checked={this.state.assignedTo.includes(item)}  onPress={()=>{
-                     if(this.state.assignedTo.includes(item)){
-                       let newAssignedTo=[...this.state.assignedTo];
-                       newAssignedTo.splice(newAssignedTo.indexOf(item),1);
-                       this.setState({assignedTo:newAssignedTo});
-                     }else{
-                       this.setState({assignedTo:[item,...this.state.assignedTo]});
-                     }}} />
-               </Left>
-               <Body>
-               {
-                 (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
-               }
-               <Text note>{item.email}</Text>
-               </Body>
-             </ListItem>
-           )}
-           </List>
-           </View>
-           </Content>
-           <Footer>
-
-             <FooterTab>
-               <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
-                 onPress={()=>this.setState({modalAssignedTo:false})}>
-                 <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
-               </Button>
-             </FooterTab>
-           </Footer>
-          </Modal>
-
-          <Text note>{I18n.t('filterStatus')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block onPress={()=>{this.setState({modalStatuses:true})}}><Text>{I18n.t('filterByStatus')}</Text></Button>
-            <List
-              dataArray={this.state.statuses}
-              renderRow={status =>
-                <ListItem>
-                  <View style={{backgroundColor:((status.color.includes('#')?'':'#')+status.color),paddingLeft:10}}>
-                    <Text style={{color:'white'}}>{status.title}</Text>
+                <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                  <ListItem>
+                    <Item rounded>
+                      <Icon name="ios-search" />
+                      <Input placeholder={I18n.t('search')} value={this.state.createdBySearch} onChangeText={(value)=>this.setState({createdBySearch:value})} />
+                    </Item>
+                  </ListItem>
+                  <List>
+                    {this.props.users.filter((item)=>compactUserForSearch(item).includes(this.state.createdBySearch.toLowerCase())).map((item)=>
+                      <ListItem thumbnail key={item.id} onPress={()=>{
+                          if(this.state.createdBy.includes(item)){
+                            let newCreatedBy=[...this.state.createdBy];
+                            newCreatedBy.splice(newCreatedBy.indexOf(item),1);
+                            this.setState({createdBy:newCreatedBy});
+                          }else{
+                            this.setState({createdBy:[item,...this.state.createdBy]});
+                          }}}>
+                          <Left>
+                            <CheckBox checked={this.state.createdBy.includes(item)}  onPress={()=>{
+                                if(this.state.createdBy.includes(item)){
+                                  let newCreatedBy=[...this.state.createdBy];
+                                  newCreatedBy.splice(newCreatedBy.indexOf(item),1);
+                                  this.setState({createdBy:newCreatedBy});
+                                }else{
+                                  this.setState({createdBy:[item,...this.state.createdBy]});
+                              }}} />
+                          </Left>
+                          <Body>
+                            {
+                              (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
+                            }
+                            <Text note>{item.email}</Text>
+                          </Body>
+                        </ListItem>
+                      )}
+                    </List>
                   </View>
-                </ListItem>
+              </Content>
+              <Footer>
+
+                <FooterTab>
+                  <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
+                    onPress={()=>this.setState({modalCreatedBy:false})}>
+                    <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                  </Button>
+                </FooterTab>
+              </Footer>
+            </Modal>
+
+            <Text note>{I18n.t('filterRequestedBy')}</Text>
+            <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+              <Button block onPress={()=>{this.setState({modalRequestedBy:true})}}><Text>{I18n.t('filterByRequestedBy')}</Text></Button>
+              <List
+                dataArray={this.state.requestedBy}
+                renderRow={item =>
+                  <ListItem>
+                    <Body>
+                      {
+                        (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
+                      }
+                      <Text note>{item.email}</Text>
+                    </Body>
+                  </ListItem>
                 }
-            />
-          </View>
-          <Modal
-            animationType={"fade"}
-            transparent={false}
-            style={{flex:1}}
-            visible={this.state.modalStatuses}
-            onRequestClose={() => this.setState({modalStatuses:false})}
-            >
-            <Content style={{ padding: 15 }}>
-            <Header>
-              <Body>
-                <Title>{I18n.t('selectFilterStatus')}</Title>
-              </Body>
-            </Header>
+                />
+            </View>
+            <Modal
+              animationType={"fade"}
+              transparent={false}
+              style={{flex:1}}
+              visible={this.state.modalRequestedBy}
+              onRequestClose={() => this.setState({modalRequestedBy:false})}
+              >
+              <Content style={{ padding: 15 }}>
+                <Header>
+                  <Body>
+                    <Title>{I18n.t('selectFilterRequestedBy')}</Title>
+                  </Body>
+                </Header>
 
-           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-           <ListItem>
-             <Item rounded>
-               <Icon name="ios-search" />
-               <Input placeholder={I18n.t('search')} value={this.state.statusesSearch} onChangeText={(value)=>this.setState({statusesSearch:value})} />
-             </Item>
-           </ListItem>
+                <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                  <ListItem>
+                    <Item rounded>
+                      <Icon name="ios-search" />
+                      <Input placeholder={I18n.t('search')} value={this.state.requestedBySearch} onChangeText={(value)=>this.setState({requestedBySearch:value})} />
+                    </Item>
+                  </ListItem>
+                  <List>
+                    {this.props.users.filter((item)=>compactUserForSearch(item).includes(this.state.requestedBySearch.toLowerCase())).map((item)=>
+                      <ListItem thumbnail key={item.id} onPress={()=>{
+                          if(this.state.requestedBy.includes(item)){
+                            let newRequestedBy=[...this.state.requestedBy];
+                            newRequestedBy.splice(newRequestedBy.indexOf(item),1);
+                            this.setState({requestedBy:newRequestedBy});
+                          }else{
+                            this.setState({requestedBy:[item,...this.state.requestedBy]});
+                          }}}>
+                          <Left>
+                            <CheckBox checked={this.state.requestedBy.includes(item)}  onPress={()=>{
+                                if(this.state.requestedBy.includes(item)){
+                                  let newRequestedBy=[...this.state.requestedBy];
+                                  newRequestedBy.splice(newRequestedBy.indexOf(item),1);
+                                  this.setState({requestedBy:newRequestedBy});
+                                }else{
+                                  this.setState({requestedBy:[item,...this.state.requestedBy]});
+                                }}} />
+                          </Left>
+                          <Body>
+                            {
+                              (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
+                            }
+                            <Text note>{item.email}</Text>
+                          </Body>
+                        </ListItem>
+                      )}
+                  </List>
 
-             <List>
-               {this.props.statuses.filter((item)=>item.title.toLowerCase().includes(this.state.statusesSearch.toLowerCase())).map((item)=>
-                 <ListItem key={item.id} thumbnail onPress={()=>{
-                   if(this.state.statuses.includes(item)){
-                     let newStatuses=[...this.state.statuses];
-                     newStatuses.splice(newStatuses.indexOf(item),1);
-                     this.setState({statuses:newStatuses});
-                   }else{
-                     this.setState({statuses:[item,...this.state.statuses]});
-                   }
-                 }}>
-                   <Left>
-                       <CheckBox checked={this.state.statuses.includes(item)} onPress={()=>{
-                         if(this.state.statuses.includes(item)){
-                           let newStatuses=[...this.state.statuses];
-                           newStatuses.splice(newStatuses.indexOf(item),1);
-                           this.setState({statuses:newStatuses});
-                         }else{
-                           this.setState({statuses:[item,...this.state.statuses]});
-                         }
-                       }}/>
-                   </Left>
-                   <Body>
-                     <View style={{backgroundColor:((item.color.includes('#')?'':'#')+item.color),paddingLeft:10}}>
-                       <Text style={{color:'white'}}>{item.title}</Text>
-                     </View>
-                   </Body>
-                 </ListItem>
-               )}
-             </List>
-           </View>
-           </Content>
-           <Footer>
+                </View>
+              </Content>
+              <Footer>
 
-             <FooterTab>
-               <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
-                 onPress={()=>this.setState({modalStatuses:false})}>
-                 <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
-               </Button>
-             </FooterTab>
-           </Footer>
+                <FooterTab>
+                  <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
+                    onPress={()=>this.setState({modalRequestedBy:false})}>
+                    <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                  </Button>
+                </FooterTab>
+              </Footer>
+            </Modal>
+
+            <Text note>{I18n.t('filterAssignedTo')}</Text>
+            <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+              <Button block onPress={()=>{this.setState({modalAssignedTo:true})}}><Text>{I18n.t('filterByAssignedTo')}</Text></Button>
+              <List
+                dataArray={this.state.assignedTo}
+                renderRow={item =>
+                  <ListItem>
+                    <Body>
+                      {
+                        (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
+                      }
+                      <Text note>{item.email}</Text>
+                    </Body>
+                  </ListItem>
+                }
+                />
+            </View>
+            <Modal
+              animationType={"fade"}
+              transparent={false}
+              style={{flex:1}}
+              visible={this.state.modalAssignedTo}
+              onRequestClose={() => this.setState({modalAssignedTo:false})}
+              >
+              <Content style={{ padding: 15 }}>
+                <Header>
+                  <Body>
+                    <Title>{I18n.t('selectFilterAssignedTo')}</Title>
+                  </Body>
+                </Header>
+
+                <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                  <ListItem>
+                    <Item rounded>
+                      <Icon name="ios-search" />
+                      <Input placeholder={I18n.t('search')} value={this.state.assignedToSearch} onChangeText={(value)=>this.setState({assignedToSearch:value})} />
+                    </Item>
+                  </ListItem>
+                  <List>
+                    {this.props.users.filter((item)=>compactUserForSearch(item).includes(this.state.assignedToSearch.toLowerCase())).map((item)=>
+                      <ListItem thumbnail key={item.id} onPress={()=>{
+                          if(this.state.assignedTo.includes(item)){
+                            let newAssignedTo=[...this.state.assignedTo];
+                            newAssignedTo.splice(newAssignedTo.indexOf(item),1);
+                            this.setState({assignedTo:newAssignedTo});
+                          }else{
+                            this.setState({assignedTo:[item,...this.state.assignedTo]});
+                          }}}>
+                          <Left>
+                            <CheckBox checked={this.state.assignedTo.includes(item)}  onPress={()=>{
+                                if(this.state.assignedTo.includes(item)){
+                                  let newAssignedTo=[...this.state.assignedTo];
+                                  newAssignedTo.splice(newAssignedTo.indexOf(item),1);
+                                  this.setState({assignedTo:newAssignedTo});
+                                }else{
+                                  this.setState({assignedTo:[item,...this.state.assignedTo]});
+                                }}} />
+                            </Left>
+                            <Body>
+                              {
+                                (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
+                              }
+                              <Text note>{item.email}</Text>
+                            </Body>
+                        </ListItem>
+                      )}
+                  </List>
+                </View>
+              </Content>
+              <Footer>
+
+                <FooterTab>
+                  <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
+                    onPress={()=>this.setState({modalAssignedTo:false})}>
+                    <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                  </Button>
+                </FooterTab>
+              </Footer>
+            </Modal>
+
+            <Text note>{I18n.t('filterStatus')}</Text>
+            <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+              <Button block onPress={()=>{this.setState({modalStatuses:true})}}><Text>{I18n.t('filterByStatus')}</Text></Button>
+              <List
+                dataArray={this.state.statuses}
+                renderRow={status =>
+                  <ListItem>
+                    <View style={{backgroundColor:((status.color.includes('#')?'':'#')+status.color),paddingLeft:10}}>
+                      <Text style={{color:'white'}}>{status.title}</Text>
+                    </View>
+                  </ListItem>
+                }
+                />
+            </View>
+            <Modal
+              animationType={"fade"}
+              transparent={false}
+              style={{flex:1}}
+              visible={this.state.modalStatuses}
+              onRequestClose={() => this.setState({modalStatuses:false})}
+              >
+              <Content style={{ padding: 15 }}>
+                <Header>
+                  <Body>
+                    <Title>{I18n.t('selectFilterStatus')}</Title>
+                  </Body>
+                </Header>
+
+                <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                  <ListItem>
+                    <Item rounded>
+                      <Icon name="ios-search" />
+                      <Input placeholder={I18n.t('search')} value={this.state.statusesSearch} onChangeText={(value)=>this.setState({statusesSearch:value})} />
+                    </Item>
+                  </ListItem>
+
+                  <List>
+                    {this.props.statuses.filter((item)=>item.title.toLowerCase().includes(this.state.statusesSearch.toLowerCase())).map((item)=>
+                      <ListItem key={item.id} thumbnail onPress={()=>{
+                          if(this.state.statuses.includes(item)){
+                            let newStatuses=[...this.state.statuses];
+                            newStatuses.splice(newStatuses.indexOf(item),1);
+                            this.setState({statuses:newStatuses});
+                          }else{
+                            this.setState({statuses:[item,...this.state.statuses]});
+                          }
+                        }}>
+                        <Left>
+                          <CheckBox checked={this.state.statuses.includes(item)} onPress={()=>{
+                              if(this.state.statuses.includes(item)){
+                                let newStatuses=[...this.state.statuses];
+                                newStatuses.splice(newStatuses.indexOf(item),1);
+                                this.setState({statuses:newStatuses});
+                              }else{
+                                this.setState({statuses:[item,...this.state.statuses]});
+                              }
+                            }}/>
+                        </Left>
+                        <Body>
+                          <View style={{backgroundColor:((item.color.includes('#')?'':'#')+item.color),paddingLeft:10}}>
+                            <Text style={{color:'white'}}>{item.title}</Text>
+                          </View>
+                        </Body>
+                    </ListItem>
+                  )}
+                </List>
+              </View>
+            </Content>
+            <Footer>
+
+              <FooterTab>
+                <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
+                  onPress={()=>this.setState({modalStatuses:false})}>
+                  <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                </Button>
+              </FooterTab>
+            </Footer>
           </Modal>
 
           <Text note>{I18n.t('filterProject')}</Text>
@@ -427,8 +434,8 @@ class Search extends Component {
                 <ListItem>
                   <Text>{project.title}</Text>
                 </ListItem>
-                }
-            />
+              }
+              />
           </View>
           <Modal
             animationType={"fade"}
@@ -438,229 +445,231 @@ class Search extends Component {
             onRequestClose={() => this.setState({modalProjects:false})}
             >
             <Content style={{ padding: 15 }}>
-            <Header>
-              <Body>
-                <Title>{I18n.t('selectFilterProject')}</Title>
-              </Body>
-            </Header>
+              <Header>
+                <Body>
+                  <Title>{I18n.t('selectFilterProject')}</Title>
+                </Body>
+              </Header>
 
-           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-           <ListItem>
-             <Item rounded>
-               <Icon name="ios-search" />
-               <Input placeholder={I18n.t('search')} value={this.state.projectsSearch} onChangeText={(value)=>this.setState({projectsSearch:value})} />
-             </Item>
-           </ListItem>
-           <List>
-             {this.props.projects.filter((item)=>item.title.toLowerCase().includes(this.state.projectsSearch.toLowerCase())).map((item)=>
-               <ListItem key={item.id} thumbnail onPress={()=>{
-                 if(this.state.projects.includes(item)){
-                   let newprojects=[...this.state.projects];
-                   newprojects.splice(newprojects.indexOf(item),1);
-                   this.setState({projects:newprojects});
-                 }else{
-                   this.setState({projects:[item,...this.state.projects]});
-                 }
-               }}>
-                 <Left>
-                     <CheckBox checked={this.state.projects.includes(item)} onPress={()=>{
-                       if(this.state.projects.includes(item)){
-                         let newprojects=[...this.state.projects];
-                         newprojects.splice(newprojects.indexOf(item),1);
-                         this.setState({projects:newprojects});
-                       }else{
-                         this.setState({projects:[item,...this.state.projects]});
-                       }
-                     }}/>
-                 </Left>
-                 <Body>
-                   <Text>{item.title}</Text>
-                 </Body>
-               </ListItem>
-             )}
-           </List>
-           </View>
-           </Content>
-           <Footer>
-
-             <FooterTab>
-               <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
-                 onPress={()=>this.setState({modalProjects:false})}>
-                 <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
-               </Button>
-             </FooterTab>
-           </Footer>
-          </Modal>
-
-          <Text note>{I18n.t('filterCompany')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block onPress={()=>{this.setState({modalCompanies:true})}}><Text>{I18n.t('filterByCompany')}</Text></Button>
-            <List
-              dataArray={this.state.companies}
-              renderRow={company =>
+              <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
                 <ListItem>
-                  <Text>{company.title}</Text>
+                  <Item rounded>
+                    <Icon name="ios-search" />
+                    <Input placeholder={I18n.t('search')} value={this.state.projectsSearch} onChangeText={(value)=>this.setState({projectsSearch:value})} />
+                  </Item>
                 </ListItem>
+                <List>
+                  {this.props.projects.filter((item)=>item.title.toLowerCase().includes(this.state.projectsSearch.toLowerCase())).map((item)=>
+                    <ListItem key={item.id} thumbnail onPress={()=>{
+                        if(this.state.projects.includes(item)){
+                          let newprojects=[...this.state.projects];
+                          newprojects.splice(newprojects.indexOf(item),1);
+                          this.setState({projects:newprojects});
+                        }else{
+                          this.setState({projects:[item,...this.state.projects]});
+                        }
+                      }}>
+                      <Left>
+                        <CheckBox checked={this.state.projects.includes(item)} onPress={()=>{
+                            if(this.state.projects.includes(item)){
+                              let newprojects=[...this.state.projects];
+                              newprojects.splice(newprojects.indexOf(item),1);
+                              this.setState({projects:newprojects});
+                            }else{
+                              this.setState({projects:[item,...this.state.projects]});
+                            }
+                          }}/>
+                        </Left>
+                        <Body>
+                          <Text>{item.title}</Text>
+                        </Body>
+                      </ListItem>
+                    )}
+                  </List>
+                </View>
+              </Content>
+              <Footer>
+
+                <FooterTab>
+                  <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
+                    onPress={()=>this.setState({modalProjects:false})}>
+                    <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                  </Button>
+                </FooterTab>
+              </Footer>
+            </Modal>
+
+            <Text note>{I18n.t('filterCompany')}</Text>
+            <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+              <Button block onPress={()=>{this.setState({modalCompanies:true})}}><Text>{I18n.t('filterByCompany')}</Text></Button>
+              <List
+                dataArray={this.state.companies}
+                renderRow={company =>
+                  <ListItem>
+                    <Text>{company.title}</Text>
+                  </ListItem>
                 }
-            />
-          </View>
-          <Modal
-            animationType={"fade"}
-            transparent={false}
-            style={{flex:1}}
-            visible={this.state.modalCompanies}
-            onRequestClose={() => this.setState({modalCompanies:false})}
-            >
-            <Content style={{ padding: 15 }}>
-            <Header>
-              <Body>
-                <Title>{I18n.t('selectFilterCompany')}</Title>
-              </Body>
-            </Header>
+                />
+            </View>
+            <Modal
+              animationType={"fade"}
+              transparent={false}
+              style={{flex:1}}
+              visible={this.state.modalCompanies}
+              onRequestClose={() => this.setState({modalCompanies:false})}
+              >
+              <Content style={{ padding: 15 }}>
+                <Header>
+                  <Body>
+                    <Title>{I18n.t('selectFilterCompany')}</Title>
+                  </Body>
+                </Header>
 
-           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-           <ListItem>
-             <Item rounded>
-               <Icon name="ios-search" />
-               <Input placeholder={I18n.t('search')} value={this.state.companiesSearch} onChangeText={(value)=>this.setState({companiesSearch:value})} />
-             </Item>
-           </ListItem>
-           <List>
-             {this.props.companies.filter((item)=>item.title.toLowerCase().includes(this.state.companiesSearch.toLowerCase())).map((item)=>
-               <ListItem key={item.id} thumbnail onPress={()=>{
-                 if(this.state.companies.includes(item)){
-                   let newCompanies=[...this.state.companies];
-                   newCompanies.splice(newCompanies.indexOf(item),1);
-                   this.setState({companies:newCompanies});
-                 }else{
-                   this.setState({companies:[item,...this.state.companies]});
-                 }
-               }}>
-                 <Left>
-                     <CheckBox checked={this.state.companies.includes(item)} onPress={()=>{
-                       if(this.state.companies.includes(item)){
-                         let newCompanies=[...this.state.companies];
-                         newCompanies.splice(newCompanies.indexOf(item),1);
-                         this.setState({companies:newCompanies});
-                       }else{
-                         this.setState({companies:[item,...this.state.companies]});
-                       }
-                     }}/>
-                 </Left>
-                 <Body>
-                   <Text>{item.title}</Text>
-                 </Body>
-               </ListItem>
-             )}
-           </List>
-           </View>
-           </Content>
-           <Footer>
-
-             <FooterTab>
-               <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
-                 onPress={()=>this.setState({modalCompanies:false})}>
-                 <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
-               </Button>
-             </FooterTab>
-           </Footer>
-          </Modal>
-
-          <Text note>{I18n.t('filterLabel')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block onPress={()=>{this.setState({modalLabel:true})}}><Text>{I18n.t('filterByLabel')}</Text></Button>
-            <List
-              dataArray={this.state.labels}
-              renderRow={label =>
-                <ListItem>
-                  <View style={{backgroundColor:((label.color.includes('#')?'':'#')+label.color),paddingLeft:10}}>
-                    <Text style={{color:'white'}}>{label.title}</Text>
+                <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                  <ListItem>
+                    <Item rounded>
+                      <Icon name="ios-search" />
+                      <Input placeholder={I18n.t('search')} value={this.state.companiesSearch} onChangeText={(value)=>this.setState({companiesSearch:value})} />
+                    </Item>
+                  </ListItem>
+                  <List>
+                    {this.props.companies.filter((item)=>item.title.toLowerCase().includes(this.state.companiesSearch.toLowerCase())).map((item)=>
+                      <ListItem key={item.id} thumbnail onPress={()=>{
+                          if(this.state.companies.includes(item)){
+                            let newCompanies=[...this.state.companies];
+                            newCompanies.splice(newCompanies.indexOf(item),1);
+                            this.setState({companies:newCompanies});
+                          }else{
+                            this.setState({companies:[item,...this.state.companies]});
+                          }
+                        }}>
+                        <Left>
+                          <CheckBox checked={this.state.companies.includes(item)} onPress={()=>{
+                              if(this.state.companies.includes(item)){
+                                let newCompanies=[...this.state.companies];
+                                newCompanies.splice(newCompanies.indexOf(item),1);
+                                this.setState({companies:newCompanies});
+                              }else{
+                                this.setState({companies:[item,...this.state.companies]});
+                              }
+                            }}/>
+                          </Left>
+                          <Body>
+                            <Text>{item.title}</Text>
+                          </Body>
+                        </ListItem>
+                      )}
+                    </List>
                   </View>
-                </ListItem>
-                }
-            />
-          </View>
-          <Modal
-            animationType={"fade"}
-            transparent={false}
-            style={{flex:1}}
-            visible={this.state.modalLabel}
-            onRequestClose={() => this.setState({modalLabel:false})}
-            >
-            <Content style={{ padding: 15 }}>
-            <Header>
-              <Body>
-                <Title>{I18n.t('selectFilterLabel')}</Title>
-              </Body>
-            </Header>
+                </Content>
+                <Footer>
 
-           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                  <FooterTab>
+                    <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
+                      onPress={()=>this.setState({modalCompanies:false})}>
+                      <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                    </Button>
+                  </FooterTab>
+                </Footer>
+              </Modal>
 
-           <ListItem>
-             <Item rounded>
-               <Icon name="ios-search" />
-               <Input placeholder={I18n.t('search')} value={this.state.labelsSearch} onChangeText={(value)=>this.setState({labelsSearch:value})} />
-             </Item>
-           </ListItem>
-           <List>
-             {this.props.labels.filter((item)=>item.title.toLowerCase().includes(this.state.labelsSearch.toLowerCase())).map((item)=>
-               <ListItem key={item.id} thumbnail onPress={()=>{
-                 if(this.state.labels.includes(item)){
-                   let newLabels=[...this.state.labels];
-                   newLabels.splice(newLabels.indexOf(item),1);
-                   this.setState({labels:newLabels});
-                 }else{
-                   this.setState({labels:[item,...this.state.labels]});
-                 }
-               }}>
-                 <Left>
-                     <CheckBox checked={this.state.labels.includes(item)} onPress={()=>{
-                       if(this.state.labels.includes(item)){
-                         let newLabels=[...this.state.labels];
-                         newLabels.splice(newLabels.indexOf(item),1);
-                         this.setState({labels:newLabels});
-                       }else{
-                         this.setState({labels:[item,...this.state.labels]});
-                       }
-                     }}/>
-                 </Left>
-                 <Body>
-                   <View style={{backgroundColor:((item.color.includes('#')?'':'#')+item.color),paddingLeft:10}}>
-                     <Text style={{color:'white'}}>{item.title}</Text>
-                   </View>
-                 </Body>
-               </ListItem>
-             )}
-           </List>
-           </View>
-           </Content>
-           <Footer>
+              <Text note>{I18n.t('filterLabel')}</Text>
+              <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                <Button block onPress={()=>{this.setState({modalLabel:true})}}><Text>{I18n.t('filterByLabel')}</Text></Button>
+                <List
+                  dataArray={this.state.labels}
+                  renderRow={label =>
+                    <ListItem>
+                      <View style={{backgroundColor:((label.color.includes('#')?'':'#')+label.color),paddingLeft:10}}>
+                        <Text style={{color:'white'}}>{label.title}</Text>
+                      </View>
+                    </ListItem>
+                  }
+                  />
+              </View>
+              <Modal
+                animationType={"fade"}
+                transparent={false}
+                style={{flex:1}}
+                visible={this.state.modalLabel}
+                onRequestClose={() => this.setState({modalLabel:false})}
+                >
+                <Content style={{ padding: 15 }}>
+                  <Header>
+                    <Body>
+                      <Title>{I18n.t('selectFilterLabel')}</Title>
+                    </Body>
+                  </Header>
 
-             <FooterTab>
-               <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
-                 onPress={()=>this.setState({modalLabel:false})}>
-                 <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
-               </Button>
-             </FooterTab>
-           </Footer>
-          </Modal>
+                  <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
 
-          <Button onPress={this.submit.bind(this)} primary block style={{ margin: 15 }}>
-            <Text>{I18n.t('search')}</Text>
-          </Button>
-      </Content>
-    </Container>
-    );
+                    <ListItem>
+                      <Item rounded>
+                        <Icon name="ios-search" />
+                        <Input placeholder={I18n.t('search')} value={this.state.labelsSearch} onChangeText={(value)=>this.setState({labelsSearch:value})} />
+                      </Item>
+                    </ListItem>
+                    <List>
+                      {this.props.labels.filter((item)=>item.title.toLowerCase().includes(this.state.labelsSearch.toLowerCase())).map((item)=>
+                        <ListItem key={item.id} thumbnail onPress={()=>{
+                            if(this.state.labels.includes(item)){
+                              let newLabels=[...this.state.labels];
+                              newLabels.splice(newLabels.indexOf(item),1);
+                              this.setState({labels:newLabels});
+                            }else{
+                              this.setState({labels:[item,...this.state.labels]});
+                            }
+                          }}>
+                          <Left>
+                            <CheckBox checked={this.state.labels.includes(item)} onPress={()=>{
+                                if(this.state.labels.includes(item)){
+                                  let newLabels=[...this.state.labels];
+                                  newLabels.splice(newLabels.indexOf(item),1);
+                                  this.setState({labels:newLabels});
+                                }else{
+                                  this.setState({labels:[item,...this.state.labels]});
+                                }
+                              }}/>
+                          </Left>
+                          <Body>
+                            <View style={{backgroundColor:((item.color.includes('#')?'':'#')+item.color),paddingLeft:10}}>
+                              <Text style={{color:'white'}}>{item.title}</Text>
+                            </View>
+                          </Body>
+                        </ListItem>
+                      )}
+                  </List>
+                </View>
+              </Content>
+              <Footer>
+
+                <FooterTab>
+                  <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
+                    onPress={()=>this.setState({modalLabel:false})}>
+                    <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                  </Button>
+                </FooterTab>
+              </Footer>
+            </Modal>
+
+            <Button onPress={this.submit.bind(this)} primary block style={{ margin: 15 }}>
+              <Text>{I18n.t('search')}</Text>
+            </Button>
+          </Content>
+        </Container>
+      );
+    }
   }
-}
 
-const mapStateToProps = ({ taskR, login, userR, companyR }) => {
-  const { users } = userR;
-  const { companies } = companyR;
-  const { token } = login;
-  const { statuses, projects,labels, currentTask} = taskR;
+  //creates function that maps actions (functions) to the redux store
+  const mapStateToProps = ({ taskR, login, userR, companyR }) => {
+    const { users } = userR;
+    const { companies } = companyR;
+    const { token } = login;
+    const { statuses, projects,labels, currentTask} = taskR;
 
-  return { users, companies,statuses, projects, labels, currentTask, token};
-};
+    return { users, companies,statuses, projects, labels, currentTask, token};
+  };
 
-export default connect(mapStateToProps,{getTasks})(Search);
+  //exports created Component connected to the redux store and redux actions
+  export default connect(mapStateToProps,{getTasks})(Search);

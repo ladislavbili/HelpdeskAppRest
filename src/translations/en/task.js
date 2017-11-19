@@ -28,6 +28,8 @@ export default {
   items:'Items',
   deletingTask:'Delete task',
   deletingTaskMessage:'Are you sure you want to delete this task?',
+  discardChanges:'Discard attribute changes?',
+  discardChangesMessage:'Going back will discard all of the attribute changes. Are you sure?',
   //list
   taskList:'Task list',
   project:'Project',

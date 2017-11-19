@@ -4,11 +4,20 @@ import { Actions } from 'react-native-router-flux';
 import {processRESTinput} from '../../helperFunctions';
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
 
+/**
+ * Starts an indicator that the items are loading
+ */
 export const startLoadingItems = () => {
   return (dispatch) => {
     dispatch({type: START_LOADING_ITEMS });
   };
 };
+
+/**
+ * Get's all items that are related to the project with specified ID
+ * @param  {int} id    ID of the project, whose tasks should be loaded
+ * @param  {string} token Token for the REST API
+ */
 export const getItemsAndUnits = (id,token) => {
   return (dispatch) => {
     Promise.all([
@@ -33,6 +42,14 @@ export const getItemsAndUnits = (id,token) => {
     });
   };
 };
+
+/**
+ * Adds a new item to the task
+ * @param {Item} item   Object containing all of the item informations except for the unit
+ * @param {int} taskId ID of the task that this item should belong to
+ * @param {int} unitId ID of the unit used for this item
+ * @param {string} token  Token for the REST API
+ */
 export const addItem = (item,taskId,unitId,token) => {
   return (dispatch) => {
     requestBody=processRESTinput(item);
@@ -61,6 +78,12 @@ export const addItem = (item,taskId,unitId,token) => {
   };
 };
 
+/**
+ * Delete's item with the sprecific id
+ * @param  {int} id     Item's ID
+ * @param  {int} taskId ID of the task that item belongs to
+ * @param  {string} token  Token for the REST API
+ */
 export const deleteItem = (id,taskId,token) => {
   return (dispatch) => {
     let url= TASK_LIST+'/'+taskId+'/invoiceable-items/'+id
@@ -79,6 +102,10 @@ export const deleteItem = (id,taskId,token) => {
   };
 };
 
+/**
+ * Get's all of the available units
+ * @param  {string} token Token for the REST API
+ */
 export const getUnits = (token) => {
   return (dispatch) => {
     fetch(UNITS_LIST+'?limit=999', {
@@ -95,6 +122,15 @@ export const getUnits = (token) => {
 
   };
 };
+
+/**
+ * Save data about the editted item
+ * @param  {Item} item   All of the editted data about an editted item except for the unit
+ * @param  {int} id     new ID of the editted item
+ * @param  {int} unitId new ID of the unit related to this item
+ * @param  {int} taskId new ID of the task this item is related to
+ * @param  {string} token  Token for the REST API
+ */
 export const saveItemEdit = (item,id,unitId,taskId,token) => {
   return (dispatch) => {
     let url = TASK_LIST+'/'+taskId+'/invoiceable-items/'+id+'/unit/'+unitId;

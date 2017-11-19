@@ -8,12 +8,21 @@ import { connect } from 'react-redux';
 import I18n from '../../translations/';
 import {startLoadingItems, getItemsAndUnits, openAddingOfItem, deleteItem, openEditingOfItem} from '../../redux/actions';
 
+/**
+ * Display's all of the items used in this task
+ * @extends Component
+ */
 class TabItems extends Component{
   componentDidMount(){
     this.props.startLoadingItems();
     this.props.getItemsAndUnits(this.props.id, this.props.token);
   }
 
+/**
+ * Delete's a single item
+ * @param  {int} id    ID of an item that is meant to be deleted
+ * @param  {string} title Title of the item
+ */
   deleteInvoiceItem(id,title){
     Alert.alert(
       I18n.t('deletingItem'),
@@ -37,8 +46,8 @@ class TabItems extends Component{
     return (
       <Container>
         <Content padder style={{ marginTop: 0 }}>
-        {
-          this.props.items.map((item)=>
+          {
+            this.props.items.map((item)=>
             <Card key={item.id}>
               <CardItem>
                 <Left>
@@ -80,29 +89,29 @@ class TabItems extends Component{
                   <Text>{(item.amount*item.unit_price).toString()}</Text>
                 </Right>
               </CardItem>
-            {
-              (this.props.ACL.includes('resolve_task') || this.props.ACL.includes('update_all_tasks')) &&
-              <CardItem>
-                <Left>
-                  <Button active block onPress={()=>this.deleteInvoiceItem(item.id,item.title)}>
-                  <Icon name="trash" />
-                  <Text>{I18n.t('delete')}</Text>
-                  </Button>
-                </Left>
-                <Right>
-                  <Button active block onPress={()=>{Actions.itemEdit({data:item,taskId:this.props.task.id});}}>
-                  <Icon name="open" />
-                  <Text>{I18n.t('edit')}</Text>
-                  </Button>
-                </Right>
-              </CardItem>
+              {
+                (this.props.ACL.includes('resolve_task') || this.props.ACL.includes('update_all_tasks')) &&
+                <CardItem>
+                  <Left>
+                    <Button active block onPress={()=>this.deleteInvoiceItem(item.id,item.title)}>
+                      <Icon name="trash" />
+                      <Text>{I18n.t('delete')}</Text>
+                    </Button>
+                  </Left>
+                  <Right>
+                    <Button active block onPress={()=>{Actions.itemEdit({data:item,taskId:this.props.task.id});}}>
+                      <Icon name="open" />
+                      <Text>{I18n.t('edit')}</Text>
+                    </Button>
+                  </Right>
+                </CardItem>
               }
             </Card>
           )
         }
 
-          <Card>
-            <CardItem>
+        <Card>
+          <CardItem>
             <Left>
               <Text note>{I18n.t('totalPrice')}</Text>
             </Left>
@@ -110,24 +119,26 @@ class TabItems extends Component{
               <Text>{total}</Text>
             </Right>
           </CardItem>
-          </Card>
+        </Card>
 
 
       </Content>
       { (this.props.ACL.includes('resolve_task') || this.props.ACL.includes('update_all_tasks')) &&
-      <Footer>
-        <FooterTab>
-          <Button onPress={()=>Actions.itemAdd({id:this.props.id}) } iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
-            <Icon active style={{ color: 'white' }} name="md-add" />
-            <Text style={{ color: 'white' }}>{I18n.t('item')}</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
+        <Footer>
+          <FooterTab>
+            <Button onPress={()=>Actions.itemAdd({id:this.props.id}) } iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
+              <Icon active style={{ color: 'white' }} name="md-add" />
+              <Text style={{ color: 'white' }}>{I18n.t('item')}</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
+      }
+    </Container>
+  );
 }
-      </Container>
-    );
-  }
 }
+
+//creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({ taskR, login, itemR }) => {
   const { items, loadingItems ,units } = itemR;
   const { task } = taskR;
@@ -135,6 +146,5 @@ const mapStateToProps = ({ taskR, login, itemR }) => {
   return { items, loadingItems,token, units, task, ACL:task.loggedUserProjectAcl.concat(task.loggedUserRoleAcl) };
 };
 
-
-
+//exports created Component connected to the redux store and redux actions
 export default connect(mapStateToProps,{startLoadingItems,getItemsAndUnits,openAddingOfItem, deleteItem, openEditingOfItem})(TabItems);

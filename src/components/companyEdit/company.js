@@ -6,25 +6,38 @@ import I18n from '../../translations/';
 import {editCompany} from '../../redux/actions';
 import {processInteger} from '../../helperFunctions';
 
+/**
+ * Allows user to edit an existing company
+ * @extends Component
+ */
 class CompanyEdit extends Component {
 
   constructor(props) {
-      super(props);
-      this.state = {
-        title:this.props.company.title,
-        ico:this.props.company.ico,
-        dic:this.props.company.dic,
-        ic_dph:this.props.company.ic_dph,
-        street:this.props.company.street,
-        city:this.props.company.city,
-        zip:this.props.company.zip,
-        country:this.props.company.country
-      };
-    }
-    checkIfNumber(value){
-      return /^\d*$/.test(value);
-    }
+    super(props);
+    this.state = {
+      title:this.props.company.title,
+      ico:this.props.company.ico,
+      dic:this.props.company.dic,
+      ic_dph:this.props.company.ic_dph,
+      street:this.props.company.street,
+      city:this.props.company.city,
+      zip:this.props.company.zip,
+      country:this.props.company.country
+    };
+  }
 
+  /**
+   * Checks, if the input string is an acceptable number
+   * @param  {string} value String that should be convertable into string
+   * @return {boolean}       If the string contains only numbers
+   */
+  checkIfNumber(value){
+    return /^\d*$/.test(value);
+  }
+
+  /**
+   * Gathers all of the data from the current state and sends them via actions to the redux. Then it returns user back to previous component
+   */
   submit(){
     let company={
       title:this.state.title,
@@ -55,102 +68,104 @@ class CompanyEdit extends Component {
           <Right>
             {this.state.title.length!=0 &&
               <Button transparent onPress={this.submit.bind(this)}>
-              <Icon active style={{ color: 'white', padding:10 }} name="ios-checkmark-circle-outline" />
+                <Icon active style={{ color: 'white', padding:10 }} name="ios-checkmark-circle-outline" />
               </Button>
             }
           </Right>
         </Header>
         <Content style={{ padding: 15 }}>
 
-        <Text note>{I18n.t('companyName')}</Text>
-        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-          <Input
-          placeholder={I18n.t('enterCompanyName')}
-          value={this.state.title}
-          onChangeText={(value)=>this.setState({title:value})}
-          />
-          {
-            this.state.title.length==0 && <Text note style={{color:'red'}}>You must set name of the company</Text>
+          <Text note>{I18n.t('companyName')}</Text>
+          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+            <Input
+              placeholder={I18n.t('enterCompanyName')}
+              value={this.state.title}
+              onChangeText={(value)=>this.setState({title:value})}
+              />
+            {
+              this.state.title.length==0 && <Text note style={{color:'red'}}>You must set name of the company</Text>
           }
 
         </View>
 
-          <Text note>{I18n.t('street')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+        <Text note>{I18n.t('street')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-          placeholder={I18n.t('enterStreet')}
-          value={this.state.street}
-          onChangeText={(value)=>this.setState({street:value})}
-          />
-          </View>
+            placeholder={I18n.t('enterStreet')}
+            value={this.state.street}
+            onChangeText={(value)=>this.setState({street:value})}
+            />
+        </View>
 
-          <Text note>{I18n.t('city')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+        <Text note>{I18n.t('city')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-          placeholder={I18n.t('enterCity')}
-          value={this.state.city}
-          onChangeText={(value)=>this.setState({city:value})}
-          />
-          </View>
+            placeholder={I18n.t('enterCity')}
+            value={this.state.city}
+            onChangeText={(value)=>this.setState({city:value})}
+            />
+        </View>
 
-          <Text note>{I18n.t('country')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+        <Text note>{I18n.t('country')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-          placeholder={I18n.t('enterCountry')}
-          value={this.state.country}
-          onChangeText={(value)=>this.setState({country:value})}
-          />
-          </View>
+            placeholder={I18n.t('enterCountry')}
+            value={this.state.country}
+            onChangeText={(value)=>this.setState({country:value})}
+            />
+        </View>
 
-          <Text note>{I18n.t('ico')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+        <Text note>{I18n.t('ico')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-          keyboardType='numeric'
-          placeholder={I18n.t('enterIco')}
-          value={this.state.ico}
-          onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ico:(result?value:this.state.ico)})} }
-          />
-          </View>
+            keyboardType='numeric'
+            placeholder={I18n.t('enterIco')}
+            value={this.state.ico}
+            onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ico:(result?value:this.state.ico)})} }
+            />
+        </View>
 
-          <Text note>{I18n.t('icDph')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+        <Text note>{I18n.t('icDph')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-          keyboardType='numeric'
-          placeholder={I18n.t('enterIcDph')}
-          value={this.state.ic_dph}
-          onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ic_dph:(result?value:this.state.ic_dph)})}}
-          />
-          </View>
+            keyboardType='numeric'
+            placeholder={I18n.t('enterIcDph')}
+            value={this.state.ic_dph}
+            onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ic_dph:(result?value:this.state.ic_dph)})}}
+            />
+        </View>
 
-          <Text note>{I18n.t('dic')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+        <Text note>{I18n.t('dic')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-          placeholder={I18n.t('enterDic')}
-          value={this.state.dic}
-          onChangeText={(value)=>this.setState({dic:value})}
-          />
-          </View>
+            placeholder={I18n.t('enterDic')}
+            value={this.state.dic}
+            onChangeText={(value)=>this.setState({dic:value})}
+            />
+        </View>
 
-          <Text note>{I18n.t('zipCode')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+        <Text note>{I18n.t('zipCode')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-          placeholder={I18n.t('enterZipCode')}
-          keyboardType='numeric'
-          value={this.state.zip}
-          onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({zip:(result?value:this.state.zip)})}}
-          />
-          </View>
+            placeholder={I18n.t('enterZipCode')}
+            keyboardType='numeric'
+            value={this.state.zip}
+            onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({zip:(result?value:this.state.zip)})}}
+            />
+        </View>
 
-        </Content>
-      </Container>
-    );
-  }
+      </Content>
+    </Container>
+  );
+}
 }
 
+//creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({ companyR,login }) => {
   const { token } = login;
   const {company} = companyR;
   return {company, token};
 };
 
+//exports created Component connected to the redux store and redux actions
 export default connect(mapStateToProps, {editCompany})(CompanyEdit);

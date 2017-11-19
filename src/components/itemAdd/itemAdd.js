@@ -5,6 +5,10 @@ import { Actions } from 'react-native-router-flux';
 import I18n from '../../translations/';
 import {addItem} from '../../redux/actions';
 
+/**
+* Allows the user to create a single item assigned to the task
+* @extends Component
+*/
 class ItemAdd extends Component {
   constructor(props) {
     super(props);
@@ -18,6 +22,9 @@ class ItemAdd extends Component {
     this.setQuantity.bind(this);
   }
 
+  /**
+  * Gathers all of the data from the current state and sends them via actions to the redux. Then it returns user back to previous component
+  */
   submit(){
     let title = this.state.title;
     let amount = this.state.itemQuantity.length==0 ? parseFloat(0) : parseFloat(this.state.itemQuantity);
@@ -26,6 +33,10 @@ class ItemAdd extends Component {
     Actions.pop();
   }
 
+  /**
+   * Set's item's price if the input string is valid decimal number
+   * @param {string} input price entered by the user
+   */
   setPrice(input){
     var valid = (input.match(/^-?\d*(\.\d*)?$/));
     if(valid){
@@ -33,6 +44,10 @@ class ItemAdd extends Component {
     }
   }
 
+  /**
+   * Set's item's quantity if the input string is a valid decimal number
+   * @param {string} input quantity entered by the user
+   */
   setQuantity(input){
     var valid = (input.match(/^-?\d*(\.\d*)?$/));
     if(valid){
@@ -53,11 +68,11 @@ class ItemAdd extends Component {
             <Title>{I18n.t('addItem')}</Title>
           </Body>
           <Right>
-          { this.state.title.length!=0 &&
-            <Button transparent onPress={this.submit.bind(this)}>
-            <Icon active style={{ color: 'white', padding:10 }} name="ios-checkmark-circle-outline" />
-            </Button>
-          }
+            { this.state.title.length!=0 &&
+              <Button transparent onPress={this.submit.bind(this)}>
+                <Icon active style={{ color: 'white', padding:10 }} name="ios-checkmark-circle-outline" />
+              </Button>
+            }
           </Right>
         </Header>
         <Content style={{ padding: 15 }}>
@@ -67,52 +82,55 @@ class ItemAdd extends Component {
               value={this.state.title}
               placeholder={I18n.t('enterTitle')}
               onChangeText={ value => this.setState({title:value}) }
-            />
+              />
             {
               this.state.title.length==0 && <Text note style={{color:'red'}}>{I18n.t('itemNameError')}</Text>
-            }
-          </View>
-          <Text note>{I18n.t('pricePerUnit')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Input
-              value={this.state.itemPrice}
-              placeholder={I18n.t('enterPricePerUnit')}
-              keyboardType='numeric'
-              onChangeText={ value => this.setPrice(value) }
+          }
+        </View>
+        <Text note>{I18n.t('pricePerUnit')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Input
+            value={this.state.itemPrice}
+            placeholder={I18n.t('enterPricePerUnit')}
+            keyboardType='numeric'
+            onChangeText={ value => this.setPrice(value) }
             />
-          </View>
+        </View>
 
-          <Text note>{I18n.t('unitSelect')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Picker
-              supportedOrientations={['portrait', 'landscape']}
-              selectedValue={this.state.unit}
-              onValueChange={(value)=>this.setState({unit:value})}>
-              {this.props.units.map(
-                (unit)=> <Item label={unit.shortcut+' ('+unit.title+')'} key={unit.id} value={unit.id} />
-              )}
-            </Picker>
-          </View>
+        <Text note>{I18n.t('unitSelect')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Picker
+            supportedOrientations={['portrait', 'landscape']}
+            selectedValue={this.state.unit}
+            onValueChange={(value)=>this.setState({unit:value})}>
+            {this.props.units.map(
+              (unit)=> <Item label={unit.shortcut+' ('+unit.title+')'} key={unit.id} value={unit.id} />
+          )}
+        </Picker>
+      </View>
 
-          <Text note>{I18n.t('quantity')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Input
-              value={this.state.itemQuantity}
-              keyboardType='numeric'
-              placeholder={I18n.t('enterQuantity')}
-              onChangeText={ value => this.setQuantity(value) }
-            />
-          </View>
+      <Text note>{I18n.t('quantity')}</Text>
+      <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+        <Input
+          value={this.state.itemQuantity}
+          keyboardType='numeric'
+          placeholder={I18n.t('enterQuantity')}
+          onChangeText={ value => this.setQuantity(value) }
+          />
+      </View>
 
-        </Content>
-      </Container>
-    );
-  }
+    </Content>
+  </Container>
+);
 }
+}
+
+//creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({ itemR, login }) => {
   const { units } = itemR;
   const { token } = login;
   return { token,units };
 };
 
+//exports created Component connected to the redux store and redux actions
 export default connect(mapStateToProps,{addItem})(ItemAdd);

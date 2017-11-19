@@ -6,25 +6,31 @@ import { Actions } from 'react-native-router-flux';
 import I18n from '../../translations/';
 import {getCompanies,startLoading,startLoadingCompany} from '../../redux/actions';
 
-
+/**
+* Show list containing all of the available companies
+* @extends Component
+*/
 class CompanyList extends Component {
   constructor(props) {
     super(props);
     this.state={seached:''}
-}
+  }
 
-componentWillMount(){
-  this.props.startLoading();
-  this.props.getCompanies(this.props.token);
-}
+  /**
+  * Befpre component mounts, it will load all of the companies
+  */
+  componentWillMount(){
+    this.props.startLoading();
+    this.props.getCompanies(this.props.token);
+  }
 
 
   render() {
     if(this.props.loadingData){
       return (
         <ActivityIndicator
-        animating size={ 'large' }
-        color='#007299' />
+          animating size={ 'large' }
+          color='#007299' />
       )
     }
     return (
@@ -40,27 +46,27 @@ componentWillMount(){
           </Body>
         </Header>
         <Content>
-        <Item rounded style={{marginTop:15,marginBottom:15,marginLeft: 20, marginRight: 20,}}>
-          <Icon name="ios-search" />
-          <Input placeholder={I18n.t('search')}
-          value={this.state.seached}
-          onChangeText={((value)=>this.setState({seached:value}))} />
-        </Item>
+          <Item rounded style={{marginTop:15,marginBottom:15,marginLeft: 20, marginRight: 20,}}>
+            <Icon name="ios-search" />
+            <Input placeholder={I18n.t('search')}
+              value={this.state.seached}
+              onChangeText={((value)=>this.setState({seached:value}))} />
+          </Item>
           <List
-          dataArray={this.props.companies.filter((company)=>company.title.toLowerCase().includes(this.state.seached.toLowerCase()))}
-          renderRow={(company)=>
-            <ListItem
-              button onPress={()=>{this.props.startLoadingCompany();Actions.companyEdit({id:company.id});}}
-            >
-              <Body>
-                <Text>{company.title}</Text>
-              </Body>
-              <Right>
-                <Icon name="arrow-forward" />
-              </Right>
-            </ListItem>
-          }
-          />
+            dataArray={this.props.companies.filter((company)=>company.title.toLowerCase().includes(this.state.seached.toLowerCase()))}
+            renderRow={(company)=>
+              <ListItem
+                button onPress={()=>{this.props.startLoadingCompany();Actions.companyEdit({id:company.id});}}
+                >
+                <Body>
+                  <Text>{company.title}</Text>
+                </Body>
+                <Right>
+                  <Icon name="arrow-forward" />
+                </Right>
+              </ListItem>
+            }
+            />
         </Content>
         <Footer>
           <FooterTab>
@@ -75,6 +81,7 @@ componentWillMount(){
   }
 }
 
+//creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({ taskR, companyR, login }) => {
   const { loadingData } = taskR;
   const { token } = login;
@@ -82,4 +89,5 @@ const mapStateToProps = ({ taskR, companyR, login }) => {
   return { companies, loadingData, token };
 };
 
+//exports created Component connected to the redux store and redux actions
 export default connect(mapStateToProps, {getCompanies,startLoading,startLoadingCompany})(CompanyList);

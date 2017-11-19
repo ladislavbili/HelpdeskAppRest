@@ -7,11 +7,20 @@ import I18n from '../../translations/';
 import {startLoadingComments, getComments} from '../../redux/actions';
 import {formatDate} from '../../helperFunctions';
 
+/**
+ * This tab contains all of the comments
+ * @extends Component
+ */
 class TabComments extends Component {
+
+  /**
+   * After the component is mounted it loads all of it's comments
+   */
   componentDidMount(){
     this.props.startLoadingComments();
     this.props.getComments(this.props.id, this.props.token);
   }
+
   render() {
     if(this.props.loadingComments){
       return (
@@ -64,10 +73,13 @@ class TabComments extends Component {
     );
   }
 }
+
+//creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({ taskR, login, commentR }) => {
   const { comments, loadingComments } = commentR;
   const { token } = login;
   return { comments, token, loadingComments,ACL:taskR.task.loggedUserProjectAcl.concat(taskR.task.loggedUserRoleAcl)};
 };
 
+//exports created Component connected to the redux store and redux actions
 export default connect(mapStateToProps,{startLoadingComments,getComments})(TabComments);

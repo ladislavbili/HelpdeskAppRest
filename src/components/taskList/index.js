@@ -9,6 +9,10 @@ import TaskList from './taskList';
 import { startLoadingSearch,openDrawer, closeDrawer } from '../../redux/actions';
 import I18n from '../../translations/';
 
+/**
+ * Loads all of the tasks for the task list
+ * @extends Component
+ */
 class TaskListLoader extends Component {
 
   render() {
@@ -43,6 +47,7 @@ class TaskListLoader extends Component {
   }
 }
 
+//creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({taskR,login,drawer}) => {
   const {loadingData,tasks,projects,currentTask,listName} = taskR;
   const {user,token} = login;
@@ -50,4 +55,5 @@ const mapStateToProps = ({taskR,login,drawer}) => {
   return {ACL:user?user.ACL:[],loadingData,tasks,projects,token,drawerState,currentTask,listName};
 };
 
+//exports created Component connected to the redux store and redux actions
 export default connect(mapStateToProps,{openDrawer, startLoadingSearch})(TaskListLoader);

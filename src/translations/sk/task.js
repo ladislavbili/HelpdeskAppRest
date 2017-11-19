@@ -28,6 +28,8 @@ export default {
   items:'Veci',
   deletingTask:'Vymazať úlohu',
   deletingTaskMessage:'Ste si istý, že chcete vymazať túto úlohu?',
+  discardChanges:'Zrušiť zmeny vlastnotí úlohy?',
+  discardChangesMessage:'Krok späť zmaže všetky zmeny vo vlastnostiach úlohy. Ste si istý?',
   //list
   taskList:'Zoznam úloh',
   project:'Projekt',

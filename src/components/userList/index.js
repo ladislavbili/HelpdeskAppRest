@@ -7,13 +7,19 @@ import { Actions } from 'react-native-router-flux';
 import I18n from '../../translations/';
 import {getUsers,startLoading,startLoadingUser} from '../../redux/actions';
 
-
-class userList extends Component {
+/**
+ * Displays all of the users visible to the current user
+ * @extends Component
+ */
+class UserList extends Component {
   constructor(props) {
     super(props);
     this.state={seached:''}
   }
 
+/**
+ * When the component loads, this function loads all of the user from the REST API
+ */
   componentWillMount(){
     this.props.startLoading();
     this.props.getUsers(this.props.token);
@@ -23,8 +29,8 @@ class userList extends Component {
     if(this.props.loadingData){
       return (
         <ActivityIndicator
-        animating size={ 'large' }
-        color='#007299' />
+          animating size={ 'large' }
+          color='#007299' />
       )
     }
     return (
@@ -40,12 +46,12 @@ class userList extends Component {
           </Body>
         </Header>
         <Content>
-        <Item rounded style={{marginTop:15,marginBottom:15,marginLeft: 20, marginRight: 20,}}>
-          <Icon name="ios-search" />
-          <Input placeholder={I18n.t('search')}
-          value={this.state.seached}
-          onChangeText={((value)=>this.setState({seached:value}))} />
-        </Item>
+          <Item rounded style={{marginTop:15,marginBottom:15,marginLeft: 20, marginRight: 20,}}>
+            <Icon name="ios-search" />
+            <Input placeholder={I18n.t('search')}
+              value={this.state.seached}
+              onChangeText={((value)=>this.setState({seached:value}))} />
+          </Item>
 
           <List
             dataArray={
@@ -54,23 +60,23 @@ class userList extends Component {
                 let filter=this.state.seached.toLowerCase();
                 return (user.name&&user.name.toLowerCase().includes(filter))||(user.email&&user.email.toLowerCase().includes(filter))||(user.company&&user.company.name&&user.company.name.toLowerCase().includes(filter))
               })
-              }
+            }
             renderRow={(user)=>
               <ListItem
                 button onPress={()=>{this.props.startLoadingUser();Actions.userEdit({id:user.id});}}
-              >
+                >
                 <Body>
-                {
-                  (user.detailData.name||user.detailData.surname)?<Text>{user.detailData.name?user.detailData.name+' ':''}{user.detailData.surname?user.detailData.surname:''}</Text>:null
-                }
-                <Text note>{user.email}</Text>
+                  {
+                    (user.detailData.name||user.detailData.surname)?<Text>{user.detailData.name?user.detailData.name+' ':''}{user.detailData.surname?user.detailData.surname:''}</Text>:null
+                  }
+                  <Text note>{user.email}</Text>
                 </Body>
                 <Right>
                   <Icon name="arrow-forward" />
                 </Right>
               </ListItem>
             }
-          />
+            />
         </Content>
         <Footer>
           <FooterTab>
@@ -85,6 +91,7 @@ class userList extends Component {
   }
 }
 
+//creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({ taskR, userR, login }) => {
   const { loadingData } = taskR;
   const { users } = userR;
@@ -92,4 +99,5 @@ const mapStateToProps = ({ taskR, userR, login }) => {
   return { users, loadingData, token };
 };
 
-export default connect(mapStateToProps, {getUsers,startLoading,startLoadingUser})(userList);
+//exports created Component connected to the redux store and redux actions
+export default connect(mapStateToProps, {getUsers,startLoading,startLoadingUser})(UserList);

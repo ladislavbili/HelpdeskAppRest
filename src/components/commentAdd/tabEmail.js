@@ -7,22 +7,30 @@ import { connect } from 'react-redux';
 import I18n from '../../translations/';
 import {addComment} from '../../redux/actions';
 
-class TabEmail extends Component { // eslint-disable-line
-    constructor(props) {
-      super(props);
-      this.state = {
-        message:'',
-        messageHeight:50,
-        title:'',
-        internal:false,
-        email_to:[],
-        newMail:'',
-      };
-    }
+/**
+ * NOT FUNCTIONAL YET
+ * Allows user to send a comment that will be also resend to the other users via e-mail
+ * @extends Component
+ */
+class TabEmail extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      message:'',
+      messageHeight:50,
+      title:'',
+      internal:false,
+      email_to:[],
+      newMail:'',
+    };
+  }
 
-    submitForm(){
-      this.props.addComment({createdBy:this.props.userData,createdAt:(new Date()).getTime(),title:this.state.title,
-        body:this.state.message,internal:this.state.internal,email_to:(this.state.email_to.length>0?this.state.email_to:null)});
+  /**
+    * Gathers all of the data from the current state and sends them via actions to the redux. Then it returns user back to previous component
+    */
+  submitForm(){
+    this.props.addComment({createdBy:this.props.userData,createdAt:(new Date()).getTime(),title:this.state.title,
+      body:this.state.message,internal:this.state.internal,email_to:(this.state.email_to.length>0?this.state.email_to:null)});
       Actions.pop();
     }
 
@@ -31,82 +39,84 @@ class TabEmail extends Component { // eslint-disable-line
         <Container>
           <Content style={{ padding: 15 }}>
 
-          {
-            (this.props.ACL.includes('view_internal_note')||this.props.ACL.includes('update_all_tasks')) &&
-            <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
-            <CheckBox checked={this.state.internal} color='#3F51B5' onPress={()=>this.setState({internal:!this.state.internal})}/>
-              <Label style={{marginLeft:15}}>{I18n.t('internal')}</Label>
-            </Item>
-          }
+            {
+              (this.props.ACL.includes('view_internal_note')||this.props.ACL.includes('update_all_tasks')) &&
+              <Item inlineLabel style={{marginBottom:20, borderWidth:0,marginTop:10,paddingBottom:5}}>
+                <CheckBox checked={this.state.internal} color='#3F51B5' onPress={()=>this.setState({internal:!this.state.internal})}/>
+                <Label style={{marginLeft:15}}>{I18n.t('internal')}</Label>
+              </Item>
+            }
 
-          <Text note>{I18n.t('addEmails')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-          <List
-          dataArray={this.state.email_to}
-          renderRow={data=>
-            <Text style={{color:'#007299'}}>{data}</Text>}
-            />
-            <View style={{flex:1, flexDirection:'row'}}>
-            <Body style={{flex:5,flexDirection:'row'}}>
-            <Input
-            keyboardType="email-address"
-            style={{flex:1,flexDirection:'row'}}
-            placeholder={I18n.t('enterEmail')}
-            value={ this.state.newMail }
-            onChangeText={ value => this.setState({newMail:value}) }
-            />
-            </Body>
-            <Right style={{flex:1}}>
-            <Button block  onPress={()=>this.setState({email_to:[this.state.newMail,...this.state.email_to],newMail:''})}>
-            <Icon active style={{ color: 'white' }} name="add" />
-            </Button>
-            </Right>
-            </View>
-            </View>
+            <Text note>{I18n.t('addEmails')}</Text>
+            <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+              <List
+                dataArray={this.state.email_to}
+                renderRow={data=>
+                  <Text style={{color:'#007299'}}>{data}</Text>}
+                    />
+                  <View style={{flex:1, flexDirection:'row'}}>
+                    <Body style={{flex:5,flexDirection:'row'}}>
+                      <Input
+                        keyboardType="email-address"
+                        style={{flex:1,flexDirection:'row'}}
+                        placeholder={I18n.t('enterEmail')}
+                        value={ this.state.newMail }
+                        onChangeText={ value => this.setState({newMail:value}) }
+                        />
+                    </Body>
+                    <Right style={{flex:1}}>
+                      <Button block  onPress={()=>this.setState({email_to:[this.state.newMail,...this.state.email_to],newMail:''})}>
+                        <Icon active style={{ color: 'white' }} name="add" />
+                      </Button>
+                    </Right>
+                  </View>
+                </View>
 
-          <Text note>{I18n.t('emailSubject')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Input
-              placeholder={I18n.t('enterEmailSubject')}
-              value={ this.state.title }
-              onChangeText={ value => this.setState({title:value}) }
-            />
-          </View>
+                <Text note>{I18n.t('emailSubject')}</Text>
+                <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                  <Input
+                    placeholder={I18n.t('enterEmailSubject')}
+                    value={ this.state.title }
+                    onChangeText={ value => this.setState({title:value}) }
+                    />
+                </View>
 
-            <Text note>{I18n.t('emailMessage')}</Text>
-            <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15}}>
-              <Input
-                style={{height:Math.max(35, this.state.messageHeight)}}
-                multiline={true}
-                onContentSizeChange={(event) => this.setState({ messageHeight: event.nativeEvent.contentSize.height })}
-                onChange={ event => this.setState({message:event.nativeEvent.text}) }
-                placeholder={I18n.t('enterEmailMessage')}
-                value={this.state.message}
-              />
-            </View>
-          </Content>
-          <Footer>
-            <FooterTab>
-              <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }} onPress={Actions.pop}>
-                <Icon active style={{ color: 'white' }} name="trash" />
-                <Text style={{ color: 'white' }} >{I18n.t('cancel')}</Text>
-              </Button>
-            </FooterTab>
-            <FooterTab>
-              <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }} onPress={this.submitForm.bind(this)}>
-                <Icon active style={{ color: 'white' }} name="add" />
-                <Text style={{ color: 'white' }} >{I18n.t('send')}</Text>
-              </Button>
-            </FooterTab>
-          </Footer>
-        </Container>
-      );
-    }
-  }
+                <Text note>{I18n.t('emailMessage')}</Text>
+                <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15}}>
+                  <Input
+                    style={{height:Math.max(35, this.state.messageHeight)}}
+                    multiline={true}
+                    onContentSizeChange={(event) => this.setState({ messageHeight: event.nativeEvent.contentSize.height })}
+                    onChange={ event => this.setState({message:event.nativeEvent.text}) }
+                    placeholder={I18n.t('enterEmailMessage')}
+                    value={this.state.message}
+                    />
+                </View>
+              </Content>
+              <Footer>
+                <FooterTab>
+                  <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }} onPress={Actions.pop}>
+                    <Icon active style={{ color: 'white' }} name="trash" />
+                    <Text style={{ color: 'white' }} >{I18n.t('cancel')}</Text>
+                  </Button>
+                </FooterTab>
+                <FooterTab>
+                  <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }} onPress={this.submitForm.bind(this)}>
+                    <Icon active style={{ color: 'white' }} name="add" />
+                    <Text style={{ color: 'white' }} >{I18n.t('send')}</Text>
+                  </Button>
+                </FooterTab>
+              </Footer>
+            </Container>
+          );
+        }
+      }
 
-  const mapStateToProps = ({ login }) => {
-    const {userData} = login;
-    return {userData};
-  };
+      //creates function that maps actions (functions) to the redux store
+      const mapStateToProps = ({ login }) => {
+        const {userData} = login;
+        return {userData};
+      };
 
-  export default connect(mapStateToProps,{addComment})(TabEmail);
+      //exports created Component connected to the redux store and redux actions
+      export default connect(mapStateToProps,{addComment})(TabEmail);

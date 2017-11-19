@@ -9,6 +9,11 @@ import {editTask,deleteTask} from '../../redux/actions';
 import {formatDate,processInteger} from '../../helperFunctions';
 import TaskLabel from './label';
 
+
+/**
+ * Tab of the main menu that is responsible for editting task
+ * @extends Component
+ */
 class TabAtributes extends Component {
   constructor(props) {
     super(props);
@@ -43,10 +48,18 @@ class TabAtributes extends Component {
       }
     }
 
+    /**
+     * after component is loaded it sends to the main menu a function, that is used to submit task changes
+     */
     componentDidMount(){
       this.props.saveFunction(this.submitForm.bind(this),(this.props.task.canEdit||this.props.task.loggedUserProjectAcl.includes('update_all_tasks')||this.props.task.loggedUserRoleAcl.includes('update_all_tasks')||this.props.task.loggedUserProjectAcl.includes('resolve_task')||this.props.task.loggedUserRoleAcl.includes('resolve_task')));
     }
 
+    /**
+     * this function is used by each separate label to add and remove itself from the label list
+     * @param {boolean} removing If the item is meant to be removed
+     * @param {Label} label    Object containing all of the data about the label
+     */
     setLabel(removing,label){
       this.props.inputChanged();
       if(removing){
@@ -66,6 +79,9 @@ class TabAtributes extends Component {
       }
     }
 
+    /**
+     * Gathers all of the data from the current state and sends them via actions to the redux. Then it returns user back to previous component
+     */
     submitForm(){
       const id = this.props.task.id;
       const project = this.state.project;
@@ -90,6 +106,9 @@ class TabAtributes extends Component {
       Actions.pop();
     }
 
+    /**
+     * Delete the task you are currently in
+     */
     deleteTask(){
       Alert.alert(
         I18n.t('deletingTask'),
@@ -441,6 +460,7 @@ class TabAtributes extends Component {
   }
 }
 
+//creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({ taskR, login, userR, companyR }) => {
   const { users } = userR;
   const {token } = login;
@@ -449,4 +469,5 @@ const mapStateToProps = ({ taskR, login, userR, companyR }) => {
   return { users, companies,statuses, projects, task,labels,token};
 };
 
+//exports created Component connected to the redux store and redux actions
 export default connect(mapStateToProps,{editTask, deleteTask})(TabAtributes);

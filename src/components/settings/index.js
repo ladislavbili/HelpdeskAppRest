@@ -7,6 +7,10 @@ import { Actions } from 'react-native-router-flux';
 import I18n from '../../translations/';
 import {startLoadingUser,logoutUser} from '../../redux/actions';
 
+/**
+ * Shows user all of the settings available to him
+ * @extends Component
+ */
 class Settings extends Component {
   render() {
     return (
@@ -21,76 +25,79 @@ class Settings extends Component {
             <Title>{I18n.t('settings')}</Title>
           </Body>
           <Right>
-         </Right>
+          </Right>
         </Header>
         <Content>
           { this.props.ACL.includes('user_settings') &&
-          <ListItem button onPress={Actions.userList} icon>
-            <Left>
-              <Icon name="people" />
-            </Left>
-            <Body>
-              <Text>{I18n.t('users')}</Text>
-            </Body>
-            <Right>
-              <Icon name="arrow-forward" />
-            </Right>
-          </ListItem>
+            <ListItem button onPress={Actions.userList} icon>
+              <Left>
+                <Icon name="people" />
+              </Left>
+              <Body>
+                <Text>{I18n.t('users')}</Text>
+              </Body>
+              <Right>
+                <Icon name="arrow-forward" />
+              </Right>
+            </ListItem>
           }
           { this.props.ACL.includes('company_settings') &&
-          <ListItem button onPress={Actions.companyList} icon>
+            <ListItem button onPress={Actions.companyList} icon>
+              <Left>
+                <Icon name="home" />
+              </Left>
+              <Body>
+                <Text>{I18n.t('companies')}</Text>
+              </Body>
+              <Right>
+                <Icon name="arrow-forward" />
+              </Right>
+            </ListItem>
+          }
+          <ListItem button onPress={Actions.account} icon>
             <Left>
-              <Icon name="home" />
+              <Icon name="person" />
             </Left>
             <Body>
-              <Text>{I18n.t('companies')}</Text>
+              <Text>{I18n.t('account')}</Text>
             </Body>
             <Right>
               <Icon name="arrow-forward" />
             </Right>
           </ListItem>
-        }
-        <ListItem button onPress={Actions.account} icon>
-          <Left>
-            <Icon name="person" />
-          </Left>
-          <Body>
-            <Text>{I18n.t('account')}</Text>
-          </Body>
-          <Right>
-            <Icon name="arrow-forward" />
-          </Right>
-        </ListItem>
-        <Button danger block onPress={()=>{this.props.logoutUser();Actions.login()}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', margin:20, borderWidth: 0.5 }}>
-          <Icon active style={{ color: 'white' }} name="power" />
-          <Text style={{ color: 'white' }} >{I18n.t('logout')}</Text>
-        </Button>
+          <Button danger block onPress={()=>{this.props.logoutUser();Actions.login()}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', margin:20, borderWidth: 0.5 }}>
+            <Icon active style={{ color: 'white' }} name="power" />
+            <Text style={{ color: 'white' }} >{I18n.t('logout')}</Text>
+          </Button>
         </Content>
         <Footer>
-        { this.props.ACL.includes('user_settings') &&
-          <FooterTab>
-            <Button onPress={()=>{this.props.startLoadingUser();Actions.userAdd();}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
-              <Icon active style={{ color: 'white' }} name="add" />
-              <Text style={{ color: 'white' }} >{I18n.t('user')}</Text>
-            </Button>
-          </FooterTab>
-        }
-        { this.props.ACL.includes('company_settings') &&
-          <FooterTab>
-            <Button onPress={Actions.companyAdd} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
-              <Icon active style={{ color: 'white' }} name="add" />
-              <Text style={{ color: 'white' }} >{I18n.t('company')}</Text>
-            </Button>
-          </FooterTab>
-        }
+          { this.props.ACL.includes('user_settings') &&
+            <FooterTab>
+              <Button onPress={()=>{this.props.startLoadingUser();Actions.userAdd();}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
+                <Icon active style={{ color: 'white' }} name="add" />
+                <Text style={{ color: 'white' }} >{I18n.t('user')}</Text>
+              </Button>
+            </FooterTab>
+          }
+          { this.props.ACL.includes('company_settings') &&
+            <FooterTab>
+              <Button onPress={Actions.companyAdd} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
+                <Icon active style={{ color: 'white' }} name="add" />
+                <Text style={{ color: 'white' }} >{I18n.t('company')}</Text>
+              </Button>
+            </FooterTab>
+          }
         </Footer>
       </Container>
     );
   }
 }
+
+//creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({ login,navigation }) => {
   const {user} = login;
   return {ACL:user?user.ACL:[],data:navigation};
 };
 
+//exports created Component connected to the redux store and redux actions
 export default connect(mapStateToProps,{startLoadingUser,logoutUser})(Settings);

@@ -7,30 +7,34 @@ import { startLoading,getMoreTasks } from '../../redux/actions';
 import TaskListRow from './taskListRow';
 import I18n from '../../translations/';
 
+/**
+ * Displays all of the loaded tasks
+ * @extends Component
+ */
 class TaskList extends Component {
   render() {
     return (
       <Container>
         <Content>
           <List>
-          {
-            this.props.tasks.map((task) => <TaskListRow task={task} key={task.id} />)
-          }
+            {
+              this.props.tasks.map((task) => <TaskListRow task={task} key={task.id} />)
+            }
           </List>
           {
             this.props.tasks.length==0 && <Text style={{padding:20}}>{I18n.t('emptyTaskList')}</Text>
-          }
-          {
-            this.props.nextTasks &&
-            <Button
-              block
-              primary
-              onPress={()=>this.props.getMoreTasks(this.props.nextTasks,this.props.token)}
-              style={{margin:15}}>
-              <Text>{I18n.t('loadMoreTasks')}</Text>
-            </Button>
-          }
-        </Content>
+        }
+        {
+          this.props.nextTasks &&
+          <Button
+            block
+            primary
+            onPress={()=>this.props.getMoreTasks(this.props.nextTasks,this.props.token)}
+            style={{margin:15}}>
+            <Text>{I18n.t('loadMoreTasks')}</Text>
+          </Button>
+        }
+      </Content>
       { this.props.ACL.includes('create_tasks_in_all_projects') &&
         <Footer>
           <FooterTab>
@@ -41,15 +45,17 @@ class TaskList extends Component {
           </FooterTab>
         </Footer>
       }
-      </Container>
-    );
-  }
+    </Container>
+  );
+}
 }
 
+//creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({ taskR, login }) => {
   const { tasks, nextTasks } = taskR;
   const { user,token } = login;
   return {tasks, token, ACL:user?user.ACL:[],nextTasks};
 };
 
+//exports created Component connected to the redux store and redux actions
 export default connect(mapStateToProps, {startLoading,getMoreTasks})(TaskList);
