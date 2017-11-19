@@ -6,6 +6,7 @@ import { Actions } from 'react-native-router-flux';
 
 import I18n from '../../translations/';
 import {getUsers,startLoading,startLoadingUser} from '../../redux/actions';
+import {compactUserForSearch} from '../../helperFunctions';
 
 /**
  * Displays all of the users visible to the current user
@@ -58,7 +59,7 @@ class UserList extends Component {
               this.props.users.filter((user)=>
               {
                 let filter=this.state.seached.toLowerCase();
-                return (user.name&&user.name.toLowerCase().includes(filter))||(user.email&&user.email.toLowerCase().includes(filter))||(user.company&&user.company.name&&user.company.name.toLowerCase().includes(filter))
+                return (compactUserForSearch(user).includes(filter));
               })
             }
             renderRow={(user)=>

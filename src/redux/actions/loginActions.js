@@ -1,4 +1,4 @@
-import {LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_LOGOUT, START_LOADING, START_LOADING_PROJECTS, SET_PROJECTS, SET_FILTERS } from '../types';
+import {LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_LOGOUT, START_LOADING, START_LOADING_PROJECTS, SET_PROJECTS, SET_FILTERS, SET_TOKEN } from '../types';
 import {LOGIN_URL, PROJECT_LIST,FILTER_LIST} from '../urls';
 import { Actions } from 'react-native-router-flux';
 import { AsyncStorage } from 'react-native';
@@ -106,13 +106,23 @@ function getProjects(dispatch,token){
 /**
  * Log's out user and returns user to the login page
  */
-export const logoutUser = () => {
-  return (dispatch) => {
-    dispatch({ type: LOGIN_LOGOUT });
-    removeTokenFromAsyncStorage();
-    Actions.login();
-  }
-};
+ export const logoutUser = () => {
+   return (dispatch) => {
+     dispatch({ type: LOGIN_LOGOUT });
+     removeTokenFromAsyncStorage();
+     Actions.login();
+   }
+ };
+
+/**
+ * Set's the current token
+ * @param {string} token Token for the REST API
+ */
+ export const setToken = (token) => {
+   return (dispatch) => {
+     dispatch({ type: SET_TOKEN, token });
+   }
+ };
 
 /**
  * User login failed, stops login indicator and displays an error

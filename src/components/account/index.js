@@ -80,7 +80,7 @@ class Account extends Component {
               />
           </View>
 
-          <Button danger block onPress={()=>{this.props.logoutUser();Actions.login()}}
+          <Button danger block onPress={()=>{this.props.logoutUser();Actions.pop();Actions.pop();Actions.pop();Actions.pop();}}
             iconLeft style={{ flexDirection: 'row', borderColor: 'white', marginTop:5, marginBottom:20, borderWidth: 0.5 }}>
             <Icon active style={{ color: 'white' }} name="power" />
             <Text style={{ color: 'white' }} >{I18n.t('logout')}</Text>

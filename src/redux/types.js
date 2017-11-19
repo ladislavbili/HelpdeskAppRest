@@ -4,6 +4,7 @@ export const LOGIN_START = 'AUTH_LOGIN_START';
 export const LOGIN_SUCCESS = 'AUTH_LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'AUTH_LOGIN_FAIL';
 export const LOGIN_LOGOUT = 'AUTH_LOGOUT';
+export const SET_TOKEN = 'SET_TOKEN';
 
 export const OPEN_DRAWER = 'OPEN_DRAWER';
 export const CLOSE_DRAWER = 'CLOSE_DRAWER';

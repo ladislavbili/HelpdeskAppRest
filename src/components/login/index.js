@@ -6,7 +6,7 @@ import jwt_decode from 'jwt-decode';
 
 import { USERS_LIST } from '../../redux/urls';
 import styles from './styles';
-import {loginUser,loginUserWithToken} from '../../redux/actions';
+import {loginUser,loginUserWithToken,setToken} from '../../redux/actions';
 import I18n from '../../translations/';
 
 /**
@@ -20,7 +20,6 @@ class Login extends Component {
       username:'admin',
       password:'admin',
       user:null,
-      token:null,
     }
     this.getToken.bind(this);
   }
@@ -39,16 +38,20 @@ class Login extends Component {
     * @return {Promise} [description]
     */
   async getToken(){
-    token = await AsyncStorage.getItem('lansystem-v1-token');
+    let token = await AsyncStorage.getItem('lansystem-v1-token');
     if(token){
-      let check = await fetch(USERS_LIST+'/'+jwt_decode(token).id, {
+      this.props.setToken(token);
+      let check = await fetch(USERS_LIST+'/'+jwt_decode(this.props.token).id, {
         method: 'GET',
         headers: {
           'Authorization': 'Bearer ' + token
         }
       });
       if(check.ok){
-        this.setState({user:jwt_decode(token),token});
+        this.setState({user:jwt_decode(token)});
+      }
+      else{
+        this.props.setToken(null);
       }
     }
   }
@@ -99,8 +102,8 @@ class Login extends Component {
                 <Text style={styles.errorMessage}>{I18n.t('loginError')}</Text>
               }
               {
-                this.state.user &&
-                <ListItem button onPress={()=>this.props.loginUserWithToken(this.state.token)}>
+                this.props.token && this.state.user &&
+                <ListItem button onPress={()=>this.props.loginUserWithToken(this.props.token)}>
                   <Body>
                     <Text style={{fontSize:17,color:'#007299'}}>Login as</Text>
                     {
@@ -124,8 +127,8 @@ class Login extends Component {
 
   //creates function that maps actions (functions) to the redux store
   const mapStateToProps = ({ login }) => {
-    return { error, loading, authenticated } = login;
+    return { error, loading, authenticated, token } = login;
   };
 
   //exports created Component connected to the redux store and redux actions
-  export default connect(mapStateToProps,{loginUser,loginUserWithToken})(Login);
+  export default connect(mapStateToProps,{loginUser,loginUserWithToken, setToken})(Login);

@@ -42,7 +42,7 @@ class TabComments extends Component {
                  <Text note>{data.createdBy?(data.createdBy.name?data.createdBy.name:data.createdBy.email):I18n.t('noUser')}</Text>
                </Left>
                <Right>
-                 <Text note>{data.internal?<Text style={{textAlign:'right',color:'red'}}>i </Text>:null}{formatDate(data.createdAt)}</Text>
+                 <Text note>{data.internal?<Text style={{textAlign:'right',color:'red'}}>i </Text>:null}{formatDate(data.createdAt*1000)}</Text>
                </Right>
               </View>
             <View style={{flex:1}}>

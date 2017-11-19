@@ -65,7 +65,7 @@ class Settings extends Component {
               <Icon name="arrow-forward" />
             </Right>
           </ListItem>
-          <Button danger block onPress={()=>{this.props.logoutUser();Actions.login()}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', margin:20, borderWidth: 0.5 }}>
+          <Button danger block onPress={()=>{this.props.logoutUser();Actions.pop();Actions.pop();Actions.pop();}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', margin:20, borderWidth: 0.5 }}>
             <Icon active style={{ color: 'white' }} name="power" />
             <Text style={{ color: 'white' }} >{I18n.t('logout')}</Text>
           </Button>

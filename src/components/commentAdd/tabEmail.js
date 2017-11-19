@@ -29,8 +29,7 @@ class TabEmail extends Component {
     * Gathers all of the data from the current state and sends them via actions to the redux. Then it returns user back to previous component
     */
   submitForm(){
-    this.props.addComment({createdBy:this.props.userData,createdAt:(new Date()).getTime(),title:this.state.title,
-      body:this.state.message,internal:this.state.internal,email_to:(this.state.email_to.length>0?this.state.email_to:null)});
+    this.props.addComment({title:this.state.title,body:this.state.message,internal:this.state.internal,email:this.state.email_to.length>0,email_to:this.state.email_to.length>0?this.state.email_to[0]:null},this.props.id,this.props.token);
       Actions.pop();
     }
 
@@ -114,8 +113,8 @@ class TabEmail extends Component {
 
       //creates function that maps actions (functions) to the redux store
       const mapStateToProps = ({ login }) => {
-        const {userData} = login;
-        return {userData};
+        const {token} = login;
+        return {token};
       };
 
       //exports created Component connected to the redux store and redux actions
