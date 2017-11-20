@@ -60,7 +60,7 @@ class TaskAdd extends Component {
         </Header>
         <Tabs>
           <Tab heading={I18n.t('attributes')}>
-            <TabAtributes projectId={this.props.projectId} saveFunction={this.setFunction.bind(this)} />
+            <TabAtributes projectID={this.props.projectID} saveFunction={this.setFunction.bind(this)} />
           </Tab>
         </Tabs>
       </Container>

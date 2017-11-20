@@ -34,7 +34,7 @@ export const getMoreTasks = (url,token) => {
   * @param {Task} task  Object containing all of the new task information
   * @param {string} token Token for the REST API
 */
-export const addTask = (task,token) => {
+export const addTask = (task,token,show) => {
   return (dispatch) => {
     fetch(TASK_LIST, {
       headers: {
@@ -46,7 +46,9 @@ export const addTask = (task,token) => {
       body:processRESTinput(task),
     }).then((response) =>{
       response.json().then((data) => {
-        dispatch({type: ADD_NEW_TASK, payload:{task:data.data}});
+        if(show){
+          dispatch({type: ADD_NEW_TASK, payload:{task:data.data}});
+        }
       });
     }).catch(function (error) {
       console.log(error);
@@ -205,7 +207,7 @@ export const getFilteredTasks = (token,listName,filterId) => {
       }
     }).then((response) =>{
       response.json().then((data) => {
-        dispatch({type: SET_TASKS, payload:{tasks:data.data,nextTasks:data._links.next,listName}});
+        dispatch({type: SET_TASKS, payload:{tasks:data.data,nextTasks:data._links.next,listName,projectID:null}});
       });
     }
   ).catch(function (error) {
@@ -220,7 +222,7 @@ export const getFilteredTasks = (token,listName,filterId) => {
  * @param  {string} listName name that should be displayed above recieved list
  * @param  {Object} filter   Object containing all of the filters
  */
-export const getTasks = (token,listName,filter) => {
+export const getTasks = (token,listName,filter,projectID) => {
   return (dispatch) => {
     fetch(TASK_LIST+'?'+processRESTinput(filter), {
       method: 'GET',
@@ -229,7 +231,7 @@ export const getTasks = (token,listName,filter) => {
       }
     }).then((response) =>{
       response.json().then((data) => {
-        dispatch({type: SET_TASKS, payload:{tasks:data.data,nextTasks:data._links.next,listName}});
+        dispatch({type: SET_TASKS, payload:{tasks:data.data,nextTasks:data._links.next,listName,projectID}});
       });
     }
   ).catch(function (error) {
@@ -363,7 +365,7 @@ export const startLoading = () => {
  * @param  {int} id    ID of the modified task
  * @param  {string} token Token for the REST API
  */
-export const editTask = (task,id,token) => {
+export const editTask = (task,id,token,stay) => {
   return (dispatch) => {
     fetch(TASK_LIST+'/quick-update/'+id, {
       headers: {
@@ -375,7 +377,12 @@ export const editTask = (task,id,token) => {
       body:processRESTinput(task),
     })
     .then((response) =>response.json().then((response)=>{
-      dispatch({type: EDIT_TASK_LIST, payload:{taskInList:response.data} });
+      if(stay){
+        dispatch({type: EDIT_TASK_LIST, payload:{taskInList:response.data} });
+      }
+      else{
+        dispatch({type: DELETE_TASK, payload:{id} });
+      }
     }))
     .catch(function (error) {
       console.log(error);

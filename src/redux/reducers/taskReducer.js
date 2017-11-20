@@ -13,6 +13,7 @@ import { SET_UNITS, SET_LABELS, DELETE_TASK, EDIT_TASK_LIST, START_LOADING, STAR
     projects:[],
     listName:null,
     loadingProjects:true,
+    projectID:null,
     filters:[],
   };
 
@@ -78,6 +79,7 @@ import { SET_UNITS, SET_LABELS, DELETE_TASK, EDIT_TASK_LIST, START_LOADING, STAR
       }
       case EDIT_TASK_LIST:{
         let newTasks= [...state.tasks];
+        if(newTasks.findIndex((task)=>task.id==action.payload.taskInList.id)==-1){return state;};
         newTasks.splice(newTasks.findIndex((task)=>task.id==action.payload.taskInList.id),1,action.payload.taskInList);
         return {
           ...state,
@@ -96,6 +98,7 @@ import { SET_UNITS, SET_LABELS, DELETE_TASK, EDIT_TASK_LIST, START_LOADING, STAR
         nextTasks: action.payload.nextTasks,
         listName: action.payload.listName,
         loadingData:false,
+        projectID:action.payload.projectID,
       };
       case SET_PROJECTS:
       return {

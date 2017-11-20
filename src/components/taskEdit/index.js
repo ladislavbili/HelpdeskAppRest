@@ -97,7 +97,7 @@ class TaskEdit extends Component {
         </Header>
         <Tabs>
           <Tab heading={I18n.t('attributes')}>
-            <TabAtributes id={this.props.id} saveFunction={this.setFunction.bind(this)} inputChanged={this.inputChanged.bind(this)} />
+            <TabAtributes id={this.props.id} projectID={this.props.projectID} saveFunction={this.setFunction.bind(this)} inputChanged={this.inputChanged.bind(this)} />
           </Tab>
           <Tab heading={I18n.t('comments')}>
             <TabComments id={this.props.id} />

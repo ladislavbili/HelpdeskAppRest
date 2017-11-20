@@ -17,8 +17,8 @@ class Login extends Component {
   constructor(props){
     super(props);
     this.state={
-      username:'admin',
-      password:'admin',
+      username:'',
+      password:'',
       user:null,
     }
     this.getToken.bind(this);

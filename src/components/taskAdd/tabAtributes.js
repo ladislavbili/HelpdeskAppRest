@@ -6,7 +6,7 @@ import { View, Body, Container, Content, Icon, Input, Item, Label, Text, Footer,
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
 import I18n from '../../translations';
-import {addTask} from '../../redux/actions';
+import {addTask,getAssigners} from '../../redux/actions';
 import {formatDate,processInteger} from '../../helperFunctions';
 import TaskLabel from './label';
 
@@ -17,18 +17,19 @@ import TaskLabel from './label';
 class TabAtributes extends Component {
   constructor(props) {
     super(props);
+    this.props.getAssigners(this.props.token,this.props.projectID);
     this.state = {
-      title:'abc',
-      assignedTo:{id:null,name:I18n.t('noUser'), email:I18n.t('noMail')},
+      title:'',
+      assignedTo:{id:null,name:I18n.t('noUser')},
       requestedBy:this.props.users[this.props.users.findIndex((user)=>user.id==user.id)],
       status:this.props.statuses[0],
-      work_time:'11',
-      description:'cba',
+      work_time:'',
+      description:'',
       descriptionHeight:100,
-      work:'cab',
+      work:'',
       workHeight:100,
       company:null,
-      project:this.props.projectId?this.props.projects[this.props.projects.findIndex((proj)=>proj.id==this.props.projectId)]:this.props.projects[0].id,
+      project:this.props.projectID,
       important:false,
       selectingCompany:false,
       filterWord:'',
@@ -95,7 +96,8 @@ class TabAtributes extends Component {
       {
         title,description,requester,project ,company,startedAt,deadline,important,work,workTime,assigned,tag
       },
-      this.props.token
+      this.props.token,
+      this.props.projectID==project
     );
     Actions.pop();
   }
@@ -164,7 +166,7 @@ class TabAtributes extends Component {
               iosHeader={I18n.t('selectOne')}
               mode="dropdown"
               selectedValue={this.state.project}
-              onValueChange={(value)=>{this.setState({project : value})}}>
+              onValueChange={(value)=>{this.setState({project : value,assignedTo:{id:null,name:I18n.t('noUser')}});this.props.getAssigners(this.props.token,value);}}>
               {
                 this.props.projects.map((project)=>
                 (<Item label={project.title?project.title:''} key={project.id} value={project.id} />)
@@ -201,9 +203,9 @@ class TabAtributes extends Component {
             <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingAssignedTo:true})}>
               <Left>
                 <Text style={{textAlign:'left',color:'black'}}>{this.state.assignedTo==null ? I18n.t('selectAssignedTo') : (
-                    this.state.assignedTo.name?
-                    <Text>{this.state.assignedTo.name}</Text>:
-                      <Text>{this.state.assignedTo.email}</Text>
+                    this.state.assignedTo.name||this.state.assignedTo.surname?
+                    <Text>{this.state.assignedTo.name?this.state.assignedTo.name:''+' '+this.state.assignedTo.surname?this.state.assignedTo.surname:''}</Text>:
+                      <Text>{this.state.assignedTo.username}</Text>
 
                     )}</Text>
                   </Left>
@@ -400,14 +402,14 @@ class TabAtributes extends Component {
 
             <List>
                 {
-                  (([{id:null,name:I18n.t('noUser'), email:I18n.t('noMail')}]).concat(this.props.users)).map((user) =>
-                  (user.email+user.name).toLowerCase().includes(this.state.filterWordAssignedTo.toLowerCase()) &&
+                  (([{id:null,name:I18n.t('noUser')}]).concat(this.props.assigners)).map((user) =>
+                  ((user.name?user.name:'')+' '+(user.surname?user.surname:'')+' '+(user.name?user.name:'')+user.username).toLowerCase().includes(this.state.filterWordAssignedTo.toLowerCase()) &&
                   <ListItem button key={user.id} onPress={()=>this.setState({assignedTo:user,selectingAssignedTo:false})} >
                     <Body>
                       {
-                        user.name?<Text>{user.name}</Text>:null
+                        (user.name||user.surname)?<Text>{user.name?user.name+' ':''}{user.surname?user.surname:''}</Text>:null
                       }
-                      <Text note>{user.email}</Text>
+                      <Text note>{user.username}</Text>
                     </Body>
                     <Right>
                       <Icon name="arrow-forward" />
@@ -426,12 +428,12 @@ class TabAtributes extends Component {
 
 //creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({ taskR, login, companyR, userR }) => {
-  const {users} = userR;
+  const {users,assigners} = userR;
   const {token} = login;
   const {companies} = companyR;
   const { statuses, projects,labels} = taskR;
-  return { users,token, companies,statuses, projects,labels};
+  return { users,token,assigners, companies,statuses, projects,labels};
 };
 
 //exports created Component connected to the redux store and redux actions
-export default connect(mapStateToProps,{addTask})(TabAtributes);
+export default connect(mapStateToProps,{addTask,getAssigners})(TabAtributes);

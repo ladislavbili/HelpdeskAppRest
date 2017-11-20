@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { View, Body, Container, Content, Icon, Input, Item, Label, Text, Footer, FooterTab, Button, Picker,  ListItem, Header,Title , Left, Right, List , CheckBox } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import I18n from '../../translations';
-import {editTask,deleteTask} from '../../redux/actions';
+import {editTask,deleteTask,getAssigners} from '../../redux/actions';
 import {formatDate,processInteger} from '../../helperFunctions';
 import TaskLabel from './label';
 
@@ -17,6 +17,7 @@ import TaskLabel from './label';
 class TabAtributes extends Component {
   constructor(props) {
     super(props);
+    this.props.getAssigners(this.props.token,this.props.projectID);
     this.state = {
       title:this.props.task.title?this.props.task.title:'',
       assignedTo:this.props.task.taskHasAssignedUsers.length!=0?this.props.users[this.props.users.findIndex((item)=>item.id==this.props.task.taskHasAssignedUsers[0].user.id)]:{id:null,name:I18n.t('noUser'), email:I18n.t('noMail')},
@@ -101,8 +102,7 @@ class TabAtributes extends Component {
         {
           project,requester,company,startedAt,deadline,closedAt,
           title,description,important,work,workTime,tag,assigned,
-        },id,this.props.token
-      );
+        },id,this.props.token,this.props.projectID==project );
       Actions.pop();
     }
 
@@ -188,12 +188,11 @@ class TabAtributes extends Component {
             <Text note>{I18n.t('project')}</Text>
             <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
               <Picker
-                enabled={!this.state.disabled}
                 supportedOrientations={['portrait', 'landscape']}
                 iosHeader={I18n.t('selectOne')}
                 mode="dropdown"
                 selectedValue={this.state.project}
-                onValueChange={(value)=>{this.setState({project : value});this.props.inputChanged();}}>
+                onValueChange={(value)=>{this.setState({project : value,assignedTo:{id:null,name:I18n.t('noUser')}});this.props.inputChanged();this.props.getAssigners(this.props.token,value);}}>
                 {
                   this.props.projects.map((project)=>
                   (<Item label={project.title?project.title:''} key={project.id} value={project.id} />)
@@ -227,12 +226,12 @@ class TabAtributes extends Component {
 
               <Text note>{I18n.t('assignedTo')}</Text>
               <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-                <Button block style={{backgroundColor:'white'}} disabled={this.state.disabled} onPress={()=>{this.setState({selectingAssignedTo:true});this.props.inputChanged();}}>
+                <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingAssignedTo:true})}>
                   <Left>
                     <Text style={{textAlign:'left',color:'black'}}>{this.state.assignedTo==null ? I18n.t('selectAssignedTo') : (
-                        (this.state.assignedTo.name)?
-                        <Text>{this.state.assignedTo.name}</Text>:
-                          <Text>{this.state.assignedTo.email}</Text>
+                        this.state.assignedTo.name||this.state.assignedTo.surname?
+                        <Text>{this.state.assignedTo.name?this.state.assignedTo.name:''+' '+this.state.assignedTo.surname?this.state.assignedTo.surname:''}</Text>:
+                          <Text>{this.state.assignedTo.username}</Text>
 
                         )}</Text>
                       </Left>
@@ -429,30 +428,30 @@ class TabAtributes extends Component {
                 <ListItem>
                   <Item rounded>
                     <Icon name="ios-search" />
-                    <Input placeholder={I18n.t('search')} value={this.state.filterWordAssignedTo} onChangeText={(value)=>this.setState({filterWordAssignedTo:value})} />
+                    <Input placeholder={I18n.t('search')} value={this.state.filterWordAssignedTo} onChangeText={((value)=>this.setState({filterWordAssignedTo:value}))} />
                   </Item>
                 </ListItem>
 
                 <List>
-                  {
-                    (([{id:null,name:I18n.t('noUser'), email:I18n.t('noMail')}]).concat(this.props.users)).map((user) =>
-                    (user.email+user.name).toLowerCase().includes(this.state.filterWordAssignedTo.toLowerCase()) &&
-                    <ListItem button key={user.id} onPress={()=>{this.setState({assignedTo:user,selectingAssignedTo:false});this.props.inputChanged();}} >
-                      <Body>
-                        {
-                          (user.name)?<Text>{user.name}</Text>:null
-                        }
-                        <Text note>{user.email}</Text>
-                      </Body>
-                      <Right>
-                        <Icon name="arrow-forward" />
-                      </Right>
-                    </ListItem>
-                  )
-                }
-              </List>
-            </Content>
-          </Modal>
+                    {
+                      (([{id:null,name:I18n.t('noUser')}]).concat(this.props.assigners)).map((user) =>
+                      ((user.name?user.name:'')+' '+(user.surname?user.surname:'')+' '+(user.name?user.name:'')+user.username).toLowerCase().includes(this.state.filterWordAssignedTo.toLowerCase()) &&
+                      <ListItem button key={user.id} onPress={()=>this.setState({assignedTo:user,selectingAssignedTo:false})} >
+                        <Body>
+                          {
+                            (user.name||user.surname)?<Text>{user.name?user.name+' ':''}{user.surname?user.surname:''}</Text>:null
+                          }
+                          <Text note>{user.username}</Text>
+                        </Body>
+                        <Right>
+                          <Icon name="arrow-forward" />
+                        </Right>
+                      </ListItem>
+                    )
+                  }
+                </List>
+              </Content>
+            </Modal>
 
         </Content>
       </Container>
@@ -462,12 +461,12 @@ class TabAtributes extends Component {
 
 //creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({ taskR, login, userR, companyR }) => {
-  const { users } = userR;
+  const { users, assigners } = userR;
   const {token } = login;
   const { companies } = companyR;
   const { statuses, projects, task,labels} = taskR;
-  return { users, companies,statuses, projects, task,labels,token};
+  return { users, companies,statuses, projects,assigners, task,labels,token};
 };
 
 //exports created Component connected to the redux store and redux actions
-export default connect(mapStateToProps,{editTask, deleteTask})(TabAtributes);
+export default connect(mapStateToProps,{editTask, deleteTask,getAssigners})(TabAtributes);

@@ -79,7 +79,7 @@ class Search extends Component {
         assigned:assignedTo.substring(0,assignedTo.length-1),
         requester:requestedBy.substring(0,requestedBy.length-1),
         creator:createdBy.substring(0,createdBy.length-1),
-      });
+      },null);
       Actions.pop();
     }
 

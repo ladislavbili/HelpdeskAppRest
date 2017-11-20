@@ -64,7 +64,7 @@ class SideBar extends Component {
           {this.state.showProjects &&
             <List
               dataArray={this.props.projects} renderRow={data =>
-                <ListItem button noBorder onPress={() => {this.props.closeDrawer();this.props.getTasks(this.props.token,data.title,{project:''+data.id});}} >
+                <ListItem button noBorder onPress={() => {this.props.closeDrawer();this.props.getTasks(this.props.token,data.title,{project:''+data.id},data.id);}} >
                   <Left>
                     <Icon active name="ios-folder-outline" style={{ color: '#777', fontSize: 26, width: 30 }} />
                     <Text style={styles.text}>{data.title}</Text>

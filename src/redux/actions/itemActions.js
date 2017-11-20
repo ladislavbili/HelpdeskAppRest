@@ -69,8 +69,8 @@ export const addItem = (item,taskId,unitId,token) => {
       body:requestBody,
     }).then((response)=>{
       response.json().then((response2)=>{
+        dispatch({type: ADD_NEW_ITEM, payload:{items:response2.data.invoiceableItems}});
       }).catch((error)=>console.log(error));
-      dispatch({type: ADD_NEW_ITEM, payload:{items:response.data.invoiceableItems}});
     })
     .catch(function (error) {
       console.log(error);

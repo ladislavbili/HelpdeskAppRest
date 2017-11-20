@@ -1,14 +1,20 @@
-import { SET_USER_ATTRIBUTES, EDIT_USER_LIST, ADD_USER, SET_USERS, SET_TASK_ATTRIBUTES, SET_SEARCH_ATTRIBUTES, START_LOADING_USER } from '../types';
+import { SET_USER_ATTRIBUTES, EDIT_USER_LIST, ADD_USER, SET_USERS, SET_TASK_ATTRIBUTES, SET_SEARCH_ATTRIBUTES, START_LOADING_USER, SET_ASSIGNERS } from '../types';
 
 const initialState = {
   user_roles:[],
   users:[],
   user:null,
-  loadingUser:false
+  loadingUser:false,
+  assigners:[],
 };
 
 export default function reducer (state = initialState, action) {
   switch (action.type) {
+    case SET_ASSIGNERS:
+    return {
+      ...state,
+      assigners: action.payload.assigners,
+    };
     case START_LOADING_USER:
     return {
       ...state,
@@ -44,7 +50,7 @@ export default function reducer (state = initialState, action) {
     case SET_TASK_ATTRIBUTES:
     return {
       ...state,
-      users:action.payload.users
+      users:action.payload.users,
     };
     case SET_SEARCH_ATTRIBUTES:
     return {

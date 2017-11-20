@@ -1,5 +1,5 @@
-import { SET_USER_ATTRIBUTES, ADD_USER, EDIT_USER_LIST, SET_USERS, START_LOADING_USER } from '../types';
-import { COMPANIES_LIST,ROLES_LIST, USERS_LIST } from '../urls';
+import { SET_USER_ATTRIBUTES, ADD_USER, EDIT_USER_LIST, SET_USERS, START_LOADING_USER, SET_ASSIGNERS } from '../types';
+import { COMPANIES_LIST,ROLES_LIST, USERS_LIST, ASSIGNERS_LIST } from '../urls';
 import {processRESTinput,processDataWithPrefix} from '../../helperFunctions';
 import queryString from 'query-string';
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
@@ -12,6 +12,28 @@ export const startLoadingUser = () => {
     dispatch({type: START_LOADING_USER });
   };
 };
+
+/**
+ * Get's all available users that can solve this project
+ * @param  {string} token     Token for the REST API
+ * @param  {int} projectID ID of the project
+ */
+export const getAssigners = (token,projectID) => {
+  return (dispatch) => {
+    fetch(ASSIGNERS_LIST+'/'+projectID, {
+      method: 'GET',
+      headers: {
+          'Authorization': 'Bearer ' + token
+      }
+    }).then((response)=> response.json().then(response => {
+      dispatch({type: SET_ASSIGNERS, payload:{assigners:response.assigner}});
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+};
+
 
 /**
  * Get's all attributes needed for the user adding

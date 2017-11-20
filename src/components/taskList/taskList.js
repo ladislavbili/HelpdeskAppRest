@@ -35,10 +35,10 @@ class TaskList extends Component {
           </Button>
         }
       </Content>
-      { this.props.ACL.includes('create_tasks_in_all_projects') &&
+      { this.props.ACL.includes('create_tasks_in_all_projects') && this.props.projectID &&
         <Footer>
           <FooterTab>
-            <Button vertical onPress={()=>{this.props.startLoading();Actions.taskAdd({projectId:this.props.projectId?this.props.projectId:null});}}>
+            <Button vertical onPress={()=>{this.props.startLoading();Actions.taskAdd({projectID:this.props.projectID});}}>
               <Icon name="md-add" style={{ color: 'white' }} />
               <Text style={{ color: 'white' }} >{I18n.t('task')}</Text>
             </Button>
@@ -52,9 +52,9 @@ class TaskList extends Component {
 
 //creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({ taskR, login }) => {
-  const { tasks, nextTasks } = taskR;
+  const { tasks, nextTasks, projectID } = taskR;
   const { user,token } = login;
-  return {tasks, token, ACL:user?user.ACL:[],nextTasks};
+  return {tasks, token,projectID, ACL:user?user.ACL:[],nextTasks};
 };
 
 //exports created Component connected to the redux store and redux actions
