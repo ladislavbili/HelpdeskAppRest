@@ -4,9 +4,6 @@
 
 # Xcode
 #
-android
-ios
-node_modules
 build/
 *.pbxuser
 !default.pbxuser
@@ -38,6 +35,8 @@ local.properties
 node_modules/
 npm-debug.log
 yarn-error.log
+android
+ios
 
 # BUCK
 buck-out/
@@ -49,9 +48,11 @@ buck-out/
 # It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
 # screenshots whenever they are needed.
 # For more information about the recommended setup visit:
-# https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Gitignore.md
+# https://docs.fastlane.tools/best-practices/source-control/
 
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots
-package-lock.json
+*/fastlane/report.xml
+*/fastlane/Preview.html
+*/fastlane/screenshots
+
+# Bundle artifact
+*.jsbundle

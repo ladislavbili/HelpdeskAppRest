@@ -46,7 +46,7 @@ export default {
   segmentActiveTextColor: '#3F51B5',
   segmentBorderColor: '#fff',
   segmentBorderColorMain: '#3F51B5',
-
+  
     // New Variable
   get defaultTextColor() {
     return this.textColor;
@@ -112,12 +112,12 @@ export default {
 
 
       // Color
-  brandPrimary: '#1976d2',
+  brandPrimary: '#2874F0',
   brandInfo: '#62B1F6',
   brandSuccess: '#5cb85c',
   brandDanger: '#d9534f',
   brandWarning: '#f0ad4e',
-  brandSidebar: '#1976d2',
+  brandSidebar: '#252932',
 
 
     // Font
@@ -137,7 +137,7 @@ export default {
 
     // Footer
   footerHeight: 55,
-  footerDefaultBg: '#1976d2',
+  footerDefaultBg: '#2874F0',
 
 
     // FooterTab
@@ -149,7 +149,7 @@ export default {
   tabActiveBgColor: (platform === 'ios') ? '#1569f4' : undefined,
 
     // Tab
-  tabDefaultBg: '#1976d2',
+  tabDefaultBg: '#2874F0',
   topTabBarTextColor: '#b3c7f9',
   topTabBarActiveTextColor: '#fff',
   topTabActiveBgColor: (platform === 'ios') ? '#1569f4' : undefined,
@@ -159,7 +159,7 @@ export default {
 
     // Header
   toolbarBtnColor: '#fff',
-  toolbarDefaultBg: '#1976d2',
+  toolbarDefaultBg: '#2874F0',
   toolbarHeight: (platform === 'ios') ? 64 : 56,
   toolbarIconSize: (platform === 'ios') ? 20 : 22,
   toolbarSearchIconSize: (platform === 'ios') ? 20 : 23,
@@ -168,7 +168,7 @@ export default {
   toolbarInverseBg: '#222',
   toolbarTextColor: '#fff',
   iosStatusbar: 'light-content',
-  toolbarDefaultBorder: '#1976d2',
+  toolbarDefaultBorder: '#2874F0',
   get statusBarColor() {
     return color(this.toolbarDefaultBg).darken(0.2).hexString();
   },
