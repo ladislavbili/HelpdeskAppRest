@@ -35,7 +35,7 @@ class TaskList extends Component {
           </Button>
         }
       </Content>
-      { this.props.ACL.includes('create_tasks_in_all_projects') && this.props.projectID &&
+      { this.props.user.user_role.acl.includes('create_tasks_in_all_projects') && this.props.projectID &&
         <Footer>
           <FooterTab>
             <Button vertical onPress={()=>{this.props.startLoading();Actions.taskAdd({projectID:this.props.projectID});}}>
@@ -51,10 +51,10 @@ class TaskList extends Component {
 }
 
 //creates function that maps actions (functions) to the redux store
-const mapStateToProps = ({ taskR, login }) => {
-  const { tasks, nextTasks, projectID } = taskR;
-  const { user,token } = login;
-  return {tasks, token,projectID, ACL:user?user.ACL:[],nextTasks};
+const mapStateToProps = ({ taskReducer, loginReducer }) => {
+  const { tasks, nextTasks, projectID } = taskReducer;
+  const { user,token } = loginReducer;
+  return {tasks, token,projectID,user,nextTasks};
 };
 
 //exports created Component connected to the redux store and redux actions

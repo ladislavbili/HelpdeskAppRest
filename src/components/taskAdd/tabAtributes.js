@@ -89,7 +89,6 @@ class TabAtributes extends Component {
     let tags = '"';
     this.state.labels.map((label)=>tags+=label.title+'","')
     const tag = '['+(tags.substring(0,tags.length-2))+']';
-    console.log(tag);
     const {title,description,important,work} = this.state;
     const workTime=this.state.work_time;
     this.props.addTask(

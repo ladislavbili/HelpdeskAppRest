@@ -20,7 +20,7 @@ class TaskListLoader extends Component {
       <Container>
         <Header>
           <Left>
-            <Button transparent onPress={this.props.openDrawer}>
+            <Button transparent onPress={()=>this.props.openDrawer(this.props.token)}>
               <Icon name="menu" />
             </Button>
           </Left>
@@ -34,7 +34,7 @@ class TaskListLoader extends Component {
             <Button transparent style={{ marginTop: 8 }} onPress={Actions.messages}>
               <Icon name="mail" style={{ color: 'white' }} />
             </Button>
-            { (this.props.ACL.includes('company_settings') || this.props.ACL.includes('user_settings') ) &&
+            { (this.props.user.user_role.acl.includes('company_settings') || this.props.user.user_role.acl.includes('user_settings') ) &&
               <Button transparent style={{ marginTop: 8 }} onPress={Actions.settings}>
               <Icon name="settings" style={{ color: 'white' }} />
               </Button>
@@ -48,11 +48,11 @@ class TaskListLoader extends Component {
 }
 
 //creates function that maps actions (functions) to the redux store
-const mapStateToProps = ({taskR,login,drawer}) => {
-  const {loadingData,tasks,projects,currentTask,listName} = taskR;
-  const {user,token} = login;
-  const{drawerState} = drawer;
-  return {ACL:user?user.ACL:[],loadingData,tasks,projects,token,drawerState,currentTask,listName};
+const mapStateToProps = ({taskReducer,loginReducer,drawerReducer}) => {
+  const {loadingData,tasks,projects,currentTask,listName} = taskReducer;
+  const {user,token} = loginReducer;
+  const{drawerState} = drawerReducer;
+  return {user,loadingData,tasks,projects,token,drawerState,currentTask,listName};
 };
 
 //exports created Component connected to the redux store and redux actions

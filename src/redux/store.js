@@ -9,17 +9,19 @@ import commentReducer from './reducers/commentReducer';
 import companyReducer from './reducers/companyReducer';
 import itemReducer from './reducers/itemReducer';
 import userReducer from './reducers/userReducer';
+import sidebarReducer from './reducers/sidebarReducer';
 
 //all reducers gathered together for the redux storage
 const reducers = combineReducers({
-  login:loginReducer,
-  drawer:drawerReducer,
-  navigation:navigationReducer,
-  taskR:taskReducer,
-  commentR:commentReducer,
-  companyR:companyReducer,
-  itemR:itemReducer,
-  userR:userReducer,
+  loginReducer,
+  drawerReducer,
+  navigationReducer,
+  taskReducer,
+  commentReducer,
+  companyReducer,
+  itemReducer,
+  userReducer,
+  sidebarReducer,
 });
 
 //all enhancers gathered together for the redux storage

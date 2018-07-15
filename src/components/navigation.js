@@ -3,26 +3,25 @@ import { connect } from 'react-redux';
 import { StyleProvider, Drawer } from 'native-base';
 import { Router, Scene } from 'react-native-router-flux';
 
-import { closeDrawer } from './redux/actions';
-import material from '../native-base-theme/variables/material';
-import getTheme from '../native-base-theme/components';
-import SideBar from './components/sidebar';
-import Login from './components/login';
-import Settings from './components/settings';
-import TaskList from './components/taskList';
-import TaskEdit from './components/taskEdit';
-import TaskAdd from './components/taskAdd';
-import CommentAdd from './components/commentAdd';
-import ItemAdd from './components/itemAdd';
-import Account from './components/account';
-import ItemEdit from './components/itemEdit';
-import UserList from './components/userList';
-import UserAdd from './components/userAdd';
-import UserEdit from './components/userEdit';
-import CompanyList from './components/companyList';
-import CompanyAdd from './components/companyAdd';
-import CompanyEdit from './components/companyEdit';
-import Search from './components/search';
+import { closeDrawer } from '../redux/actions';
+import material from '../../native-base-theme/variables/material';
+import getTheme from '../../native-base-theme/components';
+import SideBar from '../components/sidebar';
+import Settings from '../components/settings';
+import TaskList from '../components/taskList';
+import TaskEdit from '../components/taskEdit';
+import TaskAdd from '../components/taskAdd';
+import CommentAdd from '../components/commentAdd';
+import ItemAdd from '../components/itemAdd';
+import Account from '../components/account';
+import ItemEdit from '../components/itemEdit';
+import UserList from '../components/userList';
+import UserAdd from '../components/userAdd';
+import UserEdit from '../components/userEdit';
+import CompanyList from '../components/companyList';
+import CompanyAdd from '../components/companyAdd';
+import CompanyEdit from '../components/companyEdit';
+import Search from '../components/search';
 
 /**
  * Contains router that was connected to the redux storage
@@ -45,10 +44,9 @@ class AppNavigator extends Component {
           >
           <RouterWithRedux>
             <Scene key="root" hideNavBar>
-              <Scene key="login" component={Login} initial={true} />
+              <Scene key="taskList" component={TaskList} initial={true} />
               <Scene key="settings" component={Settings} />
               <Scene key="account" component={Account} />
-              <Scene key="taskList" component={TaskList} />
               <Scene key="taskEdit" component={TaskEdit} />
               <Scene key="taskAdd" component={TaskAdd} />
               <Scene key="commentAdd" component={CommentAdd} />
@@ -100,8 +98,8 @@ class AppNavigator extends Component {
 }
 
 //creates function that maps actions (functions) to the redux store
-const mapStateToProps = ({ drawer, navigation }) => {
-  return { drawerState: drawer.drawerState, themeState:drawer.themeState, navigation };
+const mapStateToProps = ({ drawerReducer, navigationReducer }) => {
+  return { drawerState: drawerReducer.drawerState, themeState:drawerReducer.themeState, navigation:navigationReducer };
 };
 
 //exports created Component connected to the redux store and redux actions

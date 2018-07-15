@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem } from 'native-base';
@@ -94,9 +93,9 @@ class Settings extends Component {
 }
 
 //creates function that maps actions (functions) to the redux store
-const mapStateToProps = ({ login,navigation }) => {
-  const {user} = login;
-  return {ACL:user?user.ACL:[],data:navigation};
+const mapStateToProps = ({ loginReducer }) => {
+  const {user} = loginReducer;
+  return {ACL:user.user_role.acl};
 };
 
 //exports created Component connected to the redux store and redux actions

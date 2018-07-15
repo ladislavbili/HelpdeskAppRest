@@ -12,3 +12,4 @@ export const FILTER_LIST = BASE_URL + '/task-bundle/filters';
 export const ROLES_LIST = BASE_URL + '/task-bundle/user-roles';
 export const UNITS_LIST = BASE_URL + '/task-bundle/units';
 export const ASSIGNERS_LIST = BASE_URL + '/task-bundle/project/assigners';
+export const SIDEBAR_DATA = BASE_URL + '/task-bundle/left-menu-params';

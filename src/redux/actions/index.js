@@ -6,3 +6,4 @@ export * from './userActions';
 export * from './commentActions';
 export * from './companyActions';
 export * from './itemActions';
+export * from './sidebarActions';

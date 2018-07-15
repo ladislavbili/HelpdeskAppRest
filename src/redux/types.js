@@ -1,10 +1,13 @@
 //collection of the all action types, used for better code consistency
 
-export const LOGIN_START = 'AUTH_LOGIN_START';
-export const LOGIN_SUCCESS = 'AUTH_LOGIN_SUCCESS';
-export const LOGIN_FAIL = 'AUTH_LOGIN_FAIL';
-export const LOGIN_LOGOUT = 'AUTH_LOGOUT';
-export const SET_TOKEN = 'SET_TOKEN';
+export const LOGIN_START = 'LOGIN_START';
+export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const TOKEN_CHECKED = 'TOKEN_CHECKED';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_LOGOUT = 'LOGIN_LOGOUT';
+
+export const SET_SIDEBAR = 'SET_SIDEBAR';
+export const SET_SIDEBAR_LOADING = 'SET_SIDEBAR_LOADING';
 
 export const OPEN_DRAWER = 'OPEN_DRAWER';
 export const CLOSE_DRAWER = 'CLOSE_DRAWER';
