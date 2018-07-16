@@ -72,5 +72,5 @@ export const processDataWithPrefix = (input,prefix)=>{
   * @return {string}      Return's lower case string used for search
 */
 export const compactUserForSearch = (item)=>{
-  return ((item.email?item.email:'')+ (item.detailData.name?item.detailData.name:'')+' '+ (item.detailData.surname?item.detailData.surname:'')+ ' ' + (item.detailData.name?item.detailData.name:'')).toLowerCase();
+  return ((item.email?item.email:'')+ (item.name?item.name:'')+' '+ (item.surname?item.surname:'')+ ' ' + (item.name?item.name:'')).toLowerCase();
 }

@@ -31,14 +31,14 @@ class TaskListLoader extends Component {
             <Button transparent style={{ marginTop: 8 }} onPress={()=>{this.props.startLoadingSearch();Actions.search();}}>
               <Icon name="search" style={{ color: 'white' }} />
             </Button>
-            <Button transparent style={{ marginTop: 8 }} onPress={Actions.messages}>
+            {false && <Button transparent style={{ marginTop: 8 }} onPress={Actions.messages}>
               <Icon name="mail" style={{ color: 'white' }} />
-            </Button>
-            { (this.props.user.user_role.acl.includes('company_settings') || this.props.user.user_role.acl.includes('user_settings') ) &&
+            </Button>}
+            { //(this.props.user.user_role.acl.includes('company_settings') || this.props.user.user_role.acl.includes('user_settings') ) &&
+            }
               <Button transparent style={{ marginTop: 8 }} onPress={Actions.settings}>
               <Icon name="settings" style={{ color: 'white' }} />
               </Button>
-            }
           </Right>
         </Header>
          <TaskList />

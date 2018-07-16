@@ -1,4 +1,4 @@
-import { SET_USER_ATTRIBUTES, ADD_USER, EDIT_USER_LIST, SET_USERS, START_LOADING_USER, SET_ASSIGNERS } from '../types';
+import { SET_USERS, SET_LOADING_USERS, SET_USER_ATTRIBUTES, ADD_USER, EDIT_USER_LIST, START_LOADING_USER, SET_ASSIGNERS } from '../types';
 import { COMPANIES_LIST,ROLES_LIST, USERS_LIST, ASSIGNERS_LIST } from '../urls';
 import {processRESTinput,processDataWithPrefix} from '../../helperFunctions';
 import queryString from 'query-string';
@@ -7,11 +7,38 @@ import queryString from 'query-string';
 /**
  * Set's user loading to true
  */
-export const startLoadingUser = () => {
+export const setUsersLoading = (usersLoaded) => {
   return (dispatch) => {
-    dispatch({type: START_LOADING_USER });
+    dispatch({type: SET_LOADING_USERS,usersLoaded });
   };
 };
+
+/**
+* Get's all of the visible users
+* @param  {[type]} token Token for the REST API
+*/
+export const getUsers= (updateDate,token) => {
+  return (dispatch) => {
+    fetch(USERS_LIST+'/all'+(updateDate?'/'+updateDate:''), {
+      method: 'get',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+    }).then((response) =>{
+      if(!response.ok){
+        return;
+      }
+      response.json().then((data) => {
+        dispatch({type: SET_USERS, users:data.data,updateDate:data.date.toString()});
+        dispatch({ type: SET_LOADING_USERS, usersLoaded:true });
+      });
+    }
+  ).catch(function (error) {
+    console.log(error);
+  });
+}
+}
 
 /**
  * Get's all available users that can solve this project
@@ -97,25 +124,6 @@ export const addUser = (user,detailData,company,role,token) => {
   };
 };
 
-/**
- * Get's all of the visible users
- * @param  {[type]} token Token for the REST API
- */
-export const getUsers = (token) => {
-  return (dispatch) => {
-    fetch(USERS_LIST+'?limit=999', {
-      method: 'GET',
-      headers: {
-          'Authorization': 'Bearer ' + token
-      }
-    }).then((response)=> response.json().then(response => {
-      dispatch({type: SET_USERS, payload:{users:response.data}});
-    }))
-    .catch(function (error) {
-      console.log(error);
-    });
-  };
-};
 /**
   * Get's user and all needed data to open user editting
  * @param  {int} id    User ID

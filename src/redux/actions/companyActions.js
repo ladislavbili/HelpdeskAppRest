@@ -1,28 +1,45 @@
-import { EDIT_COMPANY_LIST, ADD_COMPANY, SET_COMPANY, SET_COMPANIES, START_LOADING_COMPANY } from '../types';
+import { EDIT_COMPANY_LIST, SET_LOADING_COMPANIES, ADD_COMPANY, SET_COMPANY, SET_COMPANIES, START_LOADING_COMPANY } from '../types';
 import { COMPANIES_LIST } from '../urls';
 import {processRESTinput} from '../../helperFunctions';
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
 
-/**
- * Get's all available companies to the user
- * @param  {string} token Token for the REST API
- */
- export const getCompanies = (token) => {
-   return (dispatch) => {
-     fetch(COMPANIES_LIST+'?limit=999', {
-       method: 'GET',
-       headers: {
-         'Authorization': 'Bearer ' + token
-       }
-     }).then((response)=> response.json().then(response => {
-       dispatch({type: SET_COMPANIES, payload:{companies:response.data}});
-     }))
-     .catch(function (error) {
-       console.log(error);
-     });
-   };
- };
 
+/**
+ * Sets status if companies are loaded to false
+ */
+export const startCompaniesLoading = (companiesLoaded) => {
+  return (dispatch) => {
+    dispatch({ type: SET_LOADING_COMPANIES, companiesLoaded });
+  }
+};
+
+
+/**
+ * Gets all companies available with no pagination
+ * @param {string} token universal token for API comunication
+ */
+ export const getCompanies= (updateDate,token) => {
+   return (dispatch) => {
+     fetch(COMPANIES_LIST+'/all'+(updateDate?'/'+updateDate:''), {
+       method: 'get',
+       headers: {
+         'Authorization': 'Bearer ' + token,
+         'Content-Type': 'application/json'
+       }
+     }).then((response) =>{
+       if(!response.ok){
+         return;
+       }
+       response.json().then((data) => {
+         dispatch({type: SET_COMPANIES, companies:data.data,updateDate:data.date.toString()});
+         dispatch({ type: SET_LOADING_COMPANIES, companiesLoaded:true });
+       });
+     }
+   ).catch(function (error) {
+     console.log(error);
+   });
+ }
+ }
 /**
  * Saves editted company
  * @param  {Company} company Object containing all new data about the company

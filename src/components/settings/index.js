@@ -4,7 +4,7 @@ import { Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Tex
 import { Actions } from 'react-native-router-flux';
 
 import I18n from '../../translations/';
-import {startLoadingUser,logoutUser} from '../../redux/actions';
+import {logoutUser} from '../../redux/actions';
 
 /**
  * Shows user all of the settings available to him
@@ -72,7 +72,7 @@ class Settings extends Component {
         <Footer>
           { this.props.ACL.includes('user_settings') &&
             <FooterTab>
-              <Button onPress={()=>{this.props.startLoadingUser();Actions.userAdd();}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
+              <Button onPress={Actions.userAdd} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
                 <Icon active style={{ color: 'white' }} name="add" />
                 <Text style={{ color: 'white' }} >{I18n.t('user')}</Text>
               </Button>
@@ -99,4 +99,4 @@ const mapStateToProps = ({ loginReducer }) => {
 };
 
 //exports created Component connected to the redux store and redux actions
-export default connect(mapStateToProps,{startLoadingUser,logoutUser})(Settings);
+export default connect(mapStateToProps,{logoutUser})(Settings);

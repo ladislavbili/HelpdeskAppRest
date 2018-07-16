@@ -5,7 +5,7 @@ import { ActivityIndicator } from 'react-native';
 import { View, Text } from 'native-base';
 import { getSidebar, setSidebarLoading } from '../../redux/actions';
 
-class TokenChecker extends Component {
+class SidebarLoader extends Component {
   constructor(props){
     super(props);
     this.props.setSidebarLoading(false);
@@ -31,4 +31,4 @@ const mapStateToProps = ({ sidebarReducer,loginReducer }) => {
   return {token,sidebarLoaded};
 };
 
-export default connect(mapStateToProps, {getSidebar, setSidebarLoading})(TokenChecker);
+export default connect(mapStateToProps, {getSidebar, setSidebarLoading})(SidebarLoader);
