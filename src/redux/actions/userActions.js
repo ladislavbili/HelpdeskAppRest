@@ -1,5 +1,15 @@
-import { SET_USERS, SET_LOADING_USERS, SET_USER_ATTRIBUTES, ADD_USER, EDIT_USER_LIST, START_LOADING_USER, SET_ASSIGNERS } from '../types';
-import { COMPANIES_LIST,ROLES_LIST, USERS_LIST, ASSIGNERS_LIST } from '../urls';
+import { SET_USERS,
+  SET_LOADING_USERS,
+  SET_USER_ROLES,
+  SET_LOADING_USER_ROLES,
+  SET_USER_EMAIL_ERROR,
+  ADD_USER,
+  SET_LOADING_USER,
+  SET_USER,
+  EDIT_USER,
+  SET_USER_ATTRIBUTES, EDIT_USER_LIST, START_LOADING_USER, SET_ASSIGNERS } from '../types';
+
+import { IMAGE_UPLOAD, COMPANIES_LIST,USER_ROLES_LIST, USERS_LIST, ASSIGNERS_LIST,GET_LOC ,GET_FILE } from '../urls';
 import {processRESTinput,processDataWithPrefix} from '../../helperFunctions';
 import queryString from 'query-string';
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
@@ -39,6 +49,300 @@ export const getUsers= (updateDate,token) => {
   });
 }
 }
+
+/**
+ * Set's user loading to true
+ */
+export const setUserRolesLoading = (userRolesLoaded) => {
+  return (dispatch) => {
+    dispatch({type: SET_LOADING_USER_ROLES,userRolesLoaded });
+  };
+};
+
+/**
+* Gets all userRoles available with no pagination
+* @param {string} token universal token for API comunication
+*/
+export const getUserRoles= (token) => {
+  return (dispatch) => {
+    fetch(USER_ROLES_LIST+'?limit=999', {
+      method: 'get',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+    }).then((response) =>{
+      if(!response.ok){
+        return;
+      }
+      response.json().then((data) => {
+        dispatch({type: SET_USER_ROLES, userRoles:data.data});
+        dispatch({ type: SET_LOADING_USER_ROLES, userRolesLoaded:true });
+      });
+    }
+  ).catch(function (error) {
+      console.log(error);
+  });
+}
+}
+
+/**
+* Adds new user
+* @param {object} body  All parameters in an object of the new user
+* @param {string} token universal token for API comunication
+*/
+export const addUser = (body,company,role,image,afterSuccess,token) => {
+  return (dispatch) => {
+    if(image!==null){
+      let formData = new FormData();
+      formData.append("file", image);
+      fetch(IMAGE_UPLOAD,{
+        headers: {
+          'Authorization': 'Bearer ' + token
+        },
+        method: 'POST',
+        body:formData,
+      })
+      .then((response)=>{
+        if(!response.ok){
+          return;
+        }
+        response.json().then((response)=>{
+          body['image']=response.data.slug;
+          fetch(USERS_LIST + '/user-role/' + role + '/company/' + company,{
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            method: 'POST',
+            body:JSON.stringify(body),
+          }).then((response)=>{
+            if(!response.ok){
+              if(response.status===409){
+                dispatch({type: SET_USER_EMAIL_ERROR, nameError:true});
+              }
+              else{
+              }
+              return;
+            }
+            response.json().then((response)=>{
+              dispatch({type: ADD_USER, user:response.data});
+              afterSuccess();
+            })})
+            .catch(function (error) {
+              console.log(error);
+            });
+
+          })})
+          .catch(function (error) {
+            console.log(error);
+          });
+        }
+        else{
+          fetch(USERS_LIST + '/user-role/' + role + '/company/' + company,{
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            method: 'POST',
+            body:JSON.stringify(body),
+          }).then((response)=>{
+            if(!response.ok){
+              if(response.status===409){
+                dispatch({type: SET_USER_EMAIL_ERROR, nameError:true});
+              }
+              else{
+              }
+              return;
+            }
+            response.json().then((response)=>{
+              dispatch({type: ADD_USER, user:response.data});
+              afterSuccess();
+            })})
+            .catch(function (error) {
+              console.log(error);
+            });
+          }
+        };
+      };
+
+/**
+ * Set's user loading to true
+ */
+export const setUserLoading = (userLoaded) => {
+  return (dispatch) => {
+    dispatch({type: SET_LOADING_USER,userLoaded });
+  };
+};
+
+
+/**
+* Gets one user that was selected
+* @param  {string} token universal token for API comunication
+* @param  {int} id    interger, that is ID of the user that we want to load
+*/
+export const getUser = (id,token) => {
+  return (dispatch) => {
+    fetch(USERS_LIST+'/'+id, {
+      method: 'get',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+    }).then((response) =>{
+      if(!response.ok){
+        return;
+      }
+      response.json().then((data) => {
+        if(data.data.image){
+          fetch(GET_LOC+data.data.image+'/download-location', {
+            method: 'get',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            }
+          }).then((response2)=>{
+            if(!response2.ok){
+              return;
+            }
+            response2.json().then((data2)=>{
+            fetch(GET_FILE+data2.data.fileDir+'/'+data2.data.fileName, {
+              method: 'get',
+              headers: {
+                'Authorization': 'Bearer ' + token,
+              }
+            }).then((response3) =>{
+              if(!response3.ok){
+                processError(response3,dispatch);
+                return;
+              }
+              let user = {...data.data};
+              user['image']=response3.url;
+              dispatch({type: SET_USER, user});
+            }).catch(function (error) {
+              console.log(error);
+            });
+          }).catch(function (error) {
+            console.log(error);
+          });}
+        ).catch(function (error) {
+          console.log(error);
+        });
+      }
+      else{
+        dispatch({type: SET_USER, user:data.data});
+      }
+    });
+  }
+).catch(function (error) {
+  console.log(error);
+});
+}
+}
+
+/**
+* Edits selected user
+* @param  {object}  body     data about user except for isActive
+* @param  {Boolean} isActive is active user parameter
+* @param  {int}  id       id of the user
+* @param  {string}  token    universal token for API comunication
+*/
+
+export const editUser = (body,company,role,id,isActive,image,changeLanguage,token) => {
+  return (dispatch) => {
+    if(changeLanguage){
+      //i18n.changeLanguage(body.language);
+    }
+    if(image===null){
+      Promise.all([
+        fetch(USERS_LIST + '/'+id+'/user-role/' + role + '/company/' + company, {
+          method: 'put',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          },
+          body:JSON.stringify(body)
+        }),
+        fetch(USERS_LIST+'/'+id+(isActive?'/restore':'/inactivate'), {
+          method: 'put',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          }
+        })]).then(([response1,response2])=>{
+          if(!response1.ok){
+            return;
+          }
+          if(!response2.ok){
+            return;
+          }
+          Promise.all([response1.json(),response2.json()]).then(([response1,response2])=>{
+          dispatch({type: EDIT_USER, user:{...response1.data,is_active:isActive, name:response1.data.detailData.name,surname:response1.data.detailData.surname}});
+        })})
+        .catch(function (error) {
+          console.log(error);
+        });
+      }
+      else{
+        let formData = new FormData();
+        formData.append("file", image);
+        fetch(IMAGE_UPLOAD,{
+          headers: {
+            'Authorization': 'Bearer ' + token
+          },
+          method: 'POST',
+          body:formData,
+        })
+        .then((response)=>{
+          if(!response.ok){
+            return;
+          }
+          response.json().then((response)=>{
+            body['image']=response.data.slug;
+
+            Promise.all([
+              fetch(USERS_LIST + '/'+id+'/user-role/' + role + '/company/' + company, {
+                method: 'put',
+                headers: {
+                  'Authorization': 'Bearer ' + token,
+                  'Content-Type': 'application/json'
+                },
+                body:JSON.stringify(body)
+              }),
+              fetch(USERS_LIST+'/'+id+(isActive?'/restore':'/inactivate'), {
+                method: 'put',
+                headers: {
+                  'Authorization': 'Bearer ' + token,
+                  'Content-Type': 'application/json'
+                }
+              })]).then(([response1,response2])=>{
+                if(!response2.ok){
+                  return;
+                }
+                if(!response1.ok){
+                  return;
+                }
+                Promise.all([response1.json(),response2.json()]).then(([response1,response2])=>{
+                dispatch({type: EDIT_USER, user:{...response1.data,is_active:isActive}});
+              })})
+              .catch(function (error) {
+                console.log(error);
+              });
+
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
+
+        }
+
+      };
+    };
+
 
 /**
  * Get's all available users that can solve this project
@@ -87,129 +391,5 @@ export const getAssigners = (token,projectID) => {
     .catch(function (error) {
       console.log(error);
     });
-  };
-};
-
-/**
-  * Adds new user
- * @param {User} user       Object containing all of the user data except for the detailData
- * @param {DetailData} detailData Object that contains all of the userData
- * @param {int} company     ID of the users company
- * @param {int} role        ID of the users role
- * @param {string} token      Token for the REST API
- */
-export const addUser = (user,detailData,company,role,token) => {
-  return (dispatch) => {
-    let userREST=processRESTinput(user);
-    let extraREST= processDataWithPrefix(detailData,'detail_data');
-    let RESTData = userREST.length==0?extraREST:(extraREST.length==0?userREST:userREST+'&'+extraREST);
-
-      fetch(USERS_LIST + '/user-role/' + role + '/company/' + company, {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Bearer ' + token
-        },
-        method: 'POST',
-        body:RESTData,
-      })
-    .then((response)=>{
-    response.json().then((response)=>{
-      dispatch({type: ADD_USER, payload:{user:response.data}});
-    })})
-    .catch(function (error) {
-      console.log(error);
-    });
-
-  };
-};
-
-/**
-  * Get's user and all needed data to open user editting
- * @param  {int} id    User ID
- * @param  {[type]} token Token for the REST API
- */
-export const getUser = (id,token) => {
-  return (dispatch) => {
-    Promise.all([
-      fetch(COMPANIES_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + token
-        }
-      }),
-      fetch(ROLES_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + token
-        }
-      }),
-      fetch(USERS_LIST+'/'+id, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + token
-        }
-      }),
-    ]).then(([response1,response2,response3])=>Promise.all([response1.json(),response2.json(),response3.json()]).then(([response1,response2,response3])=>{
-      dispatch({type: SET_USER_ATTRIBUTES, payload:{companies:response1.data,user_roles:response2.data,user:response3.data}});
-    }))
-    .catch(function (error) {
-      console.log(error);
-    });
-  };
-};
-
-/**
- * Saves editted user
- * @param  {UserData} userData   Complete user data, used only for optimistic response
- * @param {User} user       Object containing all of the user data except for the detailData
- * @param {DetailData} detailData Object that contains all of the userData
- * @param {int} company     ID of the users company
- * @param {int} role        ID of the users role
- * @param {string} token      Token for the REST API
- */
-export const editUser = (userData,user,detailData,company,role,token) => {
-  return (dispatch) => {
-    let userREST=processRESTinput(user);
-    let extraREST= processDataWithPrefix(detailData,'detail_data');
-    let RESTData = userREST.length==0?extraREST:(extraREST.length==0?userREST:userREST+'&'+extraREST);
-    Promise.all([
-      fetch(USERS_LIST + '/' + userData.id, {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Bearer ' + token
-        },
-        method: 'PUT',
-        body:RESTData,
-      }),
-      fetch(USERS_LIST + '/' + userData.id + '/company/' + company, {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Bearer ' + token
-        },
-        method: 'PUT',
-        body:RESTData,
-      }),
-      fetch(USERS_LIST + '/' + userData.id + '/user-role/' + role, {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Bearer ' + token
-        },
-        method: 'PUT',
-        body:RESTData,
-      }),
-
-    ])
-    .then(([response1,response2,response3])=>{
-    Promise.all([response1.json(),response2.json(),response3.json()]).then(([response1,response2,response3])=>{
-      dispatch({type: EDIT_USER_LIST, payload:{user:userData}});
-    })})
-    .catch(function (error) {
-      console.log(error);
-    });
-
   };
 };

@@ -74,3 +74,12 @@ export const processDataWithPrefix = (input,prefix)=>{
 export const compactUserForSearch = (item)=>{
   return ((item.email?item.email:'')+ (item.name?item.name:'')+' '+ (item.surname?item.surname:'')+ ' ' + (item.name?item.name:'')).toLowerCase();
 }
+
+/**
+ * Checks if this email is correct
+ * @param  {string}  email User entered e-mail
+ * @return {Boolean}       If its correct
+ */
+export const isEmail = (email) => {
+  return (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/).test(email);
+}

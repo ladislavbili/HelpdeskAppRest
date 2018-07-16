@@ -1,14 +1,16 @@
-import { SET_LOADING_USERS, SET_USERS, SET_USER_ATTRIBUTES, EDIT_USER_LIST, ADD_USER,  SET_TASK_ATTRIBUTES, SET_SEARCH_ATTRIBUTES, START_LOADING_USER, SET_ASSIGNERS } from '../types';
+import { SET_LOADING_USERS, SET_USERS, SET_LOADING_USER_ROLES, SET_USER_ROLES,SET_USER_EMAIL_ERROR,SET_USER,SET_LOADING_USER, EDIT_USER,
+  SET_USER_ATTRIBUTES, EDIT_USER_LIST, ADD_USER,  SET_TASK_ATTRIBUTES, SET_SEARCH_ATTRIBUTES, START_LOADING_USER, SET_ASSIGNERS } from '../types';
 
 const initialState = {
   users:[],
   usersLoaded:false,
   updateDate:null,
   pagination:null,
-
-  user_roles:[],
+  userRoles:[],
+  userRolesLoaded:false,
+  nameError:null,
+  userLoaded:false,
   user:null,
-  userLoaded:false
 };
 
 export default function reducer (state = initialState, action) {
@@ -40,47 +42,80 @@ export default function reducer (state = initialState, action) {
       });
       return { ...state, users:newUsers, updateDate:action.updateDate };
     }
+    case SET_LOADING_USER_ROLES:
+    return {
+      ...state,
+      userRolesLoaded: action.userRolesLoaded,
+    };
+    case SET_USER_ROLES:{
+      return {
+        ...state,
+        userRoles:action.userRoles,
+        nameError:null,
+        userRolesLoaded:true
+      };
+    }
+    case SET_USER_EMAIL_ERROR:{
+      return { ...state, nameError:action.nameError };
+    }
+    case ADD_USER:{
+      if(state.users.findIndex(item=>item.id===action.user.id)!==-1){
+        return state;
+      }
+      else{
+        return {
+          ...state,
+          users:[action.user,...state.users]
+        };
+      }
+    }
+    case SET_LOADING_USER:
+    return {
+      ...state,
+      userLoaded: action.userLoaded,
+    };
+
+    case SET_USER:
+      return { ...state, user:action.user,userLoaded:true };
+    case EDIT_USER:{
+      //finds location of the current user and replaces it with newer version
+      let newUsers=[...state.users];
+      if(action.user.is_active){
+        newUsers[newUsers.findIndex((user)=>user.id==action.user.id)]=action.user;
+      }
+      else{
+        newUsers.splice(newUsers.findIndex((user)=>user.id==action.user.id),1);
+      }
+      return { ...state, users:newUsers };
+    }
+    //
     case SET_ASSIGNERS:
     return {
       ...state,
-      assigners: action.payload.assigners,
+      assigners: action.assigners,
     };
     case START_LOADING_USER:
     return {
       ...state,
       loadingUser: true,
     };
-    case SET_USER_ATTRIBUTES:{
-      return {
-        ...state,
-        user_roles:action.payload.user_roles,
-        user:action.payload.user?action.payload.user:null,
-        loadingUser:false
-      };
-    }
     case EDIT_USER_LIST:{
       let newUsers= [...state.users];
-      newUsers.splice(newUsers.findIndex((user)=>user.id==action.payload.user.id),1,action.payload.user);
+      newUsers.splice(newUsers.findIndex((user)=>user.id==action.user.id),1,action.user);
       return {
         ...state,
         users:newUsers
       };
     }
-    case ADD_USER:{
-      return {
-        ...state,
-        users:[action.payload.user,...state.users]
-      };
-    }
     case SET_TASK_ATTRIBUTES:
     return {
       ...state,
-      users:action.payload.users,
+      users:action.users,
     };
     case SET_SEARCH_ATTRIBUTES:
     return {
       ...state,
-      users:action.payload.users,
+      users:action.users,
     };
     default:
     return state;

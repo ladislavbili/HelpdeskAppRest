@@ -48,7 +48,7 @@ class UserList extends Component {
             }
             renderRow={(user)=>
               <ListItem
-                button onPress={()=>{this.props.startLoadingUser();Actions.userEdit({id:user.id});}}
+                button onPress={()=>{Actions.userEdit({id:user.id})}}
                 >
                 <Body>
                   {
@@ -65,7 +65,7 @@ class UserList extends Component {
         </Content>
         <Footer>
           <FooterTab>
-            <Button onPress={()=>{this.props.startLoadingUser();Actions.userAdd();}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
+            <Button onPress={Actions.userAdd} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
               <Icon active style={{ color: 'white' }} name="add" />
               <Text style={{ color: 'white' }} >{I18n.t('user')}</Text>
             </Button>

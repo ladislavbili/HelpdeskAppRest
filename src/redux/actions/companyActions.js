@@ -7,7 +7,7 @@ import {processRESTinput} from '../../helperFunctions';
 /**
  * Sets status if companies are loaded to false
  */
-export const startCompaniesLoading = (companiesLoaded) => {
+export const setCompaniesLoading = (companiesLoaded) => {
   return (dispatch) => {
     dispatch({ type: SET_LOADING_COMPANIES, companiesLoaded });
   }

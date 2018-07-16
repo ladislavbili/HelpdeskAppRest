@@ -1,13 +1,14 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Input, Item, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, View, CheckBox, Label } from 'native-base';
+import { Input, Item, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, View, CheckBox, Picker,Label } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import {Modal} from 'react-native';
-
-
 import I18n from '../../translations/';
 import {addUser} from '../../redux/actions';
+import {isEmail} from '../../helperFunctions';
+
+const languages = [{ id: 'en', name: 'English' }, { id: 'sk', name: 'Slovensky' }];
 
 /**
  * Component that allows you to add a new user
@@ -17,44 +18,48 @@ class UserAdd extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      username:'',
       name:'',
       surname:'',
-      email:'',
-      company:this.props.companies[0],
       password:'',
-      signature:'',
-      selectingCompany:false,
-      filterWord:'',
-      user_role:this.props.user_roles[0],
-      selectingUserRole:false,
-      filterWordUserRole:'',
-      signatureHeight:0,
-      username:'',
+      userRole:this.props.userRoles.filter(item => item.order >= this.props.user.user_role.order)[0],
+      company:this.props.companies[0],
+      language:'sk',
       func:'',
       mobile:'',
       tel:'',
+      selectingCompany:false,
+      filterWord:'',
+      selectingUserRole:false,
+      filterWordUserRole:'',
+      image:null,
     };
+    this.checkValues.bind(this);
   }
   /**
    * Gathers all of the data from the current state and sends them via actions to the redux. Then it returns user back to previous component
    */
   submit(){
-    let user = {
-      email:this.state.email,
-      username:this.state.username,
-      password:this.state.password
-    }
-    let detailData={
-      surname:this.state.surname,
-      name:this.state.name,
-      signature:this.state.signature,
-      function:this.state.func,
-      mobile:this.state.mobile,
-      tel:this.state.tel
-    }
-    this.props.addUser( user, detailData,this.state.company.id,this.state.user_role.id,this.props.token);
-    Actions.pop();
+    let body = {
+			username: this.state.username,
+			password: this.state.password,
+			email: this.state.username,
+      language: this.state.language,
+			detail_data: {
+				name: this.state.name,
+				surname: this.state.surname,
+				function: this.state.func,
+				mobile: this.state.mobile,
+				tel: this.state.tel
+			},
+		};
+		this.props.addUser(body, this.state.company.id, this.state.userRole.id, this.state.image, Actions.pop, this.props.token);
   }
+
+  checkValues(){
+    return isEmail(this.state.username) && this.state.password.length > 7;
+  }
+
   render() {
     return (
       <Container>
@@ -69,9 +74,7 @@ class UserAdd extends Component {
           </Body>
           <Right>
             {
-              (this.state.password.length>7) &&
-              this.state.username.length!=0 &&
-              this.state.email.length!=0 &&
+              this.checkValues() &&
               <Button transparent onPress={this.submit.bind(this)}>
                 <Icon active style={{ color: 'white', padding:10 }} name="ios-checkmark-circle-outline" />
               </Button>
@@ -79,6 +82,21 @@ class UserAdd extends Component {
           </Right>
         </Header>
         <Content style={{ padding: 15 }}>
+
+          <Text note>{I18n.t('email')+'/'+I18n.t('username')}</Text>
+          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+            <Input
+              placeholder={I18n.t('enterEmail')}
+              value={this.state.username}
+              onChangeText={(value)=>this.setState({username:value})}
+              />
+              {
+    						!isEmail(this.state.username) && <Text note style={{color:'red'}}>You must have an valid e-mail/username</Text>
+              }
+              {
+    						this.props.nameError && <Text note style={{color:'red'}}>This e-mail is already in use!</Text>
+              }
+          </View>
 
           <Text note>{I18n.t('firstName')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
@@ -98,20 +116,6 @@ class UserAdd extends Component {
               />
           </View>
 
-
-          <Text note>{I18n.t('email')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Input
-              placeholder={I18n.t('enterEmail')}
-              value={this.state.email}
-              onChangeText={(value)=>this.setState({email:value})}
-              />
-            {
-              this.state.email.length==0 && <Text note style={{color:'red'}}>You must have an e-mail</Text>
-          }
-
-        </View>
-
         <Text note>{I18n.t('password')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
@@ -125,6 +129,15 @@ class UserAdd extends Component {
         }
       </View>
 
+      <Text note>{I18n.t('userRole')}</Text>
+      <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+        <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingUserRole:true})}>
+          <Left>
+            <Text style={{textAlign:'left',color:'black'}}>{this.state.userRole.title}</Text>
+          </Left>
+        </Button>
+      </View>
+
       <Text note>{I18n.t('company')}</Text>
       <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
         <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingCompany:true})}>
@@ -134,27 +147,17 @@ class UserAdd extends Component {
         </Button>
       </View>
 
-      <Text note>{I18n.t('userRole')}</Text>
+      <Text note>Select users language</Text>
       <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-        <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingUserRole:true})}>
-          <Left>
-            <Text style={{textAlign:'left',color:'black'}}>{this.state.user_role.title}</Text>
-          </Left>
-        </Button>
+        <Picker
+          supportedOrientations={['portrait', 'landscape']}
+          selectedValue={this.state.language}
+          onValueChange={(value)=>this.setState({language:value})}>
+          {languages.map(
+            (lang)=> <Item label={lang.name} key={lang.id} value={lang.id} />
+        )}
+        </Picker>
       </View>
-
-      <Text note>{I18n.t('username')}</Text>
-      <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-        <Input
-          placeholder={I18n.t('enterNewUsername')}
-          value={this.state.username}
-          onChangeText={(value)=>this.setState({username:value})}
-          />
-        {
-          this.state.username.length==0 && <Text note style={{color:'red'}}>{I18n.t('usernameError')}</Text>
-      }
-
-    </View>
 
     <Text note>{I18n.t('function')}</Text>
     <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
@@ -182,19 +185,6 @@ class UserAdd extends Component {
         value={this.state.tel}
         onChangeText={(value)=>this.setState({tel:value})}
         keyboardType="numeric"
-        />
-    </View>
-
-    <Text note>{I18n.t('signature')}</Text>
-    <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-      <Input
-        style={{height:Math.max(35, this.state.signatureHeight)}}
-        onContentSizeChange={(event) => this.setState({ signatureHeight: event.nativeEvent.contentSize.height })}
-        multiline={true}
-        placeholder={I18n.t('enterSignature')}
-        value={this.state.signature}
-        onChangeText={(value)=>this.setState({signature:value})}
-
         />
     </View>
 
@@ -257,8 +247,10 @@ class UserAdd extends Component {
 
           <List>
             {
-              this.props.user_roles.map((role) =>
-              role.title.toLowerCase().includes(this.state.filterWordUserRole.toLowerCase()) && <ListItem button key={role.id} onPress={()=>this.setState({user_role:role,selectingUserRole:false})} >
+              this.props.userRoles
+								.filter(item => item.order >= this.props.user.user_role.order)
+                .map((role) =>
+              role.title.toLowerCase().includes(this.state.filterWordUserRole.toLowerCase()) && <ListItem button key={role.id} onPress={()=>this.setState({userRole:role,selectingUserRole:false})} >
               <Body>
                 <Text>{role.title}</Text>
               </Body>
@@ -278,11 +270,11 @@ class UserAdd extends Component {
 }
 
 //creates function that maps actions (functions) to the redux store
-const mapStateToProps = ({ companyR, userR,login }) => {
-  const { user_roles} = userR;
-  const { companies } = companyR;
-  const { token } = login;
-  return { companies, token, user_roles};
+const mapStateToProps = ({ companyReducer, userReducer,loginReducer }) => {
+  const { companies } = companyReducer;
+  const { userRoles, nameError} = userReducer;
+  const { token,user } = loginReducer;
+  return { companies, userRoles, nameError, token, user};
 };
 
 //exports created Component connected to the redux store and redux actions

@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
-import {getCompanies, startCompaniesLoading } from '../../redux/actions';
+import {getCompanies, setCompaniesLoading } from '../../redux/actions';
 import CompanyList from './companyList';
 
 class CompaniesListLoader extends Component {
   constructor(props){
     super(props);
-    this.props.startCompaniesLoading();
+    this.props.setCompaniesLoading(false);
     this.props.getCompanies(this.props.updateDate,this.props.token);
   }
 
@@ -28,4 +28,4 @@ const mapStateToProps = ({companyReducer, loginReducer }) => {
   return {companiesLoaded,updateDate,token};
 };
 
-export default connect(mapStateToProps, {getCompanies, startCompaniesLoading})(CompaniesListLoader);
+export default connect(mapStateToProps, {getCompanies, setCompaniesLoading})(CompaniesListLoader);
