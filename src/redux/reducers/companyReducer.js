@@ -1,4 +1,5 @@
-import { SET_LOADING_COMPANIES,SET_COMPANIES,EDIT_COMPANY_LIST, SET_COMPANY, ADD_COMPANY, SET_USER_ATTRIBUTES, SET_TASK_ATTRIBUTES, SET_SEARCH_ATTRIBUTES, START_LOADING_COMPANY } from '../types';
+import { SET_LOADING_COMPANIES,SET_COMPANIES,ADD_COMPANY,SET_LOADING_COMPANY,SET_COMPANY,EDIT_COMPANY,
+  EDIT_COMPANY_LIST,   SET_USER_ATTRIBUTES, SET_TASK_ATTRIBUTES, SET_SEARCH_ATTRIBUTES} from '../types';
 
 const initialState = {
   companies:[],
@@ -38,48 +39,35 @@ export default function reducer (state = initialState, action) {
       });
       return { ...state, companies:newCompanies, updateDate:action.updateDate };
     }
-    case EDIT_COMPANY_LIST:{
-      let newCompanies= [...state.companies];
-      newCompanies.splice(newCompanies.findIndex((company)=>company.id==action.payload.company.id),1,action.payload.company);
+
+    case ADD_COMPANY:{
       return {
         ...state,
-        companies:newCompanies
+        companies:[action.company,...state.companies]
       };
     }
+    case SET_LOADING_COMPANY:
+    return {
+      ...state,
+      companyLoaded: action.companyLoaded,
+    };
     case SET_COMPANY:{
       return {
         ...state,
         company:action.company,
-        loadingCompany:false
+        companyLoaded:true
       };
     }
-    case START_LOADING_COMPANY:
-    return {
-      ...state,
-      loadingCompany: true,
-    };
-    case ADD_COMPANY:{
-      return {
-        ...state,
-        companies:[action.payload.company,...state.companies]
-      };
-    }
-    case SET_USER_ATTRIBUTES:{
-      return {
-        ...state,
-        companies:action.payload.companies
-      };
-    }
-    case SET_TASK_ATTRIBUTES:
-    return {
-      ...state,
-      companies:action.payload.companies
-    };
-    case SET_SEARCH_ATTRIBUTES:{
-      return {
-        ...state,
-        companies:action.payload.companies
-      };
+    case EDIT_COMPANY:{
+      //finds location of the current company and replaces it with newer version
+      let newCompanies=[...state.companies];
+      if(action.company.is_active){
+        newCompanies[newCompanies.findIndex((company)=>company.id==action.company.id)]=action.company;
+      }
+      else{
+        newCompanies.splice(newCompanies.findIndex((company)=>company.id==action.company.id),1);
+      }
+      return { ...state, companies:newCompanies };
     }
     default:
     return state;

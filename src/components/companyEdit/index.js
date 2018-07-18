@@ -1,38 +1,33 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { connect } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
+import {getCompany, setCompanyLoading } from '../../redux/actions';
+import CompanyEdit from './companyEdit';
 
-import CompanyEdit from './company';
-import {getCompany} from '../../redux/actions';
-
-/**
- * Loads all of the required data to display edditing of the company
- * @extends Component
- */
 class CompanyEditLoader extends Component {
-  componentWillMount(){
-    this.props.getCompany(this.props.id, this.props.token);
+  constructor(props){
+    super(props);
+    this.props.setCompanyLoading(false);
+    this.props.getCompany( this.props.id,this.props.token);
   }
-  render() {
-    if(this.props.loadingCompany){
-      return (
-        <ActivityIndicator
-          animating size={ 'large' }
-          color='#007299' />
-      )
+
+  render(){
+    if(!this.props.companyLoaded){
+      return <ActivityIndicator
+        animating size={ 'large' }
+        color='#007299' />
     }
-    return (
-      <CompanyEdit/>
-    );
+    return <CompanyEdit {...this.props}/>
   }
 }
 
-//creates function that maps actions (functions) to the redux store
-const mapStateToProps = ({ companyR, login }) => {
-  const { loadingCompany } = companyR;
-  const { token } = login;
-  return { loadingCompany, token };
+//all below is just redux storage
+
+const mapStateToProps = ({ companyReducer, loginReducer }) => {
+  const {companyLoaded} = companyReducer;
+  const {token} = loginReducer;
+  return {token,companyLoaded};
 };
 
-//exports created Component connected to the redux store and redux actions
-export default connect(mapStateToProps,{getCompany})(CompanyEditLoader);
+
+export default connect(mapStateToProps, {getCompany, setCompanyLoading })(CompanyEditLoader);

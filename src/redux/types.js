@@ -25,6 +25,11 @@ export const EDIT_USER = 'EDIT_USER';
 
 export const SET_COMPANIES = 'SET_COMPANIES';
 export const SET_LOADING_COMPANIES = 'SET_LOADING_COMPANIES';
+export const ADD_COMPANY = 'ADD_COMPANY';
+export const SET_LOADING_COMPANY = 'SET_LOADING_COMPANY';
+export const SET_COMPANY = 'SET_COMPANY';
+export const EDIT_COMPANY = 'EDIT_COMPANY';
+
 
 ///
 export const SET_TASKS = 'SET_TASKS';
@@ -57,12 +62,6 @@ export const SET_USER_ATTRIBUTES = 'SET_USER_ATTRIBUTES';
 export const ADD_USER = 'ADD_USER';
 export const EDIT_USER_LIST = 'EDIT_USER_LIST';
 export const SET_ASSIGNERS = 'SET_ASSIGNERS';
-
-
-export const START_LOADING_COMPANY = 'START_LOADING_COMPANY';
-export const ADD_COMPANY = 'ADD_COMPANY';
-export const SET_COMPANY = 'SET_COMPANY';
-export const EDIT_COMPANY_LIST = 'EDIT_COMPANY_LIST';
 
 
 export const START_LOADING_SEARCH = 'START_LOADING_SEARCH';

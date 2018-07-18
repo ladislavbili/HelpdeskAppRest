@@ -7,23 +7,44 @@ import {editCompany} from '../../redux/actions';
 import {processInteger} from '../../helperFunctions';
 
 /**
- * Allows user to edit an existing company
- * @extends Component
- */
+* Allows user to add a new company
+* @extends Component
+*/
 class CompanyEdit extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      title:this.props.company.title,
-      ico:this.props.company.ico,
-      dic:this.props.company.dic,
-      ic_dph:this.props.company.ic_dph,
-      street:this.props.company.street,
-      city:this.props.company.city,
-      zip:this.props.company.zip,
-      country:this.props.company.country
+      is_active: this.props.company.is_active,
+      title: this.props.company.title ? this.props.company.title : "",
+      ico: this.props.company.ico ? this.props.company.ico : "",
+      dic: this.props.company.dic ? this.props.company.dic : "",
+      ic_dph: this.props.company.ic_dph ? this.props.company.ic_dph : "",
+      street: this.props.company.street ? this.props.company.street : "",
+      city: this.props.company.city ? this.props.company.city : "",
+      zip: this.props.company.zip ? this.props.company.zip : "",
+      country: this.props.company.country ? this.props.company.country : "",
     };
+    this.submit.bind(this);
+  }
+
+  /**
+   * Gathers all of the data from the current state and sends them via actions to the redux. Then it returns user back to previous component
+   */
+  submit(){
+    let company={
+      title: this.state.title,
+      city: this.state.city === "" ? "null" : this.state.city,
+      country: this.state.country === "" ? "null" : this.state.country,
+      dic: this.state.dic === "" ? "null" : this.state.dic,
+      ic_dph: this.state.ic_dph === "" ? "null" : this.state.ic_dph,
+      ico: this.state.ico === "" ? "null" : this.state.ico,
+      street: this.state.street === "" ? "null" : this.state.street,
+      zip: this.state.zip === "" ? "null" : this.state.zip
+    };
+
+    this.props.editCompany(company,this.state.is_active,this.props.company.id,this.props.token);
+    Actions.pop();
   }
 
   /**
@@ -33,24 +54,6 @@ class CompanyEdit extends Component {
    */
   checkIfNumber(value){
     return /^\d*$/.test(value);
-  }
-
-  /**
-   * Gathers all of the data from the current state and sends them via actions to the redux. Then it returns user back to previous component
-   */
-  submit(){
-    let company={
-      title:this.state.title,
-      ico:this.state.ico,
-      dic:this.state.dic,
-      ic_dph:this.state.ic_dph,
-      street:this.state.street,
-      city:this.state.city,
-      zip:this.state.zip,
-      country:this.state.country
-    };
-    this.props.editCompany(company,this.props.token,this.props.company.id);
-    Actions.pop();
   }
 
   render() {
@@ -63,7 +66,7 @@ class CompanyEdit extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{I18n.t('editCompany')}</Title>
+            <Title>{I18n.t('addCompany')}</Title>
           </Body>
           <Right>
             {this.state.title.length!=0 &&
@@ -85,7 +88,35 @@ class CompanyEdit extends Component {
             {
               this.state.title.length==0 && <Text note style={{color:'red'}}>You must set name of the company</Text>
           }
+        </View>
 
+        <Text note>{I18n.t('ico')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Input
+            keyboardType='numeric'
+            placeholder={I18n.t('enterIco')}
+            value={this.state.ico}
+            onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ico:(result?value:this.state.ico)})} }
+            />
+        </View>
+
+        <Text note>{I18n.t('dic')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Input
+            placeholder={I18n.t('enterDic')}
+            value={this.state.dic}
+            onChangeText={(value)=>this.setState({dic:value})}
+            />
+        </View>
+
+        <Text note>{I18n.t('icDph')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Input
+            keyboardType='numeric'
+            placeholder={I18n.t('enterIcDph')}
+            value={this.state.ic_dph}
+            onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ic_dph:(result?value:this.state.ic_dph)})}}
+            />
         </View>
 
         <Text note>{I18n.t('street')}</Text>
@@ -106,44 +137,6 @@ class CompanyEdit extends Component {
             />
         </View>
 
-        <Text note>{I18n.t('country')}</Text>
-        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-          <Input
-            placeholder={I18n.t('enterCountry')}
-            value={this.state.country}
-            onChangeText={(value)=>this.setState({country:value})}
-            />
-        </View>
-
-        <Text note>{I18n.t('ico')}</Text>
-        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-          <Input
-            keyboardType='numeric'
-            placeholder={I18n.t('enterIco')}
-            value={this.state.ico}
-            onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ico:(result?value:this.state.ico)})} }
-            />
-        </View>
-
-        <Text note>{I18n.t('icDph')}</Text>
-        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-          <Input
-            keyboardType='numeric'
-            placeholder={I18n.t('enterIcDph')}
-            value={this.state.ic_dph}
-            onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ic_dph:(result?value:this.state.ic_dph)})}}
-            />
-        </View>
-
-        <Text note>{I18n.t('dic')}</Text>
-        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-          <Input
-            placeholder={I18n.t('enterDic')}
-            value={this.state.dic}
-            onChangeText={(value)=>this.setState({dic:value})}
-            />
-        </View>
-
         <Text note>{I18n.t('zipCode')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
@@ -154,6 +147,16 @@ class CompanyEdit extends Component {
             />
         </View>
 
+        <Text note>{I18n.t('country')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Input
+            placeholder={I18n.t('enterCountry')}
+            value={this.state.country}
+            onChangeText={(value)=>this.setState({country:value})}
+            />
+        </View>
+
+
       </Content>
     </Container>
   );
@@ -161,10 +164,10 @@ class CompanyEdit extends Component {
 }
 
 //creates function that maps actions (functions) to the redux store
-const mapStateToProps = ({ companyR,login }) => {
-  const { token } = login;
-  const {company} = companyR;
-  return {company, token};
+const mapStateToProps = ({loginReducer, companyReducer}) => {
+  const {token} = loginReducer;
+  const {company} = companyReducer;
+  return {token, company};
 };
 
 //exports created Component connected to the redux store and redux actions

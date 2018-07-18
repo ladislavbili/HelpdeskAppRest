@@ -61,15 +61,13 @@ class SideBar extends Component {
                     <Icon active name="ios-folder-outline" style={{ color: '#777', fontSize: 26, width: 30 }} />
                     <Text style={styles.text}>{data.title}</Text>
                   </Left>
-                  {(data.numberOfTasks) &&
                     <Right style={{ flex: 1 }}>
                       <Badge
                         style={{ borderRadius: 3, height: 25, backgroundColor: '#477EEA' }}
                         >
-                        <Text style={styles.badgeText}>{data.numberOfTasks.toString()}</Text>
+                        <Text style={styles.badgeText}>{data.numberOfTasks?data.numberOfTasks.toString():'0'}</Text>
                       </Badge>
                     </Right>
-                  }
                 </ListItem>
               }
               />

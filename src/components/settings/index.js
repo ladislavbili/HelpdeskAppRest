@@ -69,7 +69,7 @@ class Settings extends Component {
             <Text style={{ color: 'white' }} >{I18n.t('logout')}</Text>
           </Button>
         </Content>
-        { this.props.ACL.includes('user_settings') || this.props.ACL.includes('company_settings') &&
+        { (this.props.ACL.includes('user_settings') || this.props.ACL.includes('company_settings')) &&
         <Footer>
           { this.props.ACL.includes('user_settings') &&
             <FooterTab>

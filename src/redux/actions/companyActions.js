@@ -1,4 +1,4 @@
-import { EDIT_COMPANY_LIST, SET_LOADING_COMPANIES, ADD_COMPANY, SET_COMPANY, SET_COMPANIES, START_LOADING_COMPANY } from '../types';
+import { EDIT_COMPANY_LIST, SET_LOADING_COMPANIES, SET_COMPANIES, ADD_COMPANY, SET_LOADING_COMPANY, SET_COMPANY, EDIT_COMPANY } from '../types';
 import { COMPANIES_LIST } from '../urls';
 import {processRESTinput} from '../../helperFunctions';
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
@@ -31,6 +31,7 @@ export const setCompaniesLoading = (companiesLoaded) => {
          return;
        }
        response.json().then((data) => {
+         data.data.map((item)=>console.log(data));
          dispatch({type: SET_COMPANIES, companies:data.data,updateDate:data.date.toString()});
          dispatch({ type: SET_LOADING_COMPANIES, companiesLoaded:true });
        });
@@ -40,83 +41,109 @@ export const setCompaniesLoading = (companiesLoaded) => {
    });
  }
  }
-/**
- * Saves editted company
- * @param  {Company} company Object containing all new data about the company
- * @param  {string} token   Token for the REST API
- * @param  {int} id      ID of the company that is being editted
- */
- export const editCompany = (company,token,id) => {
+
+ /**
+  * Adds new company
+  * @param {object} body  All parameters in an object of the new company
+  * @param {string} token universal token for API comunication
+  */
+ export const addCompany = (body,token) => {
    return (dispatch) => {
-     fetch(COMPANIES_LIST + '/' + id, {
-       headers: {
-         'Accept': 'application/json',
-         'Content-Type': 'application/x-www-form-urlencoded',
-         'Authorization': 'Bearer ' + token
-       },
-       method: 'PATCH',
-       body:processRESTinput(company),
-     })
-     .then((response)=>response.json().then((response)=>{
-       dispatch({type: EDIT_COMPANY_LIST, payload:{company:Object.assign({},company,{id})}});
-     }))
+       fetch(COMPANIES_LIST,{
+         headers: {
+           'Content-Type': 'application/json',
+           'Authorization': 'Bearer ' + token
+         },
+         method: 'POST',
+         body:JSON.stringify(body),
+       })
+     .then((response)=>{
+       if(!response.ok){
+         return;
+       }
+     response.json().then((response)=>{
+       dispatch({type: ADD_COMPANY, company:response.data});
+     })})
      .catch(function (error) {
        console.log(error);
      });
+
    };
  };
 
-/**
- * Adds completely new Company
- * @param {Company } newCompany All data about the new company
- * @param {string} token      Token for the REST API
- */
- export const addCompany = (newCompany,token) => {
+ /**
+  * Starts an indicator that the companies are loading
+  */
+ export const setCompanyLoading = (companyLoaded) => {
    return (dispatch) => {
-     fetch(COMPANIES_LIST, {
-       headers: {
-         'Accept': 'application/json',
-         'Content-Type': 'application/x-www-form-urlencoded',
-         'Authorization': 'Bearer ' + token
-       },
-       method: 'POST',
-       body:processRESTinput(newCompany),
-     })
-     .then((response1)=>response1.json().then((response2)=>{
-       dispatch({type: ADD_COMPANY, payload:{company:Object.assign(newCompany,{id:response2.data.id})}});
-     }))
-     .catch(function (error) {
-       console.log(error);
-     });
+     dispatch({type: SET_LOADING_COMPANY, companyLoaded });
    };
  };
 
-/**
- * Starts an indicator that the companies are loading
- */
-export const startLoadingCompany = () => {
-  return (dispatch) => {
-    dispatch({type: START_LOADING_COMPANY });
-  };
-};
-
-/**
- * Get's all the information about the specific company
- * @param  {int} id    Company's ID
- * @param  {string} token Token for the REST API
- */
+ /**
+  * Gets one company that was selected
+  * @param  {string} token universal token for API comunication
+  * @param  {int} id    interger, that is ID of the company that we want to load
+  */
  export const getCompany = (id,token) => {
    return (dispatch) => {
-     fetch(COMPANIES_LIST+'/'+id, {
-       method: 'GET',
-       headers: {
-         'Authorization': 'Bearer ' + token
-       }
-     }).then((response)=>response.json().then((response)=>{
-       dispatch({type: SET_COMPANY, company:response.data});
-     }))
-     .catch(function (error) {
+       fetch(COMPANIES_LIST+'/'+id, {
+         method: 'get',
+         headers: {
+           'Authorization': 'Bearer ' + token,
+           'Content-Type': 'application/json'
+         }
+       }).then((response) =>{
+         if(!response.ok){
+           return;
+         }
+       response.json().then((data) => {
+         dispatch({type: SET_COMPANY, company:data.data});
+       });
+     }
+   ).catch(function (error) {
        console.log(error);
-     });
-   };
- };
+   });
+ }
+ }
+
+ /**
+  * Edits selected company
+  * @param  {object}  body     data about company except for isActive
+  * @param  {Boolean} isActive is active company parameter
+  * @param  {int}  id       id of the company
+  * @param  {string}  token    universal token for API comunication
+  */
+  export const editCompany = (body,isActive,id,token) => {
+    return (dispatch) => {
+        Promise.all([
+          fetch(COMPANIES_LIST+'/'+id, {
+            method: 'put',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            },
+            body:JSON.stringify(body)
+          }),
+          fetch(COMPANIES_LIST+'/'+id+(isActive?'/restore':'/inactivate'), {
+            method: 'put',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            }
+          })]).then(([response1,response2])=>{
+            if(!response1.ok){
+              return;
+            }
+            if(!response2.ok){
+              return;
+            }
+            Promise.all([response1.json(),response2.json()]).then(([response1,response2])=>{
+            dispatch({type: EDIT_COMPANY, company:{...response1.data, is_active:isActive}});
+          })})
+          .catch(function (error) {
+       console.log(error);
+        });
+
+    };
+  };

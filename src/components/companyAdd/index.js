@@ -31,14 +31,14 @@ class CompanyAdd extends Component {
    */
   submit(){
     let company={
-      title:this.state.title,
-      ico:this.state.ico,
-      dic:this.state.dic,
-      ic_dph:this.state.ic_dph,
-      street:this.state.street,
-      city:this.state.city,
-      zip:this.state.zip,
-      country:this.state.country
+      title: this.state.title,
+      city: this.state.city === "" ? "null" : this.state.city,
+      country: this.state.country === "" ? "null" : this.state.country,
+      dic: this.state.dic === "" ? "null" : this.state.dic,
+      ic_dph: this.state.ic_dph === "" ? "null" : this.state.ic_dph,
+      ico: this.state.ico === "" ? "null" : this.state.ico,
+      street: this.state.street === "" ? "null" : this.state.street,
+      zip: this.state.zip === "" ? "null" : this.state.zip
     };
     this.props.addCompany(company,this.props.token);
     Actions.pop();
@@ -87,6 +87,35 @@ class CompanyAdd extends Component {
           }
         </View>
 
+        <Text note>{I18n.t('ico')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Input
+            keyboardType='numeric'
+            placeholder={I18n.t('enterIco')}
+            value={this.state.ico}
+            onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ico:(result?value:this.state.ico)})} }
+            />
+        </View>
+
+        <Text note>{I18n.t('dic')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Input
+            placeholder={I18n.t('enterDic')}
+            value={this.state.dic}
+            onChangeText={(value)=>this.setState({dic:value})}
+            />
+        </View>
+
+        <Text note>{I18n.t('icDph')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Input
+            keyboardType='numeric'
+            placeholder={I18n.t('enterIcDph')}
+            value={this.state.ic_dph}
+            onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ic_dph:(result?value:this.state.ic_dph)})}}
+            />
+        </View>
+
         <Text note>{I18n.t('street')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
@@ -105,44 +134,6 @@ class CompanyAdd extends Component {
             />
         </View>
 
-        <Text note>{I18n.t('country')}</Text>
-        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-          <Input
-            placeholder={I18n.t('enterCountry')}
-            value={this.state.country}
-            onChangeText={(value)=>this.setState({country:value})}
-            />
-        </View>
-
-        <Text note>{I18n.t('ico')}</Text>
-        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-          <Input
-            keyboardType='numeric'
-            placeholder={I18n.t('enterIco')}
-            value={this.state.ico}
-            onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ico:(result?value:this.state.ico)})} }
-            />
-        </View>
-
-        <Text note>{I18n.t('icDph')}</Text>
-        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-          <Input
-            keyboardType='numeric'
-            placeholder={I18n.t('enterIcDph')}
-            value={this.state.ic_dph}
-            onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ic_dph:(result?value:this.state.ic_dph)})}}
-            />
-        </View>
-
-        <Text note>{I18n.t('dic')}</Text>
-        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-          <Input
-            placeholder={I18n.t('enterDic')}
-            value={this.state.dic}
-            onChangeText={(value)=>this.setState({dic:value})}
-            />
-        </View>
-
         <Text note>{I18n.t('zipCode')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
@@ -153,6 +144,16 @@ class CompanyAdd extends Component {
             />
         </View>
 
+        <Text note>{I18n.t('country')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Input
+            placeholder={I18n.t('enterCountry')}
+            value={this.state.country}
+            onChangeText={(value)=>this.setState({country:value})}
+            />
+        </View>
+
+
       </Content>
     </Container>
   );
@@ -160,8 +161,8 @@ class CompanyAdd extends Component {
 }
 
 //creates function that maps actions (functions) to the redux store
-const mapStateToProps = ({login}) => {
-  return {token} = login;
+const mapStateToProps = ({loginReducer}) => {
+  return {token} = loginReducer;
 };
 
 //exports created Component connected to the redux store and redux actions

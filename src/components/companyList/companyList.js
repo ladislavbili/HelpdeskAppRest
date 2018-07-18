@@ -46,7 +46,7 @@ class CompanyList extends Component {
             dataArray={this.props.companies.filter((company)=>company.title.toLowerCase().includes(this.state.seached.toLowerCase()))}
             renderRow={(company)=>
               <ListItem
-                button onPress={()=>{this.props.startLoadingCompany();Actions.companyEdit({id:company.id});}}
+                button onPress={()=>Actions.companyEdit({id:company.id})}
                 >
                 <Body>
                   <Text>{company.title}</Text>
