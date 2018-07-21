@@ -41,7 +41,7 @@ class SideBar extends Component {
             this.state.showFilters &&
             <List
               dataArray={this.props.sidebar.filters} renderRow={data =>
-                <ListItem button noBorder onPress={() => {this.props.closeDrawer();}} >
+                <ListItem button noBorder onPress={() => {this.props.closeDrawer();Actions.taskList({filterID:data.id,listName:data.title})}} >
                   <Left>
                     <Icon active name="ios-color-filter-outline" style={{ color: '#777', fontSize: 26, width: 30 }} />
                     <Text style={styles.text}>{data.title}</Text>
@@ -56,7 +56,10 @@ class SideBar extends Component {
           {this.state.showProjects &&
             <List
               dataArray={this.props.sidebar.projects} renderRow={data =>
-                <ListItem button noBorder onPress={() => {this.props.closeDrawer();}} >
+                <ListItem button noBorder onPress={() => {
+                    this.props.closeDrawer();
+                    Actions.taskList({filter:{project:data.id},listName:data.title})
+                }} >
                   <Left>
                     <Icon active name="ios-folder-outline" style={{ color: '#777', fontSize: 26, width: 30 }} />
                     <Text style={styles.text}>{data.title}</Text>
@@ -78,7 +81,10 @@ class SideBar extends Component {
           {this.state.showArchived &&
             <List
               dataArray={this.props.sidebar.archived} renderRow={data =>
-                <ListItem button noBorder onPress={() => {this.props.closeDrawer();}} >
+                <ListItem button noBorder onPress={() => {
+                    this.props.closeDrawer();
+                    Actions.taskList({filter:{project:data.id},listName:data.title})
+                }} >
                   <Left>
                     <Icon active name="ios-folder-outline" style={{ color: '#777', fontSize: 26, width: 30 }} />
                     <Text style={styles.text}>{data.title}</Text>

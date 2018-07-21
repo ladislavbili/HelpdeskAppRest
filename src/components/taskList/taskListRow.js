@@ -14,7 +14,7 @@ import {formatDate} from '../../helperFunctions';
 class TaskListRow extends Component {
   render() {
     let project=this.props.task.project;
-    let assigned=this.props.task.taskHasAssignedUsers?this.props.task.taskHasAssignedUsers[0]:false;
+    let assigned=this.props.task.taskHasAssignedUsers?this.props.task.taskHasAssignedUsers[Object.keys(this.props.task.taskHasAssignedUsers)[0]]:false;
     let deadline=this.props.task.deadline?this.props.task.deadline:false;
     return (
       <ListItem button onPress={()=>{this.props.startLoading();Actions.taskEdit({id:this.props.task.id,projectID:this.props.task.project.id})}} >

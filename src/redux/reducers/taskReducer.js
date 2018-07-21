@@ -1,17 +1,21 @@
-import { SET_UNITS, SET_LABELS, DELETE_TASK, EDIT_TASK_LIST, START_LOADING, START_LOADING_PROJECTS, SET_SEARCH_ATTRIBUTES,ADD_NEW_TASK,
-  SET_TASKS, SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_TASK, SET_TASK_ATTRIBUTES, SET_FILTERS,SET_LAST_TASK, START_LOADING_SEARCH,ADD_TASKS } from '../types';
+import { SET_TASKS,SET_LOADING_TASKS,SET_OPENED_ID,
+  SET_UNITS, SET_LABELS, DELETE_TASK, EDIT_TASK_LIST, START_LOADING, START_LOADING_PROJECTS, SET_SEARCH_ATTRIBUTES,ADD_NEW_TASK,
+   SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_TASK, SET_TASK_ATTRIBUTES, SET_FILTERS,SET_LAST_TASK, START_LOADING_SEARCH,ADD_TASKS } from '../types';
 
   const initialState = {
-    statuses:[],
-    loadingData:false,
     tasks:[],
     nextTasks:false,
+    tasksLoaded:false,
+    openedID:null,
+
+    ///////
+    statuses:[],
+    loadingData:false,
     task:null,
     loadingSearch:false,
     labels:[],
     project:null,
     projects:[],
-    listName:null,
     loadingProjects:true,
     projectID:null,
     filters:[],
@@ -19,20 +23,39 @@ import { SET_UNITS, SET_LABELS, DELETE_TASK, EDIT_TASK_LIST, START_LOADING, STAR
 
   export default function taskReducer (state = initialState, action) {
     switch (action.type) {
+
+      case SET_LOADING_TASKS:
+      return {
+        ...state,
+        tasksLoaded: action.tasksLoaded,
+      };
+      case SET_TASKS:
+      return {
+        ...state,
+        tasks: action.tasks,
+        nextTasks: action.nextTasks,
+        tasksLoaded: true
+      };
+      case ADD_TASKS:{
+        if(action.url===state.nextTasks){
+          return {
+            ...state,
+            tasks: state.tasks.concat(action.tasks),
+            nextTasks: action.nextTasks,
+          };
+        }
+      }
+      case SET_OPENED_ID:
+      return {
+        ...state,
+        openedID: action.openedID,
+      };
+      //////
       case ADD_NEW_TASK:{
         return {
           ...state,
           tasks: [action.payload.task,...state.tasks],
         };
-      }
-      case ADD_TASKS:{
-        if(action.payload.url==state.nextTasks){
-          return {
-            ...state,
-            tasks: state.tasks.concat(action.payload.tasks),
-            nextTasks: action.payload.nextTasks,
-          };
-        }
       }
       case START_LOADING_SEARCH:
       return {
@@ -91,15 +114,7 @@ import { SET_UNITS, SET_LABELS, DELETE_TASK, EDIT_TASK_LIST, START_LOADING, STAR
         ...state,
         loadingData: true,
       };
-      case SET_TASKS:
-      return {
-        ...state,
-        tasks: action.payload.tasks,
-        nextTasks: action.payload.nextTasks,
-        listName: action.payload.listName,
-        loadingData:false,
-        projectID:action.payload.projectID,
-      };
+
       case SET_PROJECTS:
       return {
         ...state,

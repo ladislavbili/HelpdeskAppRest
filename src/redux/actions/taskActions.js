@@ -1,9 +1,44 @@
-import { SET_TASK_ATTRIBUTES, START_LOADING, SET_TASKS, SET_PROJECTS, EDIT_TASK_LIST, DELETE_TASK, START_LOADING_PROJECTS,
-  START_LOADING_SEARCH,SET_SEARCH_ATTRIBUTES, SET_FILTERS, SET_LAST_TASK, ADD_TASKS,ADD_NEW_TASK
+import { SET_TASKS, SET_LOADING_TASKS,ADD_TASKS,SET_OPENED_ID,
+  SET_TASK_ATTRIBUTES, START_LOADING, SET_PROJECTS, EDIT_TASK_LIST, DELETE_TASK, START_LOADING_PROJECTS,
+  START_LOADING_SEARCH,SET_SEARCH_ATTRIBUTES, SET_FILTERS, SET_LAST_TASK, ADD_NEW_TASK
 } from '../types';
 import { PROJECT_LIST,USERS_LIST, COMPANIES_LIST, STATUSES_LIST, TASK_LIST, TAG_LIST, FILTER_LIST, HOST_URL} from '../urls';
 import {processRESTinput} from '../../helperFunctions';
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
+
+/**
+ * Set's user loading to true
+ */
+export const setTasksLoading = (tasksLoaded) => {
+  return (dispatch) => {
+    dispatch({type: SET_LOADING_TASKS,tasksLoaded });
+  };
+};
+
+/**
+ * Gets all tasks that corresponds to the set filter
+ * @param  {string} token    Token for the REST API
+ * @param  {string} listName name that should be displayed above recieved list
+ * @param  {Object} filter   Object containing all of the filters
+ */
+export const getTasks = (filter,token) => {
+  return (dispatch) => {
+    fetch(TASK_LIST+'?'+processRESTinput(filter)+'&order=status=%3Easc', {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    }).then((response) =>{
+      response.json().then((data) => {
+        console.log(data._links);
+        dispatch({type: SET_TASKS, tasks:data.data,nextTasks:data._links.next?data._links.next+'&order=status=%3Easc':false});
+      });
+    }
+  ).catch(function (error) {
+    console.log(error);
+  });
+};
+}
 
 /**
   * Get's and adds more tasks to the task list
@@ -20,7 +55,7 @@ export const getMoreTasks = (url,token) => {
       }
     }).then((response) =>{
       response.json().then((data) => {
-        dispatch({type: ADD_TASKS, payload:{tasks:data.data,nextTasks:data._links.next,url}});
+        dispatch({type: ADD_TASKS, tasks:data.data,nextTasks:data._links.next?data._links.next+'&order=status=%3Easc':false,url});
       });
     }
   ).catch(function (error) {
@@ -28,6 +63,39 @@ export const getMoreTasks = (url,token) => {
   });
 };
 }
+
+/**
+ * Gets all tasks available with no pagination
+ * @param {string} token universal token for API comunication
+ */
+ export const getFilterTasks= (id,token) => {
+   return (dispatch) => {
+       fetch(TASK_LIST+'/filter/'+id+'?order=status=%3Easc', {
+         method: 'get',
+         headers: {
+           'Authorization': 'Bearer ' + token,
+           'Content-Type': 'application/json'
+         }
+       }).then((response) =>{
+         if(!response.ok){
+           return;
+         }
+       response.json().then((data) => {
+         dispatch({type: SET_TASKS, tasks:data.data,nextTasks:data._links.next?data._links.next+'&order=status=%3Easc':false});
+       });
+     }
+   ).catch(function (error) {
+     console.log(error);
+   });
+ }
+ }
+
+ export const setOpenedID = (openedID) => {
+   return (dispatch) => {
+     dispatch({type: SET_OPENED_ID,openedID });
+   };
+ };
+
 
 /**
   * Adds completely new task
@@ -208,30 +276,6 @@ export const getFilteredTasks = (token,listName,filterId) => {
     }).then((response) =>{
       response.json().then((data) => {
         dispatch({type: SET_TASKS, payload:{tasks:data.data,nextTasks:data._links.next,listName,projectID:null}});
-      });
-    }
-  ).catch(function (error) {
-    console.log(error);
-  });
-};
-}
-
-/**
- * Gets all tasks that corresponds to the set filter
- * @param  {string} token    Token for the REST API
- * @param  {string} listName name that should be displayed above recieved list
- * @param  {Object} filter   Object containing all of the filters
- */
-export const getTasks = (token,listName,filter,projectID) => {
-  return (dispatch) => {
-    fetch(TASK_LIST+'?'+processRESTinput(filter), {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((response) =>{
-      response.json().then((data) => {
-        dispatch({type: SET_TASKS, payload:{tasks:data.data,nextTasks:data._links.next,listName,projectID}});
       });
     }
   ).catch(function (error) {

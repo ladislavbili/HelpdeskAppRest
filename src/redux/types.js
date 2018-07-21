@@ -30,9 +30,12 @@ export const SET_LOADING_COMPANY = 'SET_LOADING_COMPANY';
 export const SET_COMPANY = 'SET_COMPANY';
 export const EDIT_COMPANY = 'EDIT_COMPANY';
 
+export const SET_TASKS = 'SET_TASKS';
+export const SET_LOADING_TASKS = 'SET_LOADING_TASKS';
+export const SET_OPENED_ID = 'SET_OPENED_ID';
+export const ADD_TASKS = 'ADD_TASKS';
 
 ///
-export const SET_TASKS = 'SET_TASKS';
 export const SET_PROJECTS = 'SET_PROJECTS';
 export const START_LOADING_PROJECTS = 'START_LOADING_PROJECTS';
 export const SET_UNITS = 'SET_UNITS';
@@ -42,7 +45,6 @@ export const EDIT_TASK_LIST = 'EDIT_TASK_LIST';
 export const DELETE_TASK = 'DELETE_TASK';
 export const SET_FILTERS = 'SET_FILTERS';
 export const SET_LAST_TASK = 'SET_LAST_TASK';
-export const ADD_TASKS = 'ADD_TASKS';
 export const ADD_NEW_TASK = 'ADD_NEW_TASK';
 
 
