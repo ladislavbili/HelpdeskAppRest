@@ -6,7 +6,7 @@ import { View, Body, Container, Content, Icon, Input, Item, Label, Text, Footer,
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
 import I18n from '../../translations';
-import {addTask,getTaskSolvers} from '../../redux/actions';
+import {editTask,getTaskSolvers,deleteFollower,addFollower} from '../../redux/actions';
 import {formatDate,processInteger} from '../../helperFunctions';
 import TaskTag from './tag';
 import TaskFollower from './follower';
@@ -20,38 +20,39 @@ const workTypes=['vzdialena podpora','servis IT','servis serverov','programovani
 class TabAtributes extends Component {
   constructor(props) {
     super(props);
+    let task = this.props.task;
     this.state = {
-      important:false,
-      title:'',
-      tag:[],
+      important:task.important,
+      title:task.title,
+      tag:this.props.tags.filter((item)=>task.tags.some((item2)=>item.id===item2.id)),
       tagOpen:false,
-      description:'',
+      description:task.description,
       descriptionHeight:100,
-      status:this.props.statuses[0],
+      status:this.props.statuses.find((item)=>item.id===task.status.id),
       statusOpen:false,
-      project:this.props.projects.length===0?'null':this.props.projects[0].id,
-      requestedBy:this.props.users[this.props.users.findIndex((user)=>user.id===this.props.user.id)],
+      project:task.project.id,
+      requestedBy:this.props.users[this.props.users.findIndex((user)=>user.id===task.requestedBy.id)],
       requestedByOpen:false,
       requestedByFilter:'',
-      company:this.props.companies.length===0?'null':this.props.companies[0],
+      company:this.props.companies.length===0?'null':this.props.companies.find((item)=>item.id===task.company.id),
       companyOpen:false,
       companyFilter:'',
-      assigned:{id:null,name:I18n.t('noUser')},
+      assigned:task.taskHasAssignedUsers.length===0?{id:null,name:I18n.t('noUser')}:this.props.users.find((item)=>item.id===Object.values(task.taskHasAssignedUsers)[0].user.id),
       assignedOpen:false,
       assignedFilter:'',
-      workType:'vzdialena podpora',
-      workTime:'0',
-      startedAt:null,
+      workType:task.work_type?task.work_type:workTypes[0],
+      workTime:task.work_time?task.work_time:'0',
+      startedAt:task.startedAt?task.startedAt*1000:null,
       startedAtOpen:false,
-      deadline:null,
+      deadline:task.deadline?task.deadline*1000:null,
       deadlineOpen:false,
-      followers:[],
+      followers:this.props.users.filter((item)=>task.followers.some((item2)=>item.id===item2.id)),
       followersFilter:'',
       followersOpen:false,
       submitError:false,
     }
     this.props.getTaskSolvers(this.state.project,this.props.token);
-    this.props.saveFunction(this.submitForm.bind(this));
+    this.props.saveFunction(this.submitForm.bind(this),this.props.task?this.props.task.canEdit:false);
   }
 
 /**
@@ -60,6 +61,7 @@ class TabAtributes extends Component {
  * @param {Tag} tag    Object containing all of the data about the tag
  */
   setTag(removing,tag){
+    this.props.inputChanged(true);
     if(removing){
       let index=this.state.tag.findIndex((item)=>item.id==tag.id);
       if(index==-1){
@@ -84,17 +86,19 @@ class TabAtributes extends Component {
    */
     setFollower(removing,follower){
       if(removing){
-        let index=this.state.followers.findIndex((item)=>item.id==follower.id);
-        if(index==-1){
+        let index=this.state.followers.findIndex((item)=>item.id===follower.id);
+        if(index===-1){
           return;
         }
+        this.props.deleteFollower(follower.id,this.props.task.id,this.props.token);
         let newFollowers=[...this.state.followers];
         newFollowers.splice(index,1);
         this.setState({followers:newFollowers});
       }
       else{
-        let index=this.state.followers.findIndex((item)=>item.id==follower.id);
-        if(index==-1){
+        let index=this.state.followers.findIndex((item)=>item.id===follower.id);
+        if(index===-1){
+          this.props.addFollower(follower.id,this.props.task.id,this.props.token);
           this.setState({followers:[...this.state.followers,follower]});
         }
       }
@@ -116,11 +120,11 @@ class TabAtributes extends Component {
 		//as a tags we send titles not ids
 		let tags = [];
 		this.state.tag.map(addTag => tags.push(this.props.tags.find(tag => tag.id === addTag.id).title));
-    let closedAt = (new Date()).getTime();
+    let closedAt = this.props.task.closedAt?this.props.task.closedAt*1000:(new Date()).getTime();
     if(this.props.statuses.find((item)=>item.id.toString()===this.state.status.id.toString()).title!=='Closed'){
       closedAt = 'null';
     }
-		this.props.addTask(
+		this.props.editTask(
 			{
 				title: this.state.title,
 				closedAt,
@@ -133,14 +137,14 @@ class TabAtributes extends Component {
 				tag: JSON.stringify(tags),
 				assigned: this.state.assigned.id !== null ? JSON.stringify([{ userId: parseInt(this.state.assigned.id) }]) : null
 			},
-			this.state.followers,
+      this.props.task.id,
 			this.state.project,
 			this.state.status.id,
 			this.state.requestedBy.id,
 			this.state.company.id,
 			this.props.token
 		);
-    Actions.pop();
+    this.props.inputChanged(false);
   }
 
   render() {
@@ -150,7 +154,7 @@ class TabAtributes extends Component {
         <Content style={{ padding: 15 }}>
 
           <Item inlineLabel style={{marginBottom:20, borderBottomWidth:0,marginTop:10,paddingBottom:5}} onPress={()=>this.setState({important:!this.state.important})}>
-            <CheckBox checked={this.state.important} color='#3F51B5' onPress={()=>this.setState({important:!this.state.important})}/>
+            <CheckBox checked={this.state.important} color='#3F51B5' onPress={()=>{    this.props.inputChanged(true);this.setState({important:!this.state.important})}}/>
             <Label style={{marginLeft:15}}>Important</Label>
           </Item>
 
@@ -159,7 +163,7 @@ class TabAtributes extends Component {
             <Input
               placeholder={I18n.t('enterTaskName')}
               value={ this.state.title }
-              onChangeText={ value => this.setState({title:value}) }
+              onChangeText={ value =>{ this.props.inputChanged(true);this.setState({title:value}) }}
               />
             {this.state.submitError && this.state.title==='' && <Text style={{color:'red'}}>{I18n.t('restrictionMustEnterTaskTitle')}</Text>}
           </View>
@@ -184,7 +188,7 @@ class TabAtributes extends Component {
             <Input
               style={{height:Math.max(35, this.state.descriptionHeight)}}
               multiline={true}
-              onChange={ event => this.setState({description:event.nativeEvent.text}) }
+              onChange={ event =>{this.props.inputChanged(true); this.setState({description:event.nativeEvent.text})} }
               onContentSizeChange={(event) => this.setState({ descriptionHeight: event.nativeEvent.contentSize.height })}
               value={ this.state.description }
               placeholder={I18n.t('enterTaskDescription')}
@@ -210,7 +214,7 @@ class TabAtributes extends Component {
               iosHeader={I18n.t('selectOne')}
               mode="dropdown"
               selectedValue={this.state.project}
-              onValueChange={(value)=>{this.setState({project : value,assigned:{id:null,name:I18n.t('noUser')}});this.props.getTaskSolvers(value,this.props.token);}}>
+              onValueChange={(value)=>{this.props.inputChanged(true);this.setState({project : value,assigned:{id:null,name:I18n.t('noUser')}});this.props.getTaskSolvers(value,this.props.token);}}>
               {
                 this.props.projects.map((project)=>
                 (<Item label={project.title?project.title:''} key={project.id} value={project.id} />)
@@ -263,7 +267,7 @@ class TabAtributes extends Component {
               iosHeader={I18n.t('selectOne')}
               mode="dropdown"
               selectedValue={this.state.workType}
-              onValueChange={(value)=>{this.setState({workType : value})}}>
+              onValueChange={(value)=>{this.props.inputChanged(true);this.setState({workType : value})}}>
               {
                 workTypes.map((work)=>
                 (<Item label={work} key={work} value={work} />)
@@ -278,7 +282,7 @@ class TabAtributes extends Component {
               value={this.state.work_time}
               keyboardType='numeric'
               placeholder={I18n.t('enterWorkHours')}
-              onChangeText={ value => {let result = processInteger(value);this.setState({work_time:(result?result:this.state.work_time)})} }
+              onChangeText={ value => {this.props.inputChanged(true);let result = processInteger(value);this.setState({work_time:(result?result:this.state.work_time)})} }
               />
           </View>
 
@@ -292,7 +296,7 @@ class TabAtributes extends Component {
             <DateTimePicker
               mode="datetime"
               isVisible={this.state.startedAtOpen}
-              onConfirm={(date)=>this.setState({startedAt:(new Date(date)).getTime(),startedAtOpen:false})}
+              onConfirm={(date)=>{this.props.inputChanged(true);this.setState({startedAt:(new Date(date)).getTime(),startedAtOpen:false})}}
               onCancel={()=>this.setState({startedAtOpen:false})}
               />
           </View>
@@ -307,7 +311,7 @@ class TabAtributes extends Component {
             <DateTimePicker
               mode="datetime"
               isVisible={this.state.deadlineOpen}
-              onConfirm={(date)=>this.setState({deadline:(new Date(date)).getTime(),deadlineOpen:false})}
+              onConfirm={(date)=>{this.props.inputChanged(true);this.setState({deadline:(new Date(date)).getTime(),deadlineOpen:false})}}
               onCancel={()=>this.setState({deadlineOpen:false})}
               />
           </View>
@@ -385,7 +389,8 @@ class TabAtributes extends Component {
                   <List>
                     {
                       this.props.companies.map((company) =>
-                      company.title.toLowerCase().includes(this.state.companyFilter.toLowerCase()) && <ListItem button key={company.id} onPress={()=>this.setState({company:company,companyOpen:false})} >
+                      company.title.toLowerCase().includes(this.state.companyFilter.toLowerCase()) &&
+                      <ListItem button key={company.id} onPress={()=>{this.props.inputChanged(true);this.setState({company:company,companyOpen:false})}} >
                       <Body>
                         <Text>{company.title}</Text>
                       </Body>
@@ -415,7 +420,8 @@ class TabAtributes extends Component {
               <ListItem>
                 <Item rounded>
                   <Icon name="ios-search" />
-                  <Input placeholder={I18n.t('search')} value={this.state.requestedByFilter} onChangeText={((value)=>this.setState({requestedByFilter:value}))} />
+                  <Input placeholder={I18n.t('search')} value={this.state.requestedByFilter}
+                    onChangeText={((value)=>{this.props.inputChanged(true);this.setState({requestedByFilter:value})})} />
                 </Item>
               </ListItem>
 
@@ -463,7 +469,7 @@ class TabAtributes extends Component {
                 {
                   (([{id:null,name:I18n.t('noUser')}]).concat(this.props.taskSolvers)).map((user) =>
                   ((user.name?user.name:'')+' '+(user.surname?user.surname:'')+' '+(user.name?user.name:'')+user.username).toLowerCase().includes(this.state.assignedFilter.toLowerCase()) &&
-                  <ListItem button key={user.id} onPress={()=>this.setState({assigned:user,assignedOpen:false})} >
+                  <ListItem button key={user.id} onPress={()=>{this.props.inputChanged(true);this.setState({assigned:user,assignedOpen:false})}} >
                     <Body>
                       {
                         (user.name||user.surname)?<Text>{user.name?user.name+' ':''}{user.surname?user.surname:''}</Text>:null
@@ -523,9 +529,9 @@ class TabAtributes extends Component {
 const mapStateToProps = ({ taskReducer, loginReducer, userReducer }) => {
   const {users} = userReducer;
   const {token, user} = loginReducer;
-  const { companies ,statuses, projects,tags, taskSolvers} = taskReducer;
-  return { users,user, token, companies,statuses, projects,tags, taskSolvers};
+  const { companies ,statuses, projects,tags, taskSolvers, task} = taskReducer;
+  return { users,user, token, companies,statuses, projects,tags, taskSolvers, task};
 };
 
 //exports created Component connected to the redux store and redux actions
-export default connect(mapStateToProps,{addTask,getTaskSolvers})(TabAtributes);
+export default connect(mapStateToProps,{editTask,getTaskSolvers, deleteFollower,addFollower})(TabAtributes);

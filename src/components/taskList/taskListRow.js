@@ -17,7 +17,7 @@ class TaskListRow extends Component {
     let assigned=this.props.task.taskHasAssignedUsers?this.props.task.taskHasAssignedUsers[Object.keys(this.props.task.taskHasAssignedUsers)[0]]:false;
     let deadline=this.props.task.deadline?this.props.task.deadline:false;
     return (
-      <ListItem button onPress={()=>{this.props.startLoading();Actions.taskEdit({id:this.props.task.id,projectID:this.props.task.project.id})}} >
+      <ListItem button onPress={()=>{Actions.taskEdit({id:this.props.task.id})}} >
         <Body>
           <Text>{this.props.task.title?this.props.task.title:''}</Text>
           <Text numberOfLines={1} note>

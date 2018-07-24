@@ -1,10 +1,7 @@
 import { SET_TASKS, SET_LOADING_TASKS,ADD_TASKS,SET_OPENED_ID, SET_TASK_STATUSES_LOADING,SET_TASK_STATUSES,SET_TASK_PROJECTS_LOADING,SET_TASK_PROJECTS,
-  SET_TASK_COMPANIES_LOADING,SET_TASK_COMPANIES,SET_TASK_UNITS_LOADING,SET_TASK_UNITS,SET_TASK_TAGS_LOADING,SET_TASK_TAGS,SET_TASK_SOLVERS,
-  //
-  SET_TASK_ATTRIBUTES, START_LOADING, SET_PROJECTS, EDIT_TASK_LIST, DELETE_TASK, START_LOADING_PROJECTS,
-  START_LOADING_SEARCH,SET_SEARCH_ATTRIBUTES, SET_FILTERS, SET_LAST_TASK, ADD_NEW_TASK
-} from '../types';
-import { PROJECTS_LIST,USERS_LIST, COMPANIES_LIST, STATUSES_LIST, TASK_LIST, TAG_LIST, FILTER_LIST, HOST_URL , UNITS_LIST, TAGS_LIST, PROJECT_URL} from '../urls';
+  SET_TASK_COMPANIES_LOADING,SET_TASK_COMPANIES,SET_TASK_UNITS_LOADING,SET_TASK_UNITS,SET_TASK_TAGS_LOADING,SET_TASK_TAGS,SET_TASK_SOLVERS,SET_TASK_LOADING,
+  SET_TASK,EDIT_TASK } from '../types';
+import { PROJECTS_LIST, COMPANIES_LIST, STATUSES_LIST, TASK_LIST, HOST_URL , UNITS_LIST, TAGS_LIST, PROJECT_URL} from '../urls';
 import {processRESTinput} from '../../helperFunctions';
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
 
@@ -325,311 +322,75 @@ export const addTask = (body,followers,projectID,statusID,requesterID,companyID,
     };
   };
 
-/**
-  * Delete's task with the input ID
-  * @param  {int} id    ID of the task that is supposed to be deleted
-  * @param  {string} token Token for the REST API
-*/
-export const deleteTask = (id,token) => {
-  return (dispatch) => {
-    fetch( TASK_LIST+ '/' + id, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    })
+  export const deleteFollower = (userID,taskID,token) => {
+    return (dispatch) => {
+      fetch(TASK_LIST+'/'+taskID+'/remove-follower/'+userID,{
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        method: 'PUT',
+      })
     .then((response)=>{
-      dispatch({type: DELETE_TASK, payload:{id}});
+      if(!response.ok){
+        return;
+      }
     })
     .catch(function (error) {
-      console.log(error);
+        console.log(error);
     });
+
+    }
   };
+
+export const setTaskLoading = (taskLoaded) => {
+  return (dispatch) => {
+    dispatch({ type: SET_TASK_LOADING, taskLoaded });
+  }
 };
 
 /**
- * Starts an indicator that the search component is loading
+ * Gets one task that was selected
+ * @param  {string} token universal token for API comunication
+ * @param  {int} id    interger, that is ID of the task that we want to load
  */
-export const startLoadingSearch = () => {
+export const getTask = (id,token) => {
   return (dispatch) => {
-    dispatch({type: START_LOADING_SEARCH });
-  };
-};
-
-/**
- * Loads all of the attributes required by the search component
- * @param  {string} token Token for the REST API
- */
-export const getSearchAttributes = (token) => {
-  return (dispatch) => {
-    Promise.all([
-      fetch(USERS_LIST+'?limit=999', {
-        method: 'GET',
+      fetch(TASK_LIST+'/'+id, {
+        method: 'get',
         headers: {
-          'Authorization': 'Bearer ' + token
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
         }
-      }),
-      fetch(COMPANIES_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
+      }).then((response) =>{
+        if(!response.ok){
+          return;
         }
-      }),
-      fetch(STATUSES_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      }),
-      fetch(PROJECTS_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      }),
-      fetch(TAG_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      })])
-      .then(([response1,response2,response3,response4,response5]) =>
-      {
-        Promise.all([response1.json(),response2.json(),response3.json(),response4.json(),response5.json()]).then(([users,companies,statuses,projects,labels]) => {
-          dispatch({type: SET_SEARCH_ATTRIBUTES,payload:{users:users.data,companies:companies.data,statuses:statuses.data,projects:projects.data,labels:labels.data}});
-        }).catch(function (error) {
-          console.log(error);
-        });
-      }
-    ).catch(function (error) {
-      console.log(error);
-    });
-  };
-};
-
-/**
- * Starts an indicator that the projects are loading
- */
-export const startLoadingProjects = () => {
-  return (dispatch) => {
-    dispatch({type: START_LOADING_PROJECTS });
-  };
-};
-
-/**
- * Get's all of the projects from the REST API, that are available
- * @param  {string} token Token for the REST API
- */
-
-export const getProjects = (token) => {
-  return (dispatch) => {
-    fetch(PROJECTS_LIST+'?limit=999', {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((response) =>{
       response.json().then((data) => {
-        dispatch({type: SET_PROJECTS, payload:{projects:data.data}});
+        dispatch({type: SET_TASK, task:data.data});
       });
     }
   ).catch(function (error) {
     console.log(error);
   });
-};
+}
 }
 
-/**
- * Get all fiters available to the user
- * @param  {string} token Token for the REST API
- */
-export const getFilters = (token) => {
+export const editTask = (data,taskID,projectID,statusID,requesterID,companyID,token) => {
   return (dispatch) => {
-    fetch(FILTER_LIST+'?limit=999', {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((response) =>{
-      response.json().then((data) => {
-        dispatch({type: SET_FILTERS, filters:data.data});
-      });
+    if(!taskID||!projectID||!statusID){
+      return;
     }
-  ).catch(function (error) {
-    console.log(error);
-  });
-};
-}
-
-/**
- * Gets first batch of the tasks from the REST API that corresponds to the fiter's ID
- * @param  {string} token    Token for the REST API
- * @param  {string} listName name, that should be displayed above recieved list
- * @param  {int} filterId ID of the filter that should be set
- */
-export const getFilteredTasks = (token,listName,filterId) => {
-  return (dispatch) => {
-    fetch(TASK_LIST+'/filter/'+filterId, {
-      method: 'GET',
+    fetch(TASK_LIST+'/'+taskID+'/project/'+projectID+'/status/'+statusID+'/requester/'+requesterID+'/company/'+companyID, {
+      method: 'put',
       headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }).then((response) =>{
-      response.json().then((data) => {
-        dispatch({type: SET_TASKS, payload:{tasks:data.data,nextTasks:data._links.next,listName,projectID:null}});
-      });
-    }
-  ).catch(function (error) {
-    console.log(error);
-  });
-};
-}
-
-/**
- * Gets task and all of it's attributes that are required for the task edit component to edit this task
- * @param  {int} id    Tasks ID
- * @param  {string} token Token for the REST API
- */
-export const getTaskAttributes = (id, token) => {
-  return (dispatch) => {
-    let taskURL = TASK_LIST+'/'+id;
-    Promise.all([
-      fetch(USERS_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      }),
-      fetch(COMPANIES_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      }),
-      fetch(STATUSES_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      }),
-      fetch(PROJECTS_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      }),
-      fetch(taskURL, {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      }),
-      fetch(TAG_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      })])
-      .then(([response1,response2,response3,response4,response5,response6]) =>
-      {
-        Promise.all([response1.json(),response2.json(),response3.json(),response4.json(),response5.json(),response6.json()]).then(([users,companies,statuses,projects,task,labels]) => {
-          dispatch({type: SET_TASK_ATTRIBUTES,payload:{users:users.data,companies:companies.data,statuses:statuses.data,projects:projects.data,task:task.data,labels:labels.data}});
-        }).catch(function (error) {
-          console.log(error);
-        });
-      }
-    ).catch(function (error) {
-      console.log(error);
-    });
-  };
-};
-
-/**
- * Gets all of the attributes that are required for the task to be created
- * @param  {sting} token Token for the REST API
- */
-export const getAttributes = (token) => {
-  return (dispatch) => {
-    Promise.all([
-      fetch(USERS_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      }),
-      fetch(COMPANIES_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      }),
-      fetch(STATUSES_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      }),
-      fetch(PROJECTS_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      }),
-      fetch(TAG_LIST+'?limit=999', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      })])
-      .then(([response1,response2,response3,response4,response5]) =>
-      {
-        Promise.all([response1.json(),response2.json(),response3.json(),response4.json(),response5.json()]).then(([users,companies,statuses,projects,labels]) => {
-          dispatch({type: SET_TASK_ATTRIBUTES,payload:{users:users.data,companies:companies.data,statuses:statuses.data,projects:projects.data,labels:labels.data,task:{}}});
-        }).catch(function (error) {
-          console.log(error);
-        });
-      }
-    ).catch(function (error) {
-      console.log(error);
-    });
-  };
-};
-
-/**
- * Starts an indicator that the tasks are loading
- */
-export const startLoading = () => {
-  return (dispatch) => {
-    dispatch({type: START_LOADING });
-  };
-};
-
-/**
- * Submitting of the editted task
- * @param  {Object} task  Object that contains all possible task attributes
- * @param  {int} id    ID of the modified task
- * @param  {string} token Token for the REST API
- */
-export const editTask = (task,id,token,stay) => {
-  return (dispatch) => {
-    fetch(TASK_LIST+'/quick-update/'+id, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ' + token
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
       },
-      method: 'PATCH',
-      body:processRESTinput(task),
-    })
-    .then((response) =>response.json().then((response)=>{
-      if(stay){
-        dispatch({type: EDIT_TASK_LIST, payload:{taskInList:response.data} });
-      }
-      else{
-        dispatch({type: DELETE_TASK, payload:{id} });
-      }
-    }))
-    .catch(function (error) {
+      body:JSON.stringify(data)
+    }).then((response)=>response.json().then((data)=>{
+      dispatch({ type: EDIT_TASK, task:data.data });
+    })).catch(function (error) {
       console.log(error);
     });
   };

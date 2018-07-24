@@ -45,7 +45,9 @@ export const SET_TASK_UNITS = 'SET_TASK_UNITS';
 export const SET_TASK_TAGS_LOADING = 'SET_TASK_TAGS_LOADING';
 export const SET_TASK_TAGS = 'SET_TASK_TAGS';
 export const SET_TASK_SOLVERS = 'SET_TASK_SOLVERS';
-
+export const SET_TASK_LOADING = 'SET_TASK_LOADING';
+export const SET_TASK = 'SET_TASK';
+export const EDIT_TASK = 'EDIT_TASK';
 
 ///
 export const SET_PROJECTS = 'SET_PROJECTS';

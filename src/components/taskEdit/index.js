@@ -4,17 +4,16 @@ import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { ActivityIndicator, Alert, BackHandler } from 'react-native';
 
-import TabAtributes from './tabAtributes';
+import TabAttributesLoader from './tabAttributesLoader';
 import TabComments from './tabComments';
 import TabItems from './tabItems';
 import I18n from '../../translations/';
-import {getTaskAttributes} from '../../redux/actions';
 
 /**
  * This component creates a main menu for the task editting
  * @extends Component
  */
-class TaskEdit extends Component {
+export default class TaskEdit extends Component {
   constructor(props){
     super(props);
     this.state={saveFunction:null, canSave:false, changed:false}
@@ -31,8 +30,8 @@ class TaskEdit extends Component {
 /**
  * Changes if the task needs to be saved
  */
-  inputChanged(){
-    this.setState({changed:true});
+  inputChanged(changed){
+    this.setState({changed});
   }
 
   /**
@@ -40,7 +39,6 @@ class TaskEdit extends Component {
    * sets the hardware back button to show message about leaving unsaved task
    */
    componentWillMount(){
-     this.props.getTaskAttributes(this.props.id, this.props.token);
      BackHandler.addEventListener('hardwareBackPress', () => {
        if(this.state.changed){
          this.leaveTask();
@@ -68,14 +66,6 @@ class TaskEdit extends Component {
 
 
   render() {
-    if(this.props.loadingData){
-      return (
-        <ActivityIndicator
-          animating size={ 'large' }
-          color='#007299' />
-      )
-    }
-
     return (
       <Container>
         <Header>
@@ -97,7 +87,7 @@ class TaskEdit extends Component {
         </Header>
         <Tabs>
           <Tab heading={I18n.t('attributes')}>
-            <TabAtributes id={this.props.id} projectID={this.props.projectID} saveFunction={this.setFunction.bind(this)} inputChanged={this.inputChanged.bind(this)} />
+            <TabAttributesLoader id={this.props.id} saveFunction={this.setFunction.bind(this)} inputChanged={this.inputChanged.bind(this)} />
           </Tab>
           <Tab heading={I18n.t('comments')}>
             <TabComments id={this.props.id} />
@@ -110,13 +100,3 @@ class TaskEdit extends Component {
     );
   }
 }
-
-//creates function that maps actions (functions) to the redux store
-const mapStateToProps = ({ taskR, login }) => {
-  const { loadingData } = taskR;
-  const { token } = login;
-  return { loadingData, token };
-};
-
-//exports created Component connected to the redux store and redux actions
-export default connect(mapStateToProps,{getTaskAttributes})(TaskEdit);
