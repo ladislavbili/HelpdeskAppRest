@@ -19,6 +19,6 @@ export default {
   filterByCompany : 'Filter by Company',
   selectFilterCompany : 'Select acceptable companies',
   filterLabel : 'Label filter',
-  filterByLabel : 'Filter by Label',
+  filterByLabel : 'Filter by Tag',
   selectFilterLabel : 'Select acceptable Labels',
   };

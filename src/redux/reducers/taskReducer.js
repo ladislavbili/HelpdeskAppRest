@@ -1,4 +1,7 @@
 import { SET_TASKS,SET_LOADING_TASKS,SET_OPENED_ID,
+  SET_TASK_STATUSES_LOADING, SET_TASK_STATUSES, SET_TASK_PROJECTS_LOADING, SET_TASK_PROJECTS, SET_TASK_COMPANIES_LOADING, SET_TASK_COMPANIES, SET_TASK_UNITS_LOADING,
+  SET_TASK_UNITS, SET_TASK_TAGS_LOADING, SET_TASK_TAGS,SET_TASK_SOLVERS,
+  //
   SET_UNITS, SET_LABELS, DELETE_TASK, EDIT_TASK_LIST, START_LOADING, START_LOADING_PROJECTS, SET_SEARCH_ATTRIBUTES,ADD_NEW_TASK,
    SET_PROJECTS, SET_COMPANIES, SET_STATUSES, SET_USERS, SET_TASK, SET_TASK_ATTRIBUTES, SET_FILTERS,SET_LAST_TASK, START_LOADING_SEARCH,ADD_TASKS } from '../types';
 
@@ -7,7 +10,19 @@ import { SET_TASKS,SET_LOADING_TASKS,SET_OPENED_ID,
     nextTasks:false,
     tasksLoaded:false,
     openedID:null,
-
+    statuses:[],
+    statusesLoaded:false,
+    statusesUpdateDate:null,
+    projects:[],
+    projectsLoaded:false,
+    companies:[],
+    companiesLoaded:false,
+    companiesUpdateDate:null,
+    units:[],
+    unitsLoaded:false,
+    tags:[],
+    tagsLoaded:false,
+    taskSolvers:[],
     ///////
     statuses:[],
     loadingData:false,
@@ -23,7 +38,6 @@ import { SET_TASKS,SET_LOADING_TASKS,SET_OPENED_ID,
 
   export default function taskReducer (state = initialState, action) {
     switch (action.type) {
-
       case SET_LOADING_TASKS:
       return {
         ...state,
@@ -50,6 +64,77 @@ import { SET_TASKS,SET_LOADING_TASKS,SET_OPENED_ID,
         ...state,
         openedID: action.openedID,
       };
+
+      case SET_TASK_STATUSES_LOADING:
+      return {
+        ...state,
+        statusesLoaded: action.statusesLoaded,
+      };
+
+      case SET_TASK_STATUSES:
+      return {
+        ...state,
+        statuses: action.statuses,
+        statusesUpdateDate:action.statusesUpdateDate,
+        statusesLoaded: true
+      };
+
+      case SET_TASK_PROJECTS_LOADING:
+      return {
+        ...state,
+        projectsLoaded: action.projectsLoaded,
+      };
+      case SET_TASK_PROJECTS:
+      return {
+        ...state,
+        projects: action.projects,
+        projectsLoaded: true
+      };
+
+      case SET_TASK_COMPANIES_LOADING:
+      return {
+        ...state,
+        companiesLoaded: action.companiesLoaded,
+      };
+      case SET_TASK_COMPANIES:
+      return {
+        ...state,
+        companies: action.companies,
+        companiesUpdateDate:action.companiesUpdateDate,
+        companiesLoaded: true
+      };
+
+      case SET_TASK_UNITS_LOADING:
+      return {
+        ...state,
+        unitsLoaded: action.unitsLoaded,
+      };
+      case SET_TASK_UNITS:
+      return {
+        ...state,
+        units: action.units,
+        unitsLoaded: true
+      };
+
+      case SET_TASK_TAGS_LOADING:
+      return {
+        ...state,
+        tagsLoaded: action.tagsLoaded,
+      };
+      case SET_TASK_TAGS:
+      return {
+        ...state,
+        tags: action.tags,
+        tagsLoaded: true
+      };
+      case SET_TASK_SOLVERS:
+      return {
+        ...state,
+        taskSolvers: action.taskSolvers,
+      };
+
+
+
       //////
       case ADD_NEW_TASK:{
         return {

@@ -19,6 +19,6 @@ export default {
   filterByCompany : 'Filter podľa firmy',
   selectFilterCompany : 'Vyberte akceptovateľné firmy',
   filterLabel : 'Filter značiek',
-  filterByLabel : 'Filter podľa značiek',
+  filterByLabel : 'Filter podľa tagov',
   selectFilterLabel : 'Vyberte akceptovateľné značky',
   };

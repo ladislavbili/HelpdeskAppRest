@@ -1,8 +1,10 @@
-import { SET_TASKS, SET_LOADING_TASKS,ADD_TASKS,SET_OPENED_ID,
+import { SET_TASKS, SET_LOADING_TASKS,ADD_TASKS,SET_OPENED_ID, SET_TASK_STATUSES_LOADING,SET_TASK_STATUSES,SET_TASK_PROJECTS_LOADING,SET_TASK_PROJECTS,
+  SET_TASK_COMPANIES_LOADING,SET_TASK_COMPANIES,SET_TASK_UNITS_LOADING,SET_TASK_UNITS,SET_TASK_TAGS_LOADING,SET_TASK_TAGS,SET_TASK_SOLVERS,
+  //
   SET_TASK_ATTRIBUTES, START_LOADING, SET_PROJECTS, EDIT_TASK_LIST, DELETE_TASK, START_LOADING_PROJECTS,
   START_LOADING_SEARCH,SET_SEARCH_ATTRIBUTES, SET_FILTERS, SET_LAST_TASK, ADD_NEW_TASK
 } from '../types';
-import { PROJECT_LIST,USERS_LIST, COMPANIES_LIST, STATUSES_LIST, TASK_LIST, TAG_LIST, FILTER_LIST, HOST_URL} from '../urls';
+import { PROJECTS_LIST,USERS_LIST, COMPANIES_LIST, STATUSES_LIST, TASK_LIST, TAG_LIST, FILTER_LIST, HOST_URL , UNITS_LIST, TAGS_LIST, PROJECT_URL} from '../urls';
 import {processRESTinput} from '../../helperFunctions';
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
 
@@ -30,7 +32,6 @@ export const getTasks = (filter,token) => {
       }
     }).then((response) =>{
       response.json().then((data) => {
-        console.log(data._links);
         dispatch({type: SET_TASKS, tasks:data.data,nextTasks:data._links.next?data._links.next+'&order=status=%3Easc':false});
       });
     }
@@ -97,32 +98,232 @@ export const getMoreTasks = (url,token) => {
  };
 
 
-/**
-  * Adds completely new task
-  * @param {Task} task  Object containing all of the new task information
-  * @param {string} token Token for the REST API
-*/
-export const addTask = (task,token,show) => {
+ export const setTaskStatusesLoading = (taskStatusesLoaded) => {
+   return (dispatch) => {
+     dispatch({ type: SET_TASK_STATUSES_LOADING, taskStatusesLoaded });
+   }
+ };
+ /**
+  * Gets all statuses available with no pagination
+  * @param {string} token universal token for API comunication
+  */
+ export const getTaskStatuses= (updateDate,token) => {
+   return (dispatch) => {
+       fetch(STATUSES_LIST+'/all'+(updateDate?'/'+updateDate:''), {
+         method: 'get',
+         headers: {
+           'Authorization': 'Bearer ' + token,
+           'Content-Type': 'application/json'
+         }
+       }).then((response) =>{
+         if(!response.ok){
+           return;
+         }
+       response.json().then((data) => {
+         dispatch({type: SET_TASK_STATUSES, statuses:data.data,statusesUpdateDate:data.date.toString()});
+       });
+     }
+   ).catch(function (error) {
+       console.log(error);
+   });
+ }
+ }
+
+ export const setTaskProjectsLoading = (taskProjectsLoaded) => {
+   return (dispatch) => {
+     dispatch({ type: SET_TASK_PROJECTS_LOADING, taskProjectsLoaded });
+   }
+ };
+ export const getTaskProjects= (token) => {
+   return (dispatch) => {
+       fetch(PROJECTS_LIST+'/create-tasks', {
+         method: 'get',
+         headers: {
+           'Authorization': 'Bearer ' + token,
+           'Content-Type': 'application/json'
+         }
+       }).then((response) =>{
+         if(!response.ok){
+           return;
+         }
+       response.json().then((data) => {
+         dispatch({type: SET_TASK_PROJECTS, projects:data.data});
+       });
+     }
+   ).catch(function (error) {
+     console.log(error);
+   });
+ }
+ }
+
+ export const setTaskCompaniesLoading = (taskCompaniesLoaded) => {
+   return (dispatch) => {
+     dispatch({ type: SET_TASK_COMPANIES_LOADING, taskCompaniesLoaded });
+   }
+ };
+ /**
+  * Gets all companies available with no pagination
+  * @param {string} token universal token for API comunication
+  */
+  export const getTaskCompanies = (updateDate,token) => {
+    return (dispatch) => {
+      fetch(COMPANIES_LIST+'/all'+(updateDate?'/'+updateDate:''), {
+        method: 'get',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        }
+      }).then((response) =>{
+        if(!response.ok){
+          return;
+        }
+        response.json().then((data) => {
+          dispatch({type: SET_TASK_COMPANIES, companies:data.data,companiesUpdateDate:data.date.toString()});
+        });
+      }
+    ).catch(function (error) {
+      console.log(error);
+    });
+  }
+  }
+
+ export const setTaskUnitsLoading = (taskUnitsLoaded) => {
+   return (dispatch) => {
+     dispatch({ type: SET_TASK_UNITS_LOADING, taskUnitsLoaded });
+   }
+ };
+ /**
+  * Gets all units available with no pagination
+  * @param {string} token universal token for API comunication
+  */
+ export const getTaskUnits= (token) => {
+   return (dispatch) => {
+       fetch(UNITS_LIST+'/all', {
+         method: 'get',
+         headers: {
+           'Authorization': 'Bearer ' + token,
+           'Content-Type': 'application/json'
+         }
+       }).then((response) =>{
+         if(!response.ok){
+           return;
+         }
+       response.json().then((data) => {
+         dispatch({type: SET_TASK_UNITS, units:data.data});
+       });
+     }
+   ).catch(function (error) {
+     console.log(error);
+   });
+ }
+ }
+
+ export const setTaskTagsLoading = (taskTagsLoaded) => {
+   return (dispatch) => {
+     dispatch({ type: SET_TASK_TAGS_LOADING, taskTagsLoaded });
+   }
+ };
+ /**
+  * Gets all tags available with no pagination
+  * @param {string} token universal token for API comunication
+  */
+ export const getTaskTags= (token) => {
+   return (dispatch) => {
+       fetch(TAGS_LIST+'/all', {
+         method: 'get',
+         headers: {
+           'Authorization': 'Bearer ' + token,
+           'Content-Type': 'application/json'
+         }
+       }).then((response) =>{
+         if(!response.ok){
+           return;
+         }
+       response.json().then((data) => {
+         dispatch({type: SET_TASK_TAGS, tags:data.data});
+       });
+     }
+   ).catch(function (error) {
+     console.log(error);
+   });
+ }
+ }
+
+ export const deleteTaskSolvers = () => {
+   return (dispatch) => {
+     dispatch({type: SET_TASK_SOLVERS, taskSolvers:[]});
+   };
+ };
+
+export const getTaskSolvers = (projectID,token) => {
   return (dispatch) => {
-    fetch(TASK_LIST, {
+      fetch(PROJECT_URL+'/'+projectID+'/assign-user', {
+        method: 'get',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        }
+      }).then((response) =>{
+        if(!response.ok){
+          return;
+        }
+      response.json().then((data) => {
+        dispatch({type: SET_TASK_SOLVERS, taskSolvers:data.data});
+      });
+    }
+  ).catch(function (error) {
+    console.log(error);
+  });
+}
+}
+
+export const addTask = (body,followers,projectID,statusID,requesterID,companyID,token) => {
+  return (dispatch) => {
+    fetch(TASK_LIST+'/project/'+projectID+'/status/'+statusID+'/requester/'+requesterID+'/company/'+companyID,{
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       },
       method: 'POST',
-      body:processRESTinput(task),
-    }).then((response) =>{
-      response.json().then((data) => {
-        if(show){
-          dispatch({type: ADD_NEW_TASK, payload:{task:data.data}});
-        }
+      body:JSON.stringify(body),
+    })
+    .then((response)=>{
+      if(!response.ok){
+        return;
+      }
+      response.json().then((response)=>{
+        followers.map((follower)=>{
+          addFollower(follower.id,response.data.id,token)(dispatch);
+        });
+      })})
+      .catch(function (error) {
+        console.log(error);
       });
-    }).catch(function (error) {
-      console.log(error);
-    });
+    };
   };
-};
+
+  export const addFollower = (userID,taskID,token) => {
+    return (dispatch) => {
+        fetch(TASK_LIST+'/'+taskID+'/add-follower/'+userID,{
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          method: 'PUT',
+        })
+      .then((response)=>{
+        if(!response.ok){
+          return;
+        }
+      response.json().then((response)=>{
+        return;
+        //dispatch({type: ADD_FOLLOWER, follower:response.data});
+      })})
+      .catch(function (error) {
+        console.log(error);
+      });
+    };
+  };
 
 /**
   * Delete's task with the input ID
@@ -180,7 +381,7 @@ export const getSearchAttributes = (token) => {
           'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(PROJECT_LIST+'?limit=999', {
+      fetch(PROJECTS_LIST+'?limit=999', {
         method: 'GET',
         headers: {
           'Authorization': 'Bearer ' + token
@@ -222,7 +423,7 @@ export const startLoadingProjects = () => {
 
 export const getProjects = (token) => {
   return (dispatch) => {
-    fetch(PROJECT_LIST+'?limit=999', {
+    fetch(PROJECTS_LIST+'?limit=999', {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + token
@@ -311,7 +512,7 @@ export const getTaskAttributes = (id, token) => {
           'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(PROJECT_LIST+'?limit=999', {
+      fetch(PROJECTS_LIST+'?limit=999', {
         method: 'GET',
         headers: {
           'Authorization': 'Bearer ' + token
@@ -368,7 +569,7 @@ export const getAttributes = (token) => {
           'Authorization': 'Bearer ' + token
         }
       }),
-      fetch(PROJECT_LIST+'?limit=999', {
+      fetch(PROJECTS_LIST+'?limit=999', {
         method: 'GET',
         headers: {
           'Authorization': 'Bearer ' + token

@@ -58,7 +58,7 @@ class AppNavigator extends Component {
               <Scene key="companyList" component={CompanyList} />
               <Scene key="companyAdd" component={CompanyAdd} />
               <Scene key="companyEdit" component={CompanyEdit} />
-              {/*<Scene key="search" component={Search} />*/}
+              <Scene key="search" component={Search} />
             </Scene>
           </RouterWithRedux>
         </Drawer>

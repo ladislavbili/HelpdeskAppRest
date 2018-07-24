@@ -5,7 +5,7 @@ import { Input, Picker, Item, Container, Header, Title, Content, Button, Icon, T
 import { Actions } from 'react-native-router-flux';
 
 import I18n from '../../translations/';
-import { getTasks } from '../../redux/actions';
+import { } from '../../redux/actions';
 
 import {compactUserForSearch} from '../../helperFunctions';
 
@@ -38,8 +38,8 @@ class Search extends Component {
       companiesSearch:'',
       companies:[],
       modalLabel:false,
-      labelsSearch:'',
-      labels:[]
+      tagsSearch:'',
+      tags:[]
     }
   }
 
@@ -47,8 +47,8 @@ class Search extends Component {
    * Gathers all of the data from the current state and sends them via actions to the redux. Then it returns user back to previous component
    */
   submit(){
-    let labels = "";
-    this.state.labels.map((item)=> labels+= item.id+',');
+    let tags = "";
+    this.state.tags.map((item)=> tags+= item.id+',');
 
     let companies = "";
     this.state.companies.map((item)=> companies+= item.id+',');
@@ -67,20 +67,18 @@ class Search extends Component {
 
     let createdBy = "";
     this.state.createdBy.map((item)=> createdBy+= item.id+',');
-
-    this.props.getTasks(this.props.token,
-      I18n.t('search'),
-      {
-        search:this.state.title,
-        tag:labels.substring(0,labels.length-1),
-        company:companies.substring(0,companies.length-1),
-        project:projects.substring(0,projects.length-1),
-        status:statuses.substring(0,statuses.length-1),
-        assigned:assignedTo.substring(0,assignedTo.length-1),
-        requester:requestedBy.substring(0,requestedBy.length-1),
-        creator:createdBy.substring(0,createdBy.length-1),
-      },null);
-      Actions.pop();
+      Actions.taskList({filter:
+        {
+          search:this.state.title,
+          tag:tags.substring(0,tags.length-1),
+          company:companies.substring(0,companies.length-1),
+          project:projects.substring(0,projects.length-1),
+          status:statuses.substring(0,statuses.length-1),
+          assigned:assignedTo.substring(0,assignedTo.length-1),
+          requester:requestedBy.substring(0,requestedBy.length-1),
+          creator:createdBy.substring(0,createdBy.length-1),
+        }
+        ,listName:'Search results'});
     }
 
     render() {
@@ -114,7 +112,7 @@ class Search extends Component {
                   <ListItem>
                     <Body>
                       {
-                        (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
+                        (item.name||item.surname)?<Text>{item.name?item.name+' ':''}{item.surname?item.surname:''}</Text>:null
                       }
                       <Text note>{item.email}</Text>
                     </Body>
@@ -165,7 +163,7 @@ class Search extends Component {
                           </Left>
                           <Body>
                             {
-                              (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
+                              (item.name||item.surname)?<Text>{item.name?item.name+' ':''}{item.surname?item.surname:''}</Text>:null
                             }
                             <Text note>{item.email}</Text>
                           </Body>
@@ -194,7 +192,7 @@ class Search extends Component {
                   <ListItem>
                     <Body>
                       {
-                        (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
+                        (item.name||item.surname)?<Text>{item.name?item.name+' ':''}{item.surname?item.surname:''}</Text>:null
                       }
                       <Text note>{item.email}</Text>
                     </Body>
@@ -245,7 +243,7 @@ class Search extends Component {
                           </Left>
                           <Body>
                             {
-                              (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
+                              (item.name||item.surname)?<Text>{item.name?item.name+' ':''}{item.surname?item.surname:''}</Text>:null
                             }
                             <Text note>{item.email}</Text>
                           </Body>
@@ -275,7 +273,7 @@ class Search extends Component {
                   <ListItem>
                     <Body>
                       {
-                        (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
+                        (item.name||item.surname)?<Text>{item.name?item.name+' ':''}{item.surname?item.surname:''}</Text>:null
                       }
                       <Text note>{item.email}</Text>
                     </Body>
@@ -326,7 +324,7 @@ class Search extends Component {
                             </Left>
                             <Body>
                               {
-                                (item.detailData.name||item.detailData.surname)?<Text>{item.detailData.name?item.detailData.name+' ':''}{item.detailData.surname?item.detailData.surname:''}</Text>:null
+                                (item.name||item.surname)?<Text>{item.name?item.name+' ':''}{item.surname?item.surname:''}</Text>:null
                               }
                               <Text note>{item.email}</Text>
                             </Body>
@@ -577,7 +575,7 @@ class Search extends Component {
               <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
                 <Button block onPress={()=>{this.setState({modalLabel:true})}}><Text>{I18n.t('filterByLabel')}</Text></Button>
                 <List
-                  dataArray={this.state.labels}
+                  dataArray={this.state.tags}
                   renderRow={label =>
                     <ListItem>
                       <View style={{backgroundColor:((label.color.includes('#')?'':'#')+label.color),paddingLeft:10}}>
@@ -606,28 +604,28 @@ class Search extends Component {
                     <ListItem>
                       <Item rounded>
                         <Icon name="ios-search" />
-                        <Input placeholder={I18n.t('search')} value={this.state.labelsSearch} onChangeText={(value)=>this.setState({labelsSearch:value})} />
+                        <Input placeholder={I18n.t('search')} value={this.state.tagsSearch} onChangeText={(value)=>this.setState({tagsSearch:value})} />
                       </Item>
                     </ListItem>
                     <List>
-                      {this.props.labels.filter((item)=>item.title.toLowerCase().includes(this.state.labelsSearch.toLowerCase())).map((item)=>
+                      {this.props.tags.filter((item)=>item.title.toLowerCase().includes(this.state.tagsSearch.toLowerCase())).map((item)=>
                         <ListItem key={item.id} thumbnail onPress={()=>{
-                            if(this.state.labels.includes(item)){
-                              let newLabels=[...this.state.labels];
-                              newLabels.splice(newLabels.indexOf(item),1);
-                              this.setState({labels:newLabels});
+                            if(this.state.tags.includes(item)){
+                              let newtags=[...this.state.tags];
+                              newtags.splice(newtags.indexOf(item),1);
+                              this.setState({tags:newtags});
                             }else{
-                              this.setState({labels:[item,...this.state.labels]});
+                              this.setState({tags:[item,...this.state.tags]});
                             }
                           }}>
                           <Left>
-                            <CheckBox checked={this.state.labels.includes(item)} onPress={()=>{
-                                if(this.state.labels.includes(item)){
-                                  let newLabels=[...this.state.labels];
-                                  newLabels.splice(newLabels.indexOf(item),1);
-                                  this.setState({labels:newLabels});
+                            <CheckBox checked={this.state.tags.includes(item)} onPress={()=>{
+                                if(this.state.tags.includes(item)){
+                                  let newtags=[...this.state.tags];
+                                  newtags.splice(newtags.indexOf(item),1);
+                                  this.setState({tags:newtags});
                                 }else{
-                                  this.setState({labels:[item,...this.state.labels]});
+                                  this.setState({tags:[item,...this.state.tags]});
                                 }
                               }}/>
                           </Left>
@@ -662,14 +660,13 @@ class Search extends Component {
   }
 
   //creates function that maps actions (functions) to the redux store
-  const mapStateToProps = ({ taskR, login, userR, companyR }) => {
-    const { users } = userR;
-    const { companies } = companyR;
-    const { token } = login;
-    const { statuses, projects,labels, currentTask} = taskR;
+  const mapStateToProps = ({ taskReducer, loginReducer, userReducer, companyReducer }) => {
+    const { users } = userReducer;
+    const { companies,statuses, projects,tags} = taskReducer;
+    const { token } = loginReducer;
 
-    return { users, companies,statuses, projects, labels, currentTask, token};
+    return { users, companies,statuses, projects, tags, token};
   };
 
   //exports created Component connected to the redux store and redux actions
-  export default connect(mapStateToProps,{getTasks})(Search);
+  export default connect(mapStateToProps,{})(Search);

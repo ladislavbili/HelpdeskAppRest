@@ -31,7 +31,6 @@ export const setCompaniesLoading = (companiesLoaded) => {
          return;
        }
        response.json().then((data) => {
-         data.data.map((item)=>console.log(data));
          dispatch({type: SET_COMPANIES, companies:data.data,updateDate:data.date.toString()});
          dispatch({ type: SET_LOADING_COMPANIES, companiesLoaded:true });
        });

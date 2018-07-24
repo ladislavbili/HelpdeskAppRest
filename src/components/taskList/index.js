@@ -57,6 +57,9 @@ class TaskListLoader extends Component {
             <Title>{this.props.listName?this.props.listName:I18n.t('taskList')}</Title>
           </Body>
           <Right>
+            <Button transparent style={{ marginTop: 8 }} onPress={Actions.taskAdd}>
+              <Icon name="add" style={{ color: 'white' }} />
+            </Button>
             <Button transparent style={{ marginTop: 8 }} onPress={Actions.search}>
               <Icon name="search" style={{ color: 'white' }} />
             </Button>
@@ -65,9 +68,9 @@ class TaskListLoader extends Component {
             </Button>}
             { //(this.props.user.user_role.acl.includes('company_settings') || this.props.user.user_role.acl.includes('user_settings') ) &&
             }
-              <Button transparent style={{ marginTop: 8 }} onPress={Actions.settings}>
-              <Icon name="settings" style={{ color: 'white' }} />
-              </Button>
+            <Button transparent style={{ marginTop: 8 }} onPress={Actions.settings}>
+            <Icon name="settings" style={{ color: 'white' }} />
+            </Button>
           </Right>
         </Header>
         {

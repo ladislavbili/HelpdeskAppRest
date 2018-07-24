@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
 
-import Search from './search';
+import TabAttributes from './tabAttributes';
 import {setTaskProjectsLoading,setTaskStatusesLoading,setTaskCompaniesLoading,setTaskTagsLoading,
-  setUsersLoading,getTaskStatuses,getTaskProjects,getTaskCompanies,getTaskTags,getUsers} from '../../redux/actions';
+  deleteTaskSolvers,setUsersLoading,getTaskStatuses,getTaskProjects,getTaskCompanies,getTaskTags,getUsers} from '../../redux/actions';
 
 /**
  * Loads all of the data needed for user to seach for tasks
@@ -18,6 +18,8 @@ class SearchLoader extends Component {
     this.props.setTaskCompaniesLoading(false);
     this.props.setTaskTagsLoading(false);
     this.props.setUsersLoading(false);
+
+    this.props.deleteTaskSolvers();
     this.props.getTaskStatuses(null,this.props.token);
     this.props.getTaskProjects(this.props.token);
     this.props.getTaskCompanies(null,this.props.token);
@@ -33,7 +35,7 @@ class SearchLoader extends Component {
       )
     }
     return (
-      <Search/>
+      <TabAttributes saveFunction={this.props.saveFunction}/>
     );
   }
 }
@@ -49,4 +51,4 @@ const mapStateToProps = ({loginReducer,userReducer, taskReducer}) => {
 
 //exports created Component connected to the redux store and redux actions
 export default connect(mapStateToProps,{setTaskProjectsLoading,setTaskStatusesLoading,setTaskCompaniesLoading,setTaskTagsLoading,
-  setUsersLoading,getTaskStatuses,getTaskProjects,getTaskCompanies,getTaskTags,getUsers})(SearchLoader);
+  deleteTaskSolvers,setUsersLoading,getTaskStatuses,getTaskProjects,getTaskCompanies,getTaskTags,getUsers})(SearchLoader);

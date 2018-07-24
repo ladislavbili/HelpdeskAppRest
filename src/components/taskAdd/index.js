@@ -4,15 +4,14 @@ import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
 
-import TabAtributes from './tabAtributes';
+import TabAttributesLoader from './tabAttributesLoader';
 import I18n from '../../translations/';
-import {getAttributes} from '../../redux/actions';
 
 /**
 * Loads all of the data required to add a new task
 * @extends Component
 */
-class TaskAdd extends Component {
+export default class TaskAdd extends Component {
   constructor(props){
     super(props);
     this.state={saveFunction:null}
@@ -26,21 +25,7 @@ class TaskAdd extends Component {
     this.setState({saveFunction:func});
   }
 
-/**
- * Before this component is loaded all of the required data should start fetching from the REST API
- */
-  componentWillMount(){
-    this.props.getAttributes(this.props.token);
-  }
-
   render() {
-    if(this.props.loadingData){
-      return (
-        <ActivityIndicator
-          animating size={ 'large' }
-          color='#007299' />
-      )
-    }
     return (
       <Container>
         <Header>
@@ -60,20 +45,10 @@ class TaskAdd extends Component {
         </Header>
         <Tabs>
           <Tab heading={I18n.t('attributes')}>
-            <TabAtributes projectID={this.props.projectID} saveFunction={this.setFunction.bind(this)} />
+            <TabAttributesLoader saveFunction={this.setFunction.bind(this)} />
           </Tab>
         </Tabs>
       </Container>
     );
   }
 }
-
-//creates function that maps actions (functions) to the redux store
-const mapStateToProps = ({ taskR, login }) => {
-  const { loadingData } = taskR;
-  const { token } = login;
-  return { loadingData, token };
-};
-
-//exports created Component connected to the redux store and redux actions
-export default connect(mapStateToProps,{getAttributes})(TaskAdd);
