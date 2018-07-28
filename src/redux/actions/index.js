@@ -7,3 +7,4 @@ export * from './commentActions';
 export * from './companyActions';
 export * from './itemActions';
 export * from './sidebarActions';
+export * from './subtaskActions';

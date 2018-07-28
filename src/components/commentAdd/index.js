@@ -10,7 +10,7 @@ import I18n from '../../translations/';
  * Creates tabs that allows the user to send either comments or comments and e-mails
  * @extends Component
  */
-class CommentAdd extends Component {
+export default class CommentAdd extends Component {
 
   render() {
     return (
@@ -30,11 +30,3 @@ class CommentAdd extends Component {
     );
   }
 }
-
-//creates function that maps actions (functions) to the redux store
-const mapStateToProps = () => {
-  return {};
-};
-
-//exports created Component connected to the redux store and redux actions
-export default connect(mapStateToProps,{})(CommentAdd);

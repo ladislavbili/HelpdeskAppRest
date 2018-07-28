@@ -6,18 +6,13 @@ import { connect } from 'react-redux';
 
 
 import I18n from '../../translations/';
-import {startLoadingItems, getItemsAndUnits, openAddingOfItem, deleteItem, openEditingOfItem} from '../../redux/actions';
+import {deleteItem} from '../../redux/actions';
 
 /**
  * Display's all of the items used in this task
  * @extends Component
  */
 class TabItems extends Component{
-  componentDidMount(){
-    this.props.startLoadingItems();
-    this.props.getItemsAndUnits(this.props.id, this.props.token);
-  }
-
 /**
  * Delete's a single item
  * @param  {int} id    ID of an item that is meant to be deleted
@@ -38,9 +33,6 @@ class TabItems extends Component{
   }
 
   render() {
-    if(this.props.loadingItems){
-      return (<ActivityIndicator animating size={ 'large' } color='#007299' />);
-    }
     let total=0;
     this.props.items.map((item)=>total+=item.amount*item.unit_price);
     return (
@@ -99,7 +91,7 @@ class TabItems extends Component{
                     </Button>
                   </Left>
                   <Right>
-                    <Button active block onPress={()=>{Actions.itemEdit({data:item,taskId:this.props.task.id});}}>
+                    <Button active block onPress={()=>{Actions.itemEdit({data:item,id:this.props.id});}}>
                       <Icon name="open" />
                       <Text>{I18n.t('edit')}</Text>
                     </Button>
@@ -139,12 +131,11 @@ class TabItems extends Component{
 }
 
 //creates function that maps actions (functions) to the redux store
-const mapStateToProps = ({ taskR, login, itemR }) => {
-  const { items, loadingItems ,units } = itemR;
-  const { task } = taskR;
-  const { token } = login;
-  return { items, loadingItems,token, units, task, ACL:task.loggedUserProjectAcl.concat(task.loggedUserRoleAcl) };
+const mapStateToProps = ({ itemReducer, loginReducer, taskReducer}) => {
+  const { items ,units } = itemReducer;
+  const { token } = loginReducer;
+  return { items, units ,token, ACL:taskReducer.task.loggedUserProjectAcl.concat(taskReducer.task.loggedUserRoleAcl) };
 };
 
 //exports created Component connected to the redux store and redux actions
-export default connect(mapStateToProps,{startLoadingItems,getItemsAndUnits,openAddingOfItem, deleteItem, openEditingOfItem})(TabItems);
+export default connect(mapStateToProps,{deleteItem})(TabItems);

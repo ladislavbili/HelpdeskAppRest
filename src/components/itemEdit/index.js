@@ -1,132 +1,42 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Input, Picker, Item, Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Body, View, Right } from 'native-base';
-import { Actions } from 'react-native-router-flux';
-import I18n from '../../translations/';
-import {saveItemEdit} from '../../redux/actions';
+import { ActivityIndicator } from 'react-native';
+
+import ItemEdit from './itemEdit';
+import {setUnitsLoading, getUnits} from '../../redux/actions';
 
 /**
-* Allows the user to edit an existing item
+* Load all of the attributes required for the user to create a new item
 * @extends Component
 */
-class ItemEdit extends Component {
+class ItemEditLoader extends Component {
   constructor(props){
     super(props);
-    this.state = {
-      unit:this.props.data.unit.id,
-      itemQuantity:this.props.data.amount.toString(),
-      title:this.props.data.title,
-      itemPrice:this.props.data.unit_price.toString(),
-    };
-    this.setPrice.bind(this);
-    this.setQuantity.bind(this);
+    this.props.setUnitsLoading(false);
+    this.props.getUnits(this.props.token);
   }
-
-  /**
-  * Gathers all of the data from the current state and sends them via actions to the redux. Then it returns user back to previous component
-  */
-  submit(){
-    let title = this.state.title;
-    let amount = parseFloat('0'+this.state.itemQuantity);
-    let unit_price = parseFloat('0'+this.state.itemPrice);
-    this.props.saveItemEdit({title,amount,unit_price},this.props.data.id,this.state.unit,this.props.taskId,this.props.token);
-    Actions.pop();
-  }
-
-  /**
-   * Set's item's price if the input string is valid decimal number
-   * @param {string} input price entered by the user
-   */
-  setPrice(input){
-    var valid = (input.match(/^-?\d*(\.\d*)?$/));
-    if(valid){
-      this.setState({itemPrice:input});
-    }
-  }
-
-  /**
-   * Set's item's quantity if the input string is a valid decimal number
-   * @param {string} input quantity entered by the user
-   */
-  setQuantity(input){
-    var valid = (input.match(/^-?\d*(\.\d*)?$/));
-    if(valid){
-      this.setState({itemQuantity:input});
-    }
-  }
-
   render() {
+    if(!this.props.unitsLoaded){
+      return (
+        <ActivityIndicator
+          animating size={ 'large' }
+          color='#007299' />
+      )
+    }
+
     return (
-      <Container>
-        <Header>
-          <Left>
-            <Button transparent onPress={() => Actions.pop()}>
-              <Icon name="arrow-back" />
-            </Button>
-          </Left>
-          <Body>
-            <Title>{I18n.t('editItem')}</Title>
-          </Body>
-          <Right>
-            {
-              this.state.title.length!=0 &&
-              <Button transparent onPress={this.submit.bind(this)}>
-                <Icon active style={{ color: 'white', padding:10 }} name="ios-checkmark-circle-outline" />
-              </Button>
-            }
-          </Right>
-        </Header>
-        <Content style={{ padding: 15 }}>
-          <Text note>{I18n.t('title')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Input
-              value={this.state.title}
-              placeholder={I18n.t('enterTitle')}
-              onChangeText={ value => this.setState({title:value}) }
-              />
-            {this.state.title.length==0 && <Text note style={{color:'red'}}>{I18n.t('itemNameError')}</Text>}
-          </View>
-          <Text note>{I18n.t('pricePerUnit')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Input
-              value={this.state.itemPrice}
-              placeholder={I18n.t('enterPricePerUnit')}
-              keyboardType='numeric'
-              onChangeText={ value => this.setPrice(value) }
-              />
-          </View>
-          <Text note>{I18n.t('unitSelect')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Picker
-              supportedOrientations={['portrait', 'landscape']}
-              selectedValue={this.state.unit}
-              onValueChange={(value)=>this.setState({unit:value})}>
-              {this.props.units.map(
-                (unit)=> <Item label={unit.shortcut+' ('+unit.title+')'} key={unit.id} value={unit.id} />
-            )}
-            </Picker>
-          </View>
-          <Text note>{I18n.t('quantity')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Input
-              value={this.state.itemQuantity}
-              placeholder={I18n.t('enterQuantity')}
-              keyboardType='numeric'
-              onChangeText={ value => this.setQuantity(value) }
-              />
-          </View>
-        </Content>
-      </Container>
+      <ItemEdit id={this.props.id} data={this.props.data}/>
     );
   }
 }
 
+
 //creates function that maps actions (functions) to the redux store
-const mapStateToProps = ({ itemR, login }) => {
-  const { units, item } = itemR;
-  const { token } = login;
-  return { units, item, token };
+const mapStateToProps = ({ itemReducer, loginReducer }) => {
+  const { unitsLoaded } = itemReducer;
+  const { token } = loginReducer;
+  return { unitsLoaded, token };
 };
 
 //exports created Component connected to the redux store and redux actions
-export default connect(mapStateToProps,{saveItemEdit})(ItemEdit);
+export default connect(mapStateToProps,{setUnitsLoading, getUnits})(ItemEditLoader);

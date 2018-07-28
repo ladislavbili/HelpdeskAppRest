@@ -1,152 +1,143 @@
-import { SET_UNITS, START_LOADING_ITEMS, SET_ITEM, SET_ITEMS, ADD_NEW_ITEM, DELETE_ITEM, EDIT_ITEM_LIST } from '../types';
-import { UNITS_LIST, TASK_LIST  } from '../urls';
-import { Actions } from 'react-native-router-flux';
-import {processRESTinput} from '../../helperFunctions';
-//All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
+import { SET_ITEMS,SET_ITEMS_LOADING, ADD_ITEM, EDIT_ITEM,DELETE_ITEM, SET_UNITS_LOADING, SET_UNITS } from '../types';
+import { TASKS_LIST, UNITS_LIST } from '../urls';
 
 /**
- * Starts an indicator that the items are loading
+ * Sets status if items are loaded to false
  */
-export const startLoadingItems = () => {
+export const setItemsLoading = (itemsLoaded) => {
   return (dispatch) => {
-    dispatch({type: START_LOADING_ITEMS });
-  };
+    dispatch({ type: SET_ITEMS_LOADING, itemsLoaded });
+  }
 };
 
 /**
- * Get's all items that are related to the project with specified ID
- * @param  {int} id    ID of the project, whose tasks should be loaded
- * @param  {string} token Token for the REST API
+ * Gets all items available with no pagination
+ * @param {string} token universal token for API comunication
  */
-export const getItemsAndUnits = (id,token) => {
+export const getItems= (taskID,token) => {
   return (dispatch) => {
-    Promise.all([
-      fetch(TASK_LIST+'/'+id+'/invoiceable-items'+'?limit=999', {
-        method: 'GET',
+      fetch(TASKS_LIST+'/'+taskID+'/invoiceable-items', {
+        method: 'get',
         headers: {
-          'Authorization': 'Bearer ' + token
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
         }
-      }),
-      fetch(UNITS_LIST+'?limit=999', {
-        method: 'GET',
+      }).then((response) =>{
+        if(!response.ok){
+          return;
+        }
+      response.json().then((data) => {
+        dispatch({type: SET_ITEMS, items:data.data});
+      });
+    }
+  ).catch(function (error) {
+      console.log(error);
+  });
+  }
+}
+/**
+ * Adds new item
+ * @param {object} body  All parameters in an object of the new item
+ * @param {string} token universal token for API comunication
+ */
+
+export const addItem = (body,taskID,unitID,token) => {
+  return (dispatch) => {
+      fetch(TASKS_LIST+'/'+taskID+'/invoiceable-items/unit/'+unitID,{
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
-        }
+        },
+        method: 'POST',
+        body:JSON.stringify(body),
       })
-    ])
-    .then(([response1,response2]) =>Promise.all([response1.json(),response2.json()]).then(([response1,response2]) => {
-      dispatch({type: SET_ITEMS, payload:{items:response1.data,units:response2.data}});
-    }))
-    .catch(function (error) {
-      console.log(error);
-    });
-  };
-};
-
-/**
- * Adds a new item to the task
- * @param {Item} item   Object containing all of the item informations except for the unit
- * @param {int} taskId ID of the task that this item should belong to
- * @param {int} unitId ID of the unit used for this item
- * @param {string} token  Token for the REST API
- */
-export const addItem = (item,taskId,unitId,token) => {
-  return (dispatch) => {
-    requestBody=processRESTinput(item);
-    if(item.amount==0){
-      requestBody+='&amount=0';
-    }
-    if(item.unit_price==0){
-      requestBody+='&unit_price=0';
-    }
-    fetch(TASK_LIST+'/'+taskId+'/invoiceable-items/unit/'+unitId, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ' + token
-      },
-      method: 'POST',
-      body:requestBody,
-    }).then((response)=>{
-      response.json().then((response2)=>{
-        dispatch({type: ADD_NEW_ITEM, payload:{items:response2.data.invoiceableItems}});
-      }).catch((error)=>console.log(error));
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  };
-};
-
-/**
- * Delete's item with the sprecific id
- * @param  {int} id     Item's ID
- * @param  {int} taskId ID of the task that item belongs to
- * @param  {string} token  Token for the REST API
- */
-export const deleteItem = (id,taskId,token) => {
-  return (dispatch) => {
-    let url= TASK_LIST+'/'+taskId+'/invoiceable-items/'+id
-    fetch(url, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer ' + token
-      },
-    }).then((response)=>{
-      dispatch({type: DELETE_ITEM, payload:{id}});
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  };
-};
-
-/**
- * Get's all of the available units
- * @param  {string} token Token for the REST API
- */
-export const getUnits = (token) => {
-  return (dispatch) => {
-    fetch(UNITS_LIST+'?limit=999', {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + token
+    .then((response)=>{
+      if(!response.ok){
+        return;
       }
-    }).then((response)=>response.json().then((response)=>{
-      dispatch({type: SET_UNITS, payload:{units:response.data}});
-    }))
+    response.json().then((response)=>{
+      dispatch({type: ADD_ITEM, item:response.data});
+    })})
     .catch(function (error) {
       console.log(error);
     });
 
   };
+};
+
+export const editItem = (body,itemID,unitID,taskID,token) => {
+  return (dispatch) => {
+        fetch(TASKS_LIST+'/'+taskID+'/invoiceable-items/'+itemID+'/unit/'+unitID, {
+          method: 'put',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          },
+          body:JSON.stringify(body)
+        }).then((response)=>{
+          if(!response.ok){
+            return;
+          }
+          response.json().then((response)=>{
+          dispatch({type: EDIT_ITEM, item:response.data});
+        })})
+        .catch(function (error) {
+          console.log(error);
+      });
+  };
+};
+
+export const deleteItem = (id,taskID,token) => {
+  return (dispatch) => {
+      fetch(TASKS_LIST+'/'+taskID+'/invoiceable-items/'+id, {
+        method: 'delete',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        }
+      }).then((response) =>{
+        if(!response.ok){
+          return;
+        }
+        dispatch({type: DELETE_ITEM, id});
+    }
+  ).catch(function (error) {
+      console.log(error);
+  });
+}
+}
+
+/**
+ * Sets status if items are loaded to false
+ */
+export const setUnitsLoading = (unitsLoaded) => {
+  return (dispatch) => {
+    dispatch({ type: SET_UNITS_LOADING, unitsLoaded });
+  }
 };
 
 /**
- * Save data about the editted item
- * @param  {Item} item   All of the editted data about an editted item except for the unit
- * @param  {int} id     new ID of the editted item
- * @param  {int} unitId new ID of the unit related to this item
- * @param  {int} taskId new ID of the task this item is related to
- * @param  {string} token  Token for the REST API
+ * Gets all units available with no pagination
+ * @param {string} token universal token for API comunication
  */
-export const saveItemEdit = (item,id,unitId,taskId,token) => {
+export const getUnits= (token) => {
   return (dispatch) => {
-    let url = TASK_LIST+'/'+taskId+'/invoiceable-items/'+id+'/unit/'+unitId;
-    fetch(url, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer ' + token
-      },
-      method: 'PATCH',
-      body:processRESTinput(item),
-    }).then((response)=>response.json().then((response)=>{
-      dispatch({type: EDIT_ITEM_LIST, payload:{item:Object.assign({},item,{id,unit:{id:unitId}})}});
-    }))
-    .catch(function (error) {
-      console.log(error);
-    });
-  };
-};
+      fetch(UNITS_LIST+'/all', {
+        method: 'get',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        }
+      }).then((response) =>{
+        if(!response.ok){
+          return;
+        }
+      response.json().then((data) => {
+        dispatch({type: SET_UNITS, units:data.data});
+      });
+    }
+  ).catch(function (error) {
+    console.log(error);
+  });
+}
+}

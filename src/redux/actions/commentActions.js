@@ -1,55 +1,260 @@
-import { SET_COMMENTS, ADD_NEW_COMMENT, START_LOADING_COMMENTS } from '../types';
-import { TASK_LIST } from '../urls';
-import {processRESTinput} from '../../helperFunctions';
-//All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
+import { SET_COMMENTS,SET_COMMENTS_LOADING, ADD_COMMENT, ADD_COMMENT_AVATAR_URL,DELETE_COMMENT, SET_COMMENT_ATTACHMENT } from '../types';
+import { TASKS_LIST, GET_LOC, GET_FILE, COMMENT_COMMENTS } from '../urls';
 
 /**
-  * Get's all of the task comments
-  * @param  {int} id    ID of the task
-  * @param  {string} token Token for the REST API
+* Sets status if comments are loaded to false
 */
-export const getComments = (id,token) => {
+export const setCommentsLoading = (commentsLoaded) => {
   return (dispatch) => {
-    fetch(TASK_LIST+'/'+id+'/comments'+'?limit=999', {
-      method: 'GET',
+    dispatch({ type: SET_COMMENTS_LOADING, commentsLoaded });
+  }
+};
+
+/**
+* Gets all comments available with no pagination
+* @param {string} token universal token for API comunication
+*/
+export const getComments= (taskID,token) => {
+  return (dispatch) => {
+    fetch(TASKS_LIST+'/'+taskID+'/comments'+'?limit=999', {
+      method: 'get',
       headers: {
-        'Authorization': 'Bearer ' + token
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
       }
-    }).then((response) =>response.json().then((response2) => {
-      dispatch({type: SET_COMMENTS, payload:{comments:response2.data}});
-    }))
+    }).then((response) =>{
+      if(!response.ok){
+        return;
+      }
+      response.json().then((data) => {
+        let comments=[];
+        dispatch({type: SET_COMMENTS, comments:data.data});
+        data.data.map((comment)=>{
+          if(comment.createdBy.avatarSlug){
+            fetch(GET_LOC+comment.createdBy.avatarSlug+'/download-location', {
+              method: 'get',
+              headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+              }
+            }).then((response2)=>response2.json().then((data2)=>{
+              fetch(GET_FILE+data2.data.fileDir+'/'+data2.data.fileName, {
+                method: 'get',
+                headers: {
+                  'Authorization': 'Bearer ' + token,
+                }
+              }).then((response3) =>{
+                if(!response3.ok){
+                  return;
+                }
+
+                dispatch({type: ADD_COMMENT_AVATAR_URL,id:comment.id,url:response3.url});
+              }).catch(function (error) {
+                console.log(error);
+              });
+            }).catch(function (error) {
+              console.log(error);
+            })
+          ).catch(function (error) {
+            console.log(error);
+          });
+        }
+        comment.commentHasAttachments.map(attachment=>{
+          fetch(GET_LOC+attachment.slug+'/download-location', {
+            method: 'get',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            }
+          }).then((response2)=>response2.json().then((data2)=>{
+            fetch(GET_FILE+data2.data.fileDir+'/'+data2.data.fileName, {
+              method: 'get',
+              headers: {
+                'Authorization': 'Bearer ' + token,
+              }
+            }).then((response3) =>{
+              if(!response3.ok){
+                return;
+              }
+
+              dispatch({type: SET_COMMENT_ATTACHMENT,commentID:comment.id,attachmentID:attachment.id,url:response3.url,name:attachment.name});
+            }).catch(function (error) {
+              console.log(error);
+            });
+          }).catch(function (error) {
+            console.log(error);
+          })
+        ).catch(function (error) {
+          console.log(error);
+        });
+      })
+    })
+  });
+}
+).catch(function (error) {
+  console.log(error);
+});
+}
+}
+/**
+* Adds new comment
+* @param {object} body  All parameters in an object of the new comment
+* @param {string} token universal token for API comunication
+*/
+
+export const addComment = (body,taskID,token) => {
+  return (dispatch) => {
+    fetch(TASKS_LIST+'/'+taskID+'/add-comment',{
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      method: 'POST',
+      body:JSON.stringify(body),
+    })
+    .then((response)=>{
+      if(!response.ok){
+        return;
+      }
+      response.json().then((response)=>{
+        if(response.data.createdBy.avatarSlug){
+          let newComment=response.data;
+          fetch(GET_LOC+newComment.createdBy.avatarSlug+'/download-location', {
+            method: 'get',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            }
+          }).then((response2)=>response2.json().then((data2)=>{
+            fetch(GET_FILE+data2.data.fileDir+'/'+data2.data.fileName, {
+              method: 'get',
+              headers: {
+                'Authorization': 'Bearer ' + token,
+              }
+            }).then((response3) =>{
+              if(!response3.ok){
+                return;
+              }
+              newComment['avatar']=response3.url;
+              dispatch({type: ADD_COMMENT, comment:newComment});
+            }).catch(function (error) {
+              console.log(error);
+            });
+          }).catch(function (error) {
+            console.log(error);
+          })
+        ).catch(function (error) {
+          console.log(error);
+        });
+      }else{
+        dispatch({type: ADD_COMMENT, comment:response.data});
+      }
+    })})
     .catch(function (error) {
       console.log(error);
     });
+
   };
 };
 
-/**
-  * Adds a new comment to the task
-  * @param {Comment} comment Object containing all of the informations about the comment
-  * @param {int} id      ID of the task
-  * @param {string} token   Token for the REST API
-*/
-export const addComment = (comment,id,token) => {
+export const addCommentsComment = (body,commentID,token) => {
   return (dispatch) => {
-    fetch(TASK_LIST+'/'+id+'/comments', {
+    fetch(COMMENT_COMMENTS+'/'+commentID+'/add-comment',{
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
       method: 'POST',
+      body:JSON.stringify(body),
+    })
+    .then((response)=>{
+        if(!response.ok){
+        return;
+        }
+
+      response.json().then((response)=>{
+        if(response.data.createdBy.avatarSlug){
+          let newComment=response.data;
+          fetch(GET_LOC+newComment.createdBy.avatarSlug+'/download-location', {
+            method: 'get',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            }
+          }).then((response2)=>response2.json().then((data2)=>{
+            fetch(GET_FILE+data2.data.fileDir+'/'+data2.data.fileName, {
+              method: 'get',
+              headers: {
+                'Authorization': 'Bearer ' + token,
+              }
+            }).then((response3) =>{
+              if(!response3.ok){
+                return;
+              }
+
+              newComment['avatar']=response3.url;
+              dispatch({type: ADD_COMMENT, comment:newComment});
+            }).catch(function (error) {
+              console.log(error);
+            });
+          }).catch(function (error) {
+            console.log(error);
+          })
+        ).catch(function (error) {
+          console.log(error);
+        });
+      }else{
+        dispatch({type: ADD_COMMENT, comment:response.data});
+      }
+    })})
+    .catch(function (error) {
+      console.log(error);
+    });
+
+  };
+};
+
+
+
+export const editComment = (body,commentID,unitID,taskID,token) => {
+  return (dispatch) => {
+    fetch(TASKS_LIST+'/'+taskID+'/comments/'+commentID+'/unit/'+unitID, {
+      method: 'put',
       headers: {
         'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       },
-      body:processRESTinput(comment),
-    }).then((response)=>response.json().then((response)=>{
-      dispatch({type: ADD_NEW_COMMENT, payload:{comment:response.data}});
-    }))
-  };
-};
+      body:JSON.stringify(body)
+    }).then((response)=>{
+      if(!response.ok){
+      }
 
-/**
-  * Starts an indicator that the comments are loading
-*/
-export const startLoadingComments = () => {
-  return (dispatch) => {
-    dispatch({type: START_LOADING_COMMENTS });
+      response.json().then((response)=>{
+        dispatch({type: EDIT_COMMENT, comment:response.data});
+      })})
+      .catch(function (error) {
+        console.log(error);
+      });
+    };
   };
-};
+
+  export const deleteComment = (id,taskID,token) => {
+    return (dispatch) => {
+      fetch(TASKS_LIST+'/'+taskID+'/comments/'+id, {
+        method: 'delete',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        }
+      }).then((response) =>{
+        if(!response.ok){
+          return;
+        }
+
+        dispatch({type: DELETE_COMMENT, id});
+      }
+    ).catch(function (error) {
+      console.log(error);
+    });
+  }
+}

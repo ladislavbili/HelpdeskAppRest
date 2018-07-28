@@ -12,7 +12,7 @@ export const COMPANIES_LIST = BASE_URL + '/core-bundle/companies';
 export const PROJECTS_LIST = BASE_URL + '/task-bundle/projects';
 export const TAGS_LIST = BASE_URL + '/task-bundle/tags';
 export const STATUSES_LIST = BASE_URL + '/task-bundle/status';
-export const TASK_LIST = BASE_URL + '/task-bundle/tasks';
+export const TASKS_LIST = BASE_URL + '/task-bundle/tasks';
 export const UNITS_LIST = BASE_URL + '/task-bundle/units';
 export const PROJECT_URL = BASE_URL + '/task-bundle/project';
 

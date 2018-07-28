@@ -83,9 +83,9 @@ class TabComment extends Component {
 }
 
 //creates function that maps actions (functions) to the redux store
-const mapStateToProps = ({ login }) => {
-  const {userData,token} = login;
-  return {userData,token};
+const mapStateToProps = ({ loginReducer }) => {
+  const {token} = loginReducer;
+  return {token};
 };
 
 //exports created Component connected to the redux store and redux actions

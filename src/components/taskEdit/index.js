@@ -5,8 +5,9 @@ import { connect } from 'react-redux';
 import { ActivityIndicator, Alert, BackHandler } from 'react-native';
 
 import TabAttributesLoader from './tabAttributesLoader';
-import TabComments from './tabComments';
-import TabItems from './tabItems';
+import TabCommentsLoader from './tabCommentsLoader';
+import TabItemsLoader from './tabItemsLoader';
+import TabSubtasksLoader from './tabSubtasksLoader';
 import I18n from '../../translations/';
 
 /**
@@ -90,10 +91,13 @@ export default class TaskEdit extends Component {
             <TabAttributesLoader id={this.props.id} saveFunction={this.setFunction.bind(this)} inputChanged={this.inputChanged.bind(this)} />
           </Tab>
           <Tab heading={I18n.t('comments')}>
-            <TabComments id={this.props.id} />
+            <TabCommentsLoader id={this.props.id} />
           </Tab>
           <Tab heading={I18n.t('items')}>
-            <TabItems id={this.props.id} />
+            <TabItemsLoader id={this.props.id} />
+          </Tab>
+          <Tab heading={I18n.t('subtasks')}>
+            <TabSubtasksLoader id={this.props.id} />
           </Tab>
         </Tabs>
       </Container>

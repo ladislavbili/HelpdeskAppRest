@@ -6,6 +6,7 @@ import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import I18n from '../../translations/';
 import {addComment} from '../../redux/actions';
+import {isEmail} from '../../helperFunctions';
 
 /**
  * NOT FUNCTIONAL YET
@@ -64,7 +65,7 @@ class TabEmail extends Component {
                         />
                     </Body>
                     <Right style={{flex:1}}>
-                      <Button block  onPress={()=>this.setState({email_to:[this.state.newMail,...this.state.email_to],newMail:''})}>
+                      <Button block disabled={!isEmail(this.state.newMail)} onPress={()=>this.setState({email_to:[this.state.newMail,...this.state.email_to],newMail:''})}>
                         <Icon active style={{ color: 'white' }} name="add" />
                       </Button>
                     </Right>
@@ -112,8 +113,8 @@ class TabEmail extends Component {
       }
 
       //creates function that maps actions (functions) to the redux store
-      const mapStateToProps = ({ login }) => {
-        const {token} = login;
+      const mapStateToProps = ({ loginReducer }) => {
+        const {token} = loginReducer;
         return {token};
       };
 

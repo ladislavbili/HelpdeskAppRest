@@ -1,7 +1,7 @@
 import { SET_TASKS, SET_LOADING_TASKS,ADD_TASKS,SET_OPENED_ID, SET_TASK_STATUSES_LOADING,SET_TASK_STATUSES,SET_TASK_PROJECTS_LOADING,SET_TASK_PROJECTS,
   SET_TASK_COMPANIES_LOADING,SET_TASK_COMPANIES,SET_TASK_UNITS_LOADING,SET_TASK_UNITS,SET_TASK_TAGS_LOADING,SET_TASK_TAGS,SET_TASK_SOLVERS,SET_TASK_LOADING,
   SET_TASK,EDIT_TASK } from '../types';
-import { PROJECTS_LIST, COMPANIES_LIST, STATUSES_LIST, TASK_LIST, HOST_URL , UNITS_LIST, TAGS_LIST, PROJECT_URL} from '../urls';
+import { PROJECTS_LIST, COMPANIES_LIST, STATUSES_LIST, TASKS_LIST, HOST_URL , UNITS_LIST, TAGS_LIST, PROJECT_URL} from '../urls';
 import {processRESTinput} from '../../helperFunctions';
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
 
@@ -22,7 +22,7 @@ export const setTasksLoading = (tasksLoaded) => {
  */
 export const getTasks = (filter,token) => {
   return (dispatch) => {
-    fetch(TASK_LIST+'?'+processRESTinput(filter)+'&order=status=%3Easc', {
+    fetch(TASKS_LIST+'?'+processRESTinput(filter)+'&order=status=%3Easc', {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + token
@@ -68,7 +68,7 @@ export const getMoreTasks = (url,token) => {
  */
  export const getFilterTasks= (id,token) => {
    return (dispatch) => {
-       fetch(TASK_LIST+'/filter/'+id+'?order=status=%3Easc', {
+       fetch(TASKS_LIST+'/filter/'+id+'?order=status=%3Easc', {
          method: 'get',
          headers: {
            'Authorization': 'Bearer ' + token,
@@ -276,7 +276,7 @@ export const getTaskSolvers = (projectID,token) => {
 
 export const addTask = (body,followers,projectID,statusID,requesterID,companyID,token) => {
   return (dispatch) => {
-    fetch(TASK_LIST+'/project/'+projectID+'/status/'+statusID+'/requester/'+requesterID+'/company/'+companyID,{
+    fetch(TASKS_LIST+'/project/'+projectID+'/status/'+statusID+'/requester/'+requesterID+'/company/'+companyID,{
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
@@ -301,7 +301,7 @@ export const addTask = (body,followers,projectID,statusID,requesterID,companyID,
 
   export const addFollower = (userID,taskID,token) => {
     return (dispatch) => {
-        fetch(TASK_LIST+'/'+taskID+'/add-follower/'+userID,{
+        fetch(TASKS_LIST+'/'+taskID+'/add-follower/'+userID,{
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token
@@ -324,7 +324,7 @@ export const addTask = (body,followers,projectID,statusID,requesterID,companyID,
 
   export const deleteFollower = (userID,taskID,token) => {
     return (dispatch) => {
-      fetch(TASK_LIST+'/'+taskID+'/remove-follower/'+userID,{
+      fetch(TASKS_LIST+'/'+taskID+'/remove-follower/'+userID,{
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
@@ -356,7 +356,7 @@ export const setTaskLoading = (taskLoaded) => {
  */
 export const getTask = (id,token) => {
   return (dispatch) => {
-      fetch(TASK_LIST+'/'+id, {
+      fetch(TASKS_LIST+'/'+id, {
         method: 'get',
         headers: {
           'Authorization': 'Bearer ' + token,
@@ -381,7 +381,7 @@ export const editTask = (data,taskID,projectID,statusID,requesterID,companyID,to
     if(!taskID||!projectID||!statusID){
       return;
     }
-    fetch(TASK_LIST+'/'+taskID+'/project/'+projectID+'/status/'+statusID+'/requester/'+requesterID+'/company/'+companyID, {
+    fetch(TASKS_LIST+'/'+taskID+'/project/'+projectID+'/status/'+statusID+'/requester/'+requesterID+'/company/'+companyID, {
       method: 'put',
       headers: {
         'Authorization': 'Bearer ' + token,

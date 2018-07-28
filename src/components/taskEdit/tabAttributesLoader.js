@@ -10,7 +10,7 @@ import {setTaskProjectsLoading,setTaskStatusesLoading,setTaskCompaniesLoading,se
  * Loads all of the data needed for user to seach for tasks
  * @extends Component
  */
-class SearchLoader extends Component {
+class TabAttributesLoader extends Component {
   constructor(props){
     super(props);
     this.props.setTaskProjectsLoading(false);
@@ -53,4 +53,4 @@ const mapStateToProps = ({loginReducer,userReducer, taskReducer}) => {
 
 //exports created Component connected to the redux store and redux actions
 export default connect(mapStateToProps,{setTaskProjectsLoading,setTaskStatusesLoading,setTaskCompaniesLoading,setTaskTagsLoading,
-  deleteTaskSolvers,setUsersLoading,getTaskStatuses,getTaskProjects,getTaskCompanies,getTaskTags,getUsers, setTaskLoading, getTask})(SearchLoader);
+  deleteTaskSolvers,setUsersLoading,getTaskStatuses,getTaskProjects,getTaskCompanies,getTaskTags,getUsers, setTaskLoading, getTask})(TabAttributesLoader);

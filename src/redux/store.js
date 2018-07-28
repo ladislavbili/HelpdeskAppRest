@@ -10,6 +10,7 @@ import companyReducer from './reducers/companyReducer';
 import itemReducer from './reducers/itemReducer';
 import userReducer from './reducers/userReducer';
 import sidebarReducer from './reducers/sidebarReducer';
+import subtaskReducer from './reducers/subtaskReducer';
 
 //all reducers gathered together for the redux storage
 const reducers = combineReducers({
@@ -22,6 +23,7 @@ const reducers = combineReducers({
   itemReducer,
   userReducer,
   sidebarReducer,
+  subtaskReducer,
 });
 
 //all enhancers gathered together for the redux storage

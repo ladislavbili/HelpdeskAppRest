@@ -13,22 +13,8 @@ import {formatDate} from '../../helperFunctions';
  */
 class TabComments extends Component {
 
-  /**
-   * After the component is mounted it loads all of it's comments
-   */
-  componentDidMount(){
-    this.props.startLoadingComments();
-    this.props.getComments(this.props.id, this.props.token);
-  }
 
   render() {
-    if(this.props.loadingComments){
-      return (
-        <ActivityIndicator
-        animating size={ 'large' }
-        color='#007299' />
-      )
-    }
     return (
       <Container>
         <Content padder style={{ marginTop: 0 }}>
@@ -75,10 +61,10 @@ class TabComments extends Component {
 }
 
 //creates function that maps actions (functions) to the redux store
-const mapStateToProps = ({ taskR, login, commentR }) => {
-  const { comments, loadingComments } = commentR;
-  const { token } = login;
-  return { comments, token, loadingComments,ACL:taskR.task.loggedUserProjectAcl.concat(taskR.task.loggedUserRoleAcl)};
+const mapStateToProps = ({ taskReducer, loginReducer, commentReducer }) => {
+  const { comments, loadingComments } = commentReducer;
+  const { token } = loginReducer;
+  return { comments, token, loadingComments,ACL:taskReducer.task.loggedUserProjectAcl.concat(taskReducer.task.loggedUserRoleAcl)};
 };
 
 //exports created Component connected to the redux store and redux actions
