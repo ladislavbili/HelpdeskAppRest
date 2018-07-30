@@ -7,4 +7,5 @@ export default {
   ok: 'OK',
   delete:'Zmazať',
   edit:'Upraviť',
+  change:'Zmeniť',
 };

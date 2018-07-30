@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Input, Item, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, View, CheckBox, Picker,Label } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import {Modal} from 'react-native';
-import I18n from '../../translations/';
+import i18n from 'i18next';
 import {addUser} from '../../redux/actions';
 import {isEmail} from '../../helperFunctions';
 
@@ -70,7 +70,7 @@ class UserAdd extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{I18n.t('addUser')}</Title>
+            <Title>{i18n.t('addUser')}</Title>
           </Body>
           <Right>
             {
@@ -83,53 +83,53 @@ class UserAdd extends Component {
         </Header>
         <Content style={{ padding: 15 }}>
 
-          <Text note>{I18n.t('email')+'/'+I18n.t('username')}</Text>
+          <Text note>{i18n.t('email')+'/'+i18n.t('username')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
-              placeholder={I18n.t('enterEmail')}
+              placeholder={i18n.t('enterEmail')}
               value={this.state.username}
               onChangeText={(value)=>this.setState({username:value})}
               />
               {
-    						!isEmail(this.state.username) && <Text note style={{color:'red'}}>You must have an valid e-mail/username</Text>
+    						!isEmail(this.state.username) && <Text note style={{color:'red'}}>{i18n.t('usernameError')}</Text>
               }
               {
-    						this.props.nameError && <Text note style={{color:'red'}}>This e-mail is already in use!</Text>
+    						this.props.nameError && <Text note style={{color:'red'}}>{i18n.t('usernameInUse')}</Text>
               }
           </View>
 
-          <Text note>{I18n.t('firstName')}</Text>
+          <Text note>{i18n.t('firstName')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
-              placeholder={I18n.t('enterFirstName')}
+              placeholder={i18n.t('enterFirstName')}
               value={this.state.name}
               onChangeText={(value)=>this.setState({name:value})}
               />
           </View>
 
-          <Text note>{I18n.t('surname')}</Text>
+          <Text note>{i18n.t('surname')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
-              placeholder={I18n.t('enterSurname')}
+              placeholder={i18n.t('enterSurname')}
               value={this.state.surname}
               onChangeText={(value)=>this.setState({surname:value})}
               />
           </View>
 
-        <Text note>{I18n.t('password')}</Text>
+        <Text note>{i18n.t('password')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
             secureTextEntry={true}
-            placeholder={I18n.t('enterNewPassword')}
+            placeholder={i18n.t('enterNewPassword')}
             value={this.state.password}
             onChangeText={(value)=>this.setState({password:value})}
             />
           {
-            this.state.password.length<8  && <Text note style={{color:'red'}}>Password has to be at least 8 characters</Text>
+            this.state.password.length<8  && <Text note style={{color:'red'}}>{i18n.t('userPasswordError')}</Text>
         }
       </View>
 
-      <Text note>{I18n.t('userRole')}</Text>
+      <Text note>{i18n.t('userRole')}</Text>
       <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
         <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingUserRole:true})}>
           <Left>
@@ -138,11 +138,11 @@ class UserAdd extends Component {
         </Button>
       </View>
 
-      <Text note>{I18n.t('company')}</Text>
+      <Text note>{i18n.t('company')}</Text>
       <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
         <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({selectingCompany:true})}>
           <Left>
-            <Text style={{textAlign:'left',color:'black'}}>{this.state.company==null ? I18n.t('selectCompany') : this.state.company.title}</Text>
+            <Text style={{textAlign:'left',color:'black'}}>{this.state.company==null ? i18n.t('selectCompany') : this.state.company.title}</Text>
           </Left>
         </Button>
       </View>
@@ -159,29 +159,29 @@ class UserAdd extends Component {
         </Picker>
       </View>
 
-    <Text note>{I18n.t('function')}</Text>
+    <Text note>{i18n.t('function')}</Text>
     <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
       <Input
-        placeholder={I18n.t('enterFunction')}
+        placeholder={i18n.t('enterFunction')}
         value={this.state.func}
         onChangeText={(value)=>this.setState({func:value})}
         />
     </View>
 
-    <Text note>{I18n.t('mobile')}</Text>
+    <Text note>{i18n.t('mobile')}</Text>
     <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
       <Input
-        placeholder={I18n.t('enterMobile')}
+        placeholder={i18n.t('enterMobile')}
         value={this.state.mobile}
         keyboardType="numeric"
         onChangeText={(value)=>this.setState({mobile:value})}
         />
     </View>
 
-    <Text note>{I18n.t('telephone')}</Text>
+    <Text note>{i18n.t('telephone')}</Text>
     <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
       <Input
-        placeholder={I18n.t('enterTelephone')}
+        placeholder={i18n.t('enterTelephone')}
         value={this.state.tel}
         onChangeText={(value)=>this.setState({tel:value})}
         keyboardType="numeric"
@@ -196,7 +196,7 @@ class UserAdd extends Component {
         onRequestClose={() => this.setState({selectingCompany:false})}>
         <Header>
           <Body>
-            <Title>{I18n.t('selectUsersCompany')}</Title>
+            <Title>{i18n.t('selectUsersCompany')}</Title>
           </Body>
         </Header>
         <Content style={{ padding: 15 }}>
@@ -204,7 +204,7 @@ class UserAdd extends Component {
           <ListItem>
             <Item rounded>
               <Icon name="ios-search" />
-              <Input placeholder={I18n.t('search')} value={this.state.filterWord} onChangeText={((value)=>this.setState({filterWord:value}))} />
+              <Input placeholder={i18n.t('search')} value={this.state.filterWord} onChangeText={((value)=>this.setState({filterWord:value}))} />
             </Item>
           </ListItem>
 
@@ -233,7 +233,7 @@ class UserAdd extends Component {
         onRequestClose={() => this.setState({selectingUserRole:false})}>
         <Header>
           <Body>
-            <Title>{I18n.t('selectUserRole')}</Title>
+            <Title>{i18n.t('selectUserRole')}</Title>
           </Body>
         </Header>
         <Content style={{ padding: 15 }}>
@@ -241,7 +241,7 @@ class UserAdd extends Component {
           <ListItem>
             <Item rounded>
               <Icon name="ios-search" />
-              <Input placeholder={I18n.t('search')} value={this.state.filterWordUserRole} onChangeText={((value)=>this.setState({filterWordUserRole:value}))} />
+              <Input placeholder={i18n.t('search')} value={this.state.filterWordUserRole} onChangeText={((value)=>this.setState({filterWordUserRole:value}))} />
             </Item>
           </ListItem>
 

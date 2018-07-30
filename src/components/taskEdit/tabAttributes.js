@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { View, Body, Container, Content, Icon, Input, Item, Label, Text, Footer, FooterTab, Button, Picker,  ListItem, Header,Title , Left, Right, List , CheckBox } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
-import I18n from '../../translations';
+import i18n from 'i18next';
 import {editTask,getTaskSolvers,deleteFollower,addFollower} from '../../redux/actions';
 import {formatDate,processInteger} from '../../helperFunctions';
 import TaskTag from './tag';
@@ -37,7 +37,7 @@ class TabAtributes extends Component {
       company:this.props.companies.length===0?'null':this.props.companies.find((item)=>item.id===task.company.id),
       companyOpen:false,
       companyFilter:'',
-      assigned:task.taskHasAssignedUsers.length===0?{id:null,name:I18n.t('noUser')}:this.props.users.find((item)=>item.id===Object.values(task.taskHasAssignedUsers)[0].user.id),
+      assigned:task.taskHasAssignedUsers.length===0?{id:null,name:i18n.t('noUser')}:this.props.users.find((item)=>item.id===Object.values(task.taskHasAssignedUsers)[0].user.id),
       assignedOpen:false,
       assignedFilter:'',
       workType:task.work_type?task.work_type:workTypes[0],
@@ -155,22 +155,22 @@ class TabAtributes extends Component {
 
           <Item inlineLabel style={{marginBottom:20, borderBottomWidth:0,marginTop:10,paddingBottom:5}} onPress={()=>this.setState({important:!this.state.important})}>
             <CheckBox checked={this.state.important} color='#3F51B5' onPress={()=>{    this.props.inputChanged(true);this.setState({important:!this.state.important})}}/>
-            <Label style={{marginLeft:15}}>Important</Label>
+            <Label style={{marginLeft:15}}>{i18n.t('important')}</Label>
           </Item>
 
-          <Text note>{I18n.t('taskName')}</Text>
+          <Text note>{i18n.t('taskName')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
-              placeholder={I18n.t('enterTaskName')}
+              placeholder={i18n.t('enterTaskName')}
               value={ this.state.title }
               onChangeText={ value =>{ this.props.inputChanged(true);this.setState({title:value}) }}
               />
-            {this.state.submitError && this.state.title==='' && <Text style={{color:'red'}}>{I18n.t('restrictionMustEnterTaskTitle')}</Text>}
+            {this.state.submitError && this.state.title==='' && <Text style={{color:'red'}}>{i18n.t('restrictionMustEnterTaskTitle')}</Text>}
           </View>
 
-          <Text note>{I18n.t('tags')}</Text>
+          <Text note>{i18n.t('tags')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block onPress={()=>{this.setState({tagOpen:true})}}><Text>{I18n.t('selectTags')}</Text></Button>
+            <Button block onPress={()=>{this.setState({tagOpen:true})}}><Text>{i18n.t('selectTags')}</Text></Button>
             <List
               dataArray={this.state.tag}
               renderRow={tag =>
@@ -183,7 +183,7 @@ class TabAtributes extends Component {
               />
           </View>
 
-          <Text note>{I18n.t('taskDescription')}</Text>
+          <Text note>{i18n.t('taskDescription')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
               style={{height:Math.max(35, this.state.descriptionHeight)}}
@@ -191,11 +191,11 @@ class TabAtributes extends Component {
               onChange={ event =>{this.props.inputChanged(true); this.setState({description:event.nativeEvent.text})} }
               onContentSizeChange={(event) => this.setState({ descriptionHeight: event.nativeEvent.contentSize.height })}
               value={ this.state.description }
-              placeholder={I18n.t('enterTaskDescription')}
+              placeholder={i18n.t('enterTaskDescription')}
               />
           </View>
 
-          <Text note>{I18n.t('status')}</Text>
+          <Text note>{i18n.t('status')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Button style={statusButtonStyle} onPress={()=>this.setState({statusOpened:!this.state.statusOpened})}><Text style={{color:'white',flex:1,textAlign:'center'}}>{this.state.status.title}</Text></Button>
             {
@@ -207,24 +207,24 @@ class TabAtributes extends Component {
             }
           </View>
 
-          <Text note>{I18n.t('project')}</Text>
+          <Text note>{i18n.t('project')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Picker
               supportedOrientations={['portrait', 'landscape']}
-              iosHeader={I18n.t('selectOne')}
+              iosHeader={i18n.t('selectOne')}
               mode="dropdown"
               selectedValue={this.state.project}
-              onValueChange={(value)=>{this.props.inputChanged(true);this.setState({project : value,assigned:{id:null,name:I18n.t('noUser')}});this.props.getTaskSolvers(value,this.props.token);}}>
+              onValueChange={(value)=>{this.props.inputChanged(true);this.setState({project : value,assigned:{id:null,name:i18n.t('noUser')}});this.props.getTaskSolvers(value,this.props.token);}}>
               {
                 this.props.projects.map((project)=>
                 (<Item label={project.title?project.title:''} key={project.id} value={project.id} />)
               )
             }
           </Picker>
-          {this.state.submitError && this.state.project==='null' && <Text style={{color:'red'}}>{I18n.t('restrictionMustSelectTaskProject')}</Text>}
+          {this.state.submitError && this.state.project==='null' && <Text style={{color:'red'}}>{i18n.t('restrictionMustSelectTaskProject')}</Text>}
         </View>
 
-        <Text note>{I18n.t('requester')}</Text>
+        <Text note>{i18n.t('requester')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({requestedByOpen:true})}>
             <Left>
@@ -236,21 +236,21 @@ class TabAtributes extends Component {
             </Button>
           </View>
 
-          <Text note>{I18n.t('company')}</Text>
+          <Text note>{i18n.t('company')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({companyOpen:true})}>
               <Left>
-                <Text style={{textAlign:'left',color:'black'}}>{this.state.company==null ? I18n.t('selectCompany') : this.state.company.title}</Text>
+                <Text style={{textAlign:'left',color:'black'}}>{this.state.company==null ? i18n.t('selectCompany') : this.state.company.title}</Text>
               </Left>
             </Button>
-            {this.state.submitError && this.state.company==='null' && <Text style={{color:'red'}}>{I18n.t('restrictionMustSelectTaskCompany')}</Text>}
+            {this.state.submitError && this.state.company==='null' && <Text style={{color:'red'}}>{i18n.t('restrictionMustSelectTaskCompany')}</Text>}
           </View>
 
-          <Text note>{I18n.t('assigned')}</Text>
+          <Text note>{i18n.t('assigned')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({assignedOpen:true})}>
               <Left>
-                <Text style={{textAlign:'left',color:'black'}}>{this.state.assigned==null ? I18n.t('selectAssignedTo') : (
+                <Text style={{textAlign:'left',color:'black'}}>{this.state.assigned==null ? i18n.t('selectAssignedTo') : (
                     this.state.assigned.name||this.state.assigned.surname?
                     <Text>{this.state.assigned.name?this.state.assigned.name:''+' '+this.state.assigned.surname?this.state.assigned.surname:''}</Text>:
                       <Text>{this.state.assigned.username}</Text>
@@ -260,11 +260,11 @@ class TabAtributes extends Component {
                 </Button>
               </View>
 
-          <Text note>{I18n.t('taskWork')}</Text>
+          <Text note>{i18n.t('taskWork')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Picker
               supportedOrientations={['portrait', 'landscape']}
-              iosHeader={I18n.t('selectOne')}
+              iosHeader={i18n.t('selectOne')}
               mode="dropdown"
               selectedValue={this.state.workType}
               onValueChange={(value)=>{this.props.inputChanged(true);this.setState({workType : value})}}>
@@ -276,21 +276,21 @@ class TabAtributes extends Component {
           </Picker>
         </View>
 
-          <Text note>{I18n.t('workHours')}</Text>
+          <Text note>{i18n.t('workHours')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
               value={this.state.work_time}
               keyboardType='numeric'
-              placeholder={I18n.t('enterWorkHours')}
+              placeholder={i18n.t('enterWorkHours')}
               onChangeText={ value => {this.props.inputChanged(true);let result = processInteger(value);this.setState({work_time:(result?result:this.state.work_time)})} }
               />
           </View>
 
-          <Text note>{I18n.t('startsAt')}</Text>
+          <Text note>{i18n.t('startsAt')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({startedAtOpen:true})}>
               <Left>
-                <Text style={{textAlign:'left',color:'black'}}>{this.state.startedAt==null ? I18n.t('selectPendingAt') : formatDate(this.state.startedAt)}</Text>
+                <Text style={{textAlign:'left',color:'black'}}>{this.state.startedAt==null ? i18n.t('selectStartsAt') : formatDate(this.state.startedAt)}</Text>
               </Left>
             </Button>
             <DateTimePicker
@@ -301,11 +301,11 @@ class TabAtributes extends Component {
               />
           </View>
 
-          <Text note>{I18n.t('deadline')}</Text>
+          <Text note>{i18n.t('deadline')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({deadlineOpen:true})}>
               <Left>
-                <Text style={{textAlign:'left',color:'black'}}>{this.state.deadline==null ? I18n.t('selectDeadline') : formatDate(this.state.deadline)}</Text>
+                <Text style={{textAlign:'left',color:'black'}}>{this.state.deadline==null ? i18n.t('selectDeadline') : formatDate(this.state.deadline)}</Text>
               </Left>
             </Button>
             <DateTimePicker
@@ -316,11 +316,11 @@ class TabAtributes extends Component {
               />
           </View>
 
-          <Text note>{I18n.t('followers')}</Text>
+          <Text note>{i18n.t('followers')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({followersOpen:true})}>
               <Left>
-                <Text style={{textAlign:'left',color:'black'}}>{I18n.t('selectFollowers')}</Text>
+                <Text style={{textAlign:'left',color:'black'}}>{i18n.t('selectFollowers')}</Text>
                   </Left>
                 </Button>
                 {
@@ -341,7 +341,7 @@ class TabAtributes extends Component {
                 <Content style={{ padding: 15 }}>
                   <Header>
                     <Body>
-                      <Title>{I18n.t('selectTaskTags')}</Title>
+                      <Title>{i18n.t('selectTaskTags')}</Title>
                     </Body>
                   </Header>
 
@@ -360,7 +360,7 @@ class TabAtributes extends Component {
                   <FooterTab>
                     <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
                       onPress={()=>this.setState({tagOpen:false})}>
-                      <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                      <Text style={{ color: 'white' }}>{i18n.t('done')}</Text>
                     </Button>
                   </FooterTab>
                 </Footer>
@@ -374,7 +374,7 @@ class TabAtributes extends Component {
                 onRequestClose={() => this.setState({companyOpen:false})}>
                 <Header>
                   <Body>
-                    <Title>{I18n.t('selectCompany')}</Title>
+                    <Title>{i18n.t('selectCompany')}</Title>
                   </Body>
                 </Header>
                 <Content style={{ padding: 15 }}>
@@ -382,7 +382,7 @@ class TabAtributes extends Component {
                   <ListItem>
                     <Item rounded>
                       <Icon name="ios-search" />
-                      <Input placeholder={I18n.t('search')} value={this.state.companyFilter} onChangeText={((value)=>this.setState({companyFilter:value}))} />
+                      <Input placeholder={i18n.t('search')} value={this.state.companyFilter} onChangeText={((value)=>this.setState({companyFilter:value}))} />
                     </Item>
                   </ListItem>
 
@@ -412,7 +412,7 @@ class TabAtributes extends Component {
             onRequestClose={() => this.setState({requestedByOpen:false})}>
             <Header>
               <Body>
-                <Title>{I18n.t('selectRequester')}</Title>
+                <Title>{i18n.t('selectRequester')}</Title>
               </Body>
             </Header>
             <Content style={{ padding: 15 }}>
@@ -420,7 +420,7 @@ class TabAtributes extends Component {
               <ListItem>
                 <Item rounded>
                   <Icon name="ios-search" />
-                  <Input placeholder={I18n.t('search')} value={this.state.requestedByFilter}
+                  <Input placeholder={i18n.t('search')} value={this.state.requestedByFilter}
                     onChangeText={((value)=>{this.props.inputChanged(true);this.setState({requestedByFilter:value})})} />
                 </Item>
               </ListItem>
@@ -453,7 +453,7 @@ class TabAtributes extends Component {
           onRequestClose={() => this.setState({assignedOpen:false})}>
           <Header>
             <Body>
-              <Title>{I18n.t('selectAssignedTo')}</Title>
+              <Title>{i18n.t('selectAssignedTo')}</Title>
             </Body>
           </Header>
           <Content style={{ padding: 15 }}>
@@ -461,13 +461,13 @@ class TabAtributes extends Component {
             <ListItem>
               <Item rounded>
                 <Icon name="ios-search" />
-                <Input placeholder={I18n.t('search')} value={this.state.assignedFilter} onChangeText={((value)=>this.setState({assignedFilter:value}))} />
+                <Input placeholder={i18n.t('search')} value={this.state.assignedFilter} onChangeText={((value)=>this.setState({assignedFilter:value}))} />
               </Item>
             </ListItem>
 
             <List>
                 {
-                  (([{id:null,name:I18n.t('noUser')}]).concat(this.props.taskSolvers)).map((user) =>
+                  (([{id:null,name:i18n.t('noUser')}]).concat(this.props.taskSolvers)).map((user) =>
                   ((user.name?user.name:'')+' '+(user.surname?user.surname:'')+' '+(user.name?user.name:'')+user.username).toLowerCase().includes(this.state.assignedFilter.toLowerCase()) &&
                   <ListItem button key={user.id} onPress={()=>{this.props.inputChanged(true);this.setState({assigned:user,assignedOpen:false})}} >
                     <Body>
@@ -495,7 +495,7 @@ class TabAtributes extends Component {
           <Content style={{ padding: 15 }}>
             <Header>
               <Body>
-                <Title>{I18n.t('selectTaskFollowers')}</Title>
+                <Title>{i18n.t('selectTaskFollowers')}</Title>
               </Body>
             </Header>
 
@@ -514,7 +514,7 @@ class TabAtributes extends Component {
             <FooterTab>
               <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
                 onPress={()=>this.setState({followersOpen:false})}>
-                <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                <Text style={{ color: 'white' }}>{i18n.t('done')}</Text>
               </Button>
             </FooterTab>
           </Footer>

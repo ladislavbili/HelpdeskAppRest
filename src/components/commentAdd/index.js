@@ -4,7 +4,7 @@ import { Tab, Tabs, Container} from 'native-base';
 import { connect } from 'react-redux';
 import TabComment from './tabComment';
 import TabEmail from './tabEmail';
-import I18n from '../../translations/';
+import i18n from 'i18next';
 
 /**
  * Creates tabs that allows the user to send either comments or comments and e-mails
@@ -16,12 +16,12 @@ export default class CommentAdd extends Component {
     return (
       <Container>
         <Tabs>
-          <Tab heading={'+' + I18n.t('comment')}>
+          <Tab heading={'+' + i18n.t('comment')}>
             <TabComment id={this.props.id} ACL={this.props.ACL} />
           </Tab>
           {
             this.props.ACL.includes('sent_emails_from_comments') &&
-            <Tab heading={"+"+ I18n.t('email')}>
+            <Tab heading={"+"+ i18n.t('email')}>
               <TabEmail id={this.props.id} ACL={this.props.ACL} />
             </Tab>
           }

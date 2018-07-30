@@ -5,7 +5,7 @@ import { Input, Item, Picker, Container, Header, Title, Content, Button, Icon, T
 import { Actions } from 'react-native-router-flux';
 import jwt_decode from 'jwt-decode';
 import {logoutUser, editUser} from '../../redux/actions';
-import I18n from '../../translations/';
+import i18n from 'i18next';
 import {isEmail} from '../../helperFunctions';
 
 const languages = [{ id: 'en', name: 'English' }, { id: 'sk', name: 'Slovensky' }];
@@ -81,50 +81,47 @@ class Account extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{I18n.t('account')}</Title>
+            <Title>{i18n.t('account')}</Title>
           </Body>
         </Header>
         <Content style={{ padding: 15 }}>
 
-          <Text note>{I18n.t('email')}/{I18n.t('username')}</Text>
+          <Text note>{i18n.t('email')}/{i18n.t('username')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 5 }}>
             <Input
               value={this.state.email}
               disabled={true}
               />
-              {
-                !isEmail(this.state.email) && <Text note style={{color:'red'}}>You must have an valid e-mail/username</Text>
-              }
           </View>
 
-          <Text note>{I18n.t('firstName')}</Text>
+          <Text note>{i18n.t('firstName')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 5 }}>
             <Input
-              placeholder={I18n.t('enterFirstName')}
+              placeholder={i18n.t('enterFirstName')}
               value={this.state.name}
               onChangeText={(value)=>this.setState({name:value})}
               />
           </View>
 
-          <Text note>{I18n.t('surname')}</Text>
+          <Text note>{i18n.t('surname')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 5 }}>
             <Input
-              placeholder={I18n.t('enterSurname')}
+              placeholder={i18n.t('enterSurname')}
               value={this.state.surname}
               onChangeText={(value)=>this.setState({surname:value})}
               />
           </View>
 
-          <Text note>{I18n.t('password')}</Text>
+          <Text note>{i18n.t('password')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
               secureTextEntry={true}
-              placeholder={I18n.t('enterNewPassword')}
+              placeholder={i18n.t('enterNewPassword')}
               value={this.state.password}
               onChangeText={(value)=>this.setState({password:value})}
               />
             {
-              this.state.password.length<8  && this.state.password.length>0 && <Text note style={{color:'red'}}>Password has to be at least 8 characters</Text>
+              this.state.password.length<8  && this.state.password.length>0 && <Text note style={{color:'red'}}>{i18n.t('userPasswordError')}</Text>
           }
         </View>
 
@@ -140,36 +137,36 @@ class Account extends Component {
           </Picker>
         </View>
 
-        <Text note>{I18n.t('function')}</Text>
+        <Text note>{i18n.t('function')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-            placeholder={I18n.t('enterFunction')}
+            placeholder={i18n.t('enterFunction')}
             value={this.state.func}
             onChangeText={(value)=>this.setState({func:value})}
             />
         </View>
 
-        <Text note>{I18n.t('mobile')}</Text>
+        <Text note>{i18n.t('mobile')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-            placeholder={I18n.t('enterMobile')}
+            placeholder={i18n.t('enterMobile')}
             value={this.state.mobile}
             keyboardType="numeric"
             onChangeText={(value)=>this.setState({mobile:value})}
             />
         </View>
 
-        <Text note>{I18n.t('telephone')}</Text>
+        <Text note>{i18n.t('telephone')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-            placeholder={I18n.t('enterTelephone')}
+            placeholder={i18n.t('enterTelephone')}
             value={this.state.tel}
             onChangeText={(value)=>this.setState({tel:value})}
             keyboardType="numeric"
             />
         </View>
 
-          <Text note>{I18n.t('userRole')}</Text>
+          <Text note>{i18n.t('userRole')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 5 }}>
             <Input
               value={this.state.user_role}
@@ -179,14 +176,14 @@ class Account extends Component {
 
           <Button primary block onPress={this.submit.bind(this)} disabled={!this.checkValues()}
             style={{ flexDirection: 'row', borderColor: 'white', marginTop:5, marginBottom:20, borderWidth: 0.5 }}>
-            <Text style={{ color: 'white' }} >Change</Text>
+            <Text style={{ color: 'white' }} >{i18n.t('change')}</Text>
           </Button>
 
 
           <Button danger block onPress={()=>{Actions.taskList();this.props.logoutUser();}}
             iconLeft style={{ flexDirection: 'row', borderColor: 'white', marginTop:5, marginBottom:20, borderWidth: 0.5 }}>
             <Icon active style={{ color: 'white' }} name="power" />
-            <Text style={{ color: 'white' }} >{I18n.t('logout')}</Text>
+            <Text style={{ color: 'white' }} >{i18n.t('logout')}</Text>
           </Button>
 
 

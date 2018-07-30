@@ -5,7 +5,7 @@ import { ActivityIndicator, Alert } from 'react-native';
 import { connect } from 'react-redux';
 
 
-import I18n from '../../translations/';
+import i18n from 'i18next';
 import {addSubtask,deleteSubtask,editSubtask} from '../../redux/actions';
 
 /**
@@ -29,13 +29,12 @@ class TabSubtasks extends Component{
   * @param  {string} title Title of the item
   */
   deleteSubtask(id,title){
-    console.log('nom');
     Alert.alert(
-      I18n.t('deletingSubtask'),
-      I18n.t('deletingSubtaskMessage')+title,
+      i18n.t('deletingSubtask'),
+      i18n.t('deletingSubtaskMessage')+title+'?',
       [
-        {text: I18n.t('cancel'), style: 'cancel'},
-        {text: I18n.t('ok'), onPress: () =>{
+        {text: i18n.t('cancel'), style: 'cancel'},
+        {text: i18n.t('ok'), onPress: () =>{
           this.props.deleteSubtask(
             id,
             this.props.id,
@@ -108,7 +107,7 @@ class TabSubtasks extends Component{
                 <Left>
                   <Input
                     onChange={ event => this.setState({newTitle:event.nativeEvent.text}) }
-                    placeholder={"Enter new subtask"}
+                    placeholder={i18n.t('enterNewSubtask')}
                     value={this.state.newTitle}
                     />
                 </Left>

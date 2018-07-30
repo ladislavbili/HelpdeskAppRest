@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
 
 import TabAttributesLoader from './tabAttributesLoader';
-import I18n from '../../translations/';
+import i18n from 'i18next';
 
 /**
 * Loads all of the data required to add a new task
@@ -35,7 +35,7 @@ export default class TaskAdd extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{I18n.t('addTask')}</Title>
+            <Title>{i18n.t('addTask')}</Title>
           </Body>
           <Right>
             <Button transparent onPress={()=>this.state.saveFunction?this.state.saveFunction():()=>{}}>
@@ -44,7 +44,7 @@ export default class TaskAdd extends Component {
           </Right>
         </Header>
         <Tabs>
-          <Tab heading={I18n.t('attributes')}>
+          <Tab heading={i18n.t('attributes')}>
             <TabAttributesLoader saveFunction={this.setFunction.bind(this)} />
           </Tab>
         </Tabs>

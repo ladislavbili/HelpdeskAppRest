@@ -6,7 +6,7 @@ import { ActivityIndicator } from 'react-native';
 
 import { closeDrawer } from '../../redux/actions';
 import styles from './style';
-import I18n from '../../translations/';
+import i18n from 'i18next';
 
 /**
  * Displays user a list of all projects and filters
@@ -30,12 +30,12 @@ class SideBar extends Component {
           >
           <Header>
             <Body>
-              <Title>{I18n.t('appName')}</Title>
+              <Title>{i18n.t('appName')}</Title>
             </Body>
             <Right />
           </Header>
           <ListItem button noBorder onPress={() => this.setState({showFilters:!this.state.showFilters})} >
-            <Text>{I18n.t('filters')}</Text>
+            <Text>{i18n.t('filters')}</Text>
           </ListItem>
           {
             this.state.showFilters &&
@@ -51,7 +51,7 @@ class SideBar extends Component {
               />
           }
           <ListItem button noBorder onPress={() => this.setState({showProjects:!this.state.showProjects})} >
-            <Text>{I18n.t('projects')}</Text>
+            <Text>{i18n.t('projects')}</Text>
           </ListItem>
           {this.state.showProjects &&
             <List
@@ -76,7 +76,7 @@ class SideBar extends Component {
               />
           }
           <ListItem button noBorder onPress={() => this.setState({showArchived:!this.state.showArchived})} >
-            <Text>{I18n.t('archived')}</Text>
+            <Text>{i18n.t('archived')}</Text>
           </ListItem>
           {this.state.showArchived &&
             <List

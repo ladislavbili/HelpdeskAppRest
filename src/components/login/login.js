@@ -5,7 +5,7 @@ import { View, Container, Button, Text, Content, Item, Form, Input, Label, Heade
 import jwt_decode from 'jwt-decode';
 import styles from './styles';
 import {loginUser} from '../../redux/actions';
-import I18n from '../../translations/';
+import i18n from 'i18next';
 import Navigation from '../navigation';
 
 /**
@@ -17,7 +17,7 @@ class Login extends Component {
     super(props);
     this.state={
       username:'admin@admin.sk',
-      password:'admin'
+      password:'12345678'
     }
   }
   /**
@@ -39,13 +39,13 @@ class Login extends Component {
         <Content padder style={{ backgroundColor: '#FFF', padding: 20 }}>
           <Header>
             <Body>
-              <Title>{I18n.t('appName')}</Title>
+              <Title>{i18n.t('appName')}</Title>
             </Body>
           </Header>
           <Form>
             <Item inlineLabel>
               <Input
-                placeholder={I18n.t('enterUsername')}
+                placeholder={i18n.t('enterUsername')}
                 value={this.state.username}
                 onChangeText={(value)=>this.setState({username:value})}
                 />
@@ -53,7 +53,7 @@ class Login extends Component {
             <Item inlineLabel last>
               <Input
                 secureTextEntry={true}
-                placeholder={I18n.t('enterPassword')}
+                placeholder={i18n.t('enterPassword')}
                 value={this.state.password}
                 onChangeText={(value)=>this.setState({password:value})}
                 />
@@ -71,7 +71,7 @@ class Login extends Component {
                 <ActivityIndicator
                   animating size={ 'large' }
                   color='#007299' /> :
-                  <Text>{I18n.t('login')}</Text>
+                  <Text>{i18n.t('login')}</Text>
                 }
               </Button>
                 <Text style={styles.errorMessage}>{this.props.error}</Text>

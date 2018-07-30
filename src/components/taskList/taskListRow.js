@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Icon, Text, Right, Body, ListItem, Item} from 'native-base';
 import { connect } from 'react-redux';
 
-import I18n from '../../translations/';
+import i18n from 'i18next';
 import {startLoading} from '../../redux/actions';
 import { Actions } from 'react-native-router-flux';
 import {formatDate} from '../../helperFunctions';
@@ -21,10 +21,10 @@ class TaskListRow extends Component {
         <Body>
           <Text>{this.props.task.title?this.props.task.title:''}</Text>
           <Text numberOfLines={1} note>
-            {I18n.t('project')}: {project?project.title:I18n.t('noProject')}
+            {i18n.t('project')}: {project?project.title:i18n.t('noProject')}
           </Text>
-          <Text numberOfLines={1} note>{I18n.t('assignedTo')}: {assigned?assigned.user.username:I18n.t('noUser')}</Text>
-          <Text numberOfLines={1} note>{I18n.t('deadline')}: {deadline?formatDate(deadline*1000):I18n.t('noDeadline')}</Text>
+          <Text numberOfLines={1} note>{i18n.t('assignedTo')}: {assigned?assigned.user.username:i18n.t('noUser')}</Text>
+          <Text numberOfLines={1} note>{i18n.t('deadline')}: {deadline?formatDate(deadline*1000):i18n.t('noDeadline')}</Text>
           { assigned &&
             <Item style={{backgroundColor:assigned.status.color,flex:1,flexDirection:'column'}}>
               <Text style={{color:'white',paddingLeft:10,paddingRight:10,flex:1,flexDirection:'column'}}>{assigned.status.title}</Text>

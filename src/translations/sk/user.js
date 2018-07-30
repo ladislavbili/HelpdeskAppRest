@@ -12,7 +12,8 @@ export default {
   userRole:'Používateľova rola',
   username:'Prihlasovacie meno',
   enterNewUsername:'Zadajte používateľové prihlasovacie meno',
-  usernameError:'Používateľ musí mat  prihlasovacie meno!',
+  usernameError:'Musíte zadať validný email!',
+  usernameInUse:'This e-mail is already in use!',
   function:'Funkcia',
   enterFunction:'Zadajte používateľovu funkciu',
   mobile:'Mobilné číslo',
@@ -23,6 +24,8 @@ export default {
   enterSignature:'Zadajte používateľov podpis',
   selectUsersCompany:'Vyberte používateľovú firmu',
   selectUserRole:'Vyberte používateľovú rolu',
+  selectUserLanguage:'Vyberte používateľov jazyk',
+  userPasswordError:'Používateľove heslo musí byť dlhé aspoň 8 charakterov!',
   //edit user
   editUser:'Upraviť používateľa',
   //list

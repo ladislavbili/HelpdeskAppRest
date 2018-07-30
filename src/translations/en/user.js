@@ -12,7 +12,8 @@ export default {
   userRole:'User\'s role',
   username:'Username',
   enterNewUsername:'Enter user\'s username',
-  usernameError:'User must have an username!',
+  usernameError:'You have to enter valid e-mail!',
+  usernameInUse:'This e-mail is already in use!',
   function:'Function',
   enterFunction:'Enter user\'s function',
   mobile:'Mobile',
@@ -22,7 +23,9 @@ export default {
   signature:'Signature',
   enterSignature:'Enter user\'s signature',
   selectUsersCompany:'Select user\'s company',
-  selectUserRole:'Select user\' role',
+  selectUserRole:'Select user\'s role',
+  selectUserLanguage:'Select user\'s language',
+  userPasswordError:'User\'s password has to be at least 8 characters long!',
   //edit user
   editUser:'Edit user',
   //list

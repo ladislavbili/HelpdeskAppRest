@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Button, Icon, Footer, FooterTab,View, Container, Content, Text, ListItem, List,  Left, Right } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import {ActivityIndicator} from 'react-native';
-import I18n from '../../translations/';
+import i18n from 'i18next';
 import {startLoadingComments, getComments} from '../../redux/actions';
 import {formatDate} from '../../helperFunctions';
 
@@ -25,7 +25,7 @@ class TabComments extends Component {
             (<ListItem key={data.id} style={{flexDirection:'column',justifyContent:'flex-start',alignItems:'flex-start',flex:1}}>
               <View style={{flex:1,flexDirection:'row'}}>
                <Left>
-                 <Text note>{data.createdBy?(data.createdBy.name?data.createdBy.name:data.createdBy.email):I18n.t('noUser')}</Text>
+                 <Text note>{data.createdBy?(data.createdBy.name?data.createdBy.name:data.createdBy.email):i18n.t('noUser')}</Text>
                </Left>
                <Right>
                  <Text note>{data.internal?<Text style={{textAlign:'right',color:'red'}}>i </Text>:null}{formatDate(data.createdAt*1000)}</Text>
@@ -33,7 +33,7 @@ class TabComments extends Component {
               </View>
             <View style={{flex:1}}>
              {data.email_to &&
-               <Text>{I18n.t('mailedTo')} <Text note>{data.email_to.join(', ')}</Text></Text>
+               <Text>{i18n.t('mailedTo')} <Text note>{data.email_to.join(', ')}</Text></Text>
              }
               {data.title &&
                 <Text style={{color:'#007299'}}> {data.title}</Text>
@@ -49,7 +49,7 @@ class TabComments extends Component {
         <FooterTab>
           <Button onPress={()=>{Actions.commentAdd({id:this.props.id,ACL:this.props.ACL})}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
             <Icon active style={{ color: 'white' }} name="md-add" />
-            <Text style={{ color: 'white' }} >{I18n.t('comment')}</Text>
+            <Text style={{ color: 'white' }} >{i18n.t('comment')}</Text>
           </Button>
         </FooterTab>
       </Footer>

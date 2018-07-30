@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Input, Picker, Item, Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Body, View, Right } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import I18n from '../../translations/';
+import i18n from 'i18next';
 import {editItem} from '../../redux/actions';
 
 /**
@@ -66,7 +66,7 @@ class ItemEdit extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{I18n.t('editItem')}</Title>
+            <Title>{i18n.t('editItem')}</Title>
           </Body>
           <Right>
             {
@@ -78,25 +78,25 @@ class ItemEdit extends Component {
           </Right>
         </Header>
         <Content style={{ padding: 15 }}>
-          <Text note>{I18n.t('title')}</Text>
+          <Text note>{i18n.t('title')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
               value={this.state.title}
-              placeholder={I18n.t('enterTitle')}
+              placeholder={i18n.t('enterTitle')}
               onChangeText={ value => this.setState({title:value}) }
               />
-            {this.state.title.length==0 && <Text note style={{color:'red'}}>{I18n.t('itemNameError')}</Text>}
+            {this.state.title.length==0 && <Text note style={{color:'red'}}>{i18n.t('itemNameError')}</Text>}
           </View>
-          <Text note>{I18n.t('pricePerUnit')}</Text>
+          <Text note>{i18n.t('pricePerUnit')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
               value={this.state.itemPrice}
-              placeholder={I18n.t('enterPricePerUnit')}
+              placeholder={i18n.t('enterPricePerUnit')}
               keyboardType='numeric'
               onChangeText={ value => this.setPrice(value) }
               />
           </View>
-          <Text note>{I18n.t('unitSelect')}</Text>
+          <Text note>{i18n.t('unitSelect')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Picker
               supportedOrientations={['portrait', 'landscape']}
@@ -107,11 +107,11 @@ class ItemEdit extends Component {
             )}
             </Picker>
           </View>
-          <Text note>{I18n.t('quantity')}</Text>
+          <Text note>{i18n.t('quantity')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
               value={this.state.itemQuantity}
-              placeholder={I18n.t('enterQuantity')}
+              placeholder={i18n.t('enterQuantity')}
               keyboardType='numeric'
               onChangeText={ value => this.setQuantity(value) }
               />

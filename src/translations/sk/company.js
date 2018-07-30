@@ -17,7 +17,8 @@ export default {
   enterDic : 'Zadajte DIČ sem...',
   zipCode : 'PSČ',
   enterZipCode : 'Zadajte PSČ sem...',
-  //edit company
+  companyNameError : 'Musíte zadať názov firmy',
+//edit company
   editCompany : 'Upraviť firmu',
   //list
   companies:'Firmy',

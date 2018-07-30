@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 
-import I18n from '../../translations/';
+import i18n from 'i18next';
 import {logoutUser} from '../../redux/actions';
 
 /**
@@ -21,7 +21,7 @@ class Settings extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{I18n.t('settings')}</Title>
+            <Title>{i18n.t('settings')}</Title>
           </Body>
           <Right>
           </Right>
@@ -33,7 +33,7 @@ class Settings extends Component {
                 <Icon name="people" />
               </Left>
               <Body>
-                <Text>{I18n.t('users')}</Text>
+                <Text>{i18n.t('users')}</Text>
               </Body>
               <Right>
                 <Icon name="arrow-forward" />
@@ -46,7 +46,7 @@ class Settings extends Component {
                 <Icon name="home" />
               </Left>
               <Body>
-                <Text>{I18n.t('companies')}</Text>
+                <Text>{i18n.t('companies')}</Text>
               </Body>
               <Right>
                 <Icon name="arrow-forward" />
@@ -58,7 +58,7 @@ class Settings extends Component {
               <Icon name="person" />
             </Left>
             <Body>
-              <Text>{I18n.t('account')}</Text>
+              <Text>{i18n.t('account')}</Text>
             </Body>
             <Right>
               <Icon name="arrow-forward" />
@@ -66,7 +66,7 @@ class Settings extends Component {
           </ListItem>
           <Button danger block onPress={()=>{this.props.logoutUser();Actions.pop();Actions.pop();Actions.pop();}} iconLeft style={{ flexDirection: 'row', borderColor: 'white', margin:20, borderWidth: 0.5 }}>
             <Icon active style={{ color: 'white' }} name="power" />
-            <Text style={{ color: 'white' }} >{I18n.t('logout')}</Text>
+            <Text style={{ color: 'white' }} >{i18n.t('logout')}</Text>
           </Button>
         </Content>
         { (this.props.ACL.includes('user_settings') || this.props.ACL.includes('company_settings')) &&
@@ -75,7 +75,7 @@ class Settings extends Component {
             <FooterTab>
               <Button onPress={Actions.userAdd} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
                 <Icon active style={{ color: 'white' }} name="add" />
-                <Text style={{ color: 'white' }} >{I18n.t('user')}</Text>
+                <Text style={{ color: 'white' }} >{i18n.t('user')}</Text>
               </Button>
             </FooterTab>
           }
@@ -83,7 +83,7 @@ class Settings extends Component {
             <FooterTab>
               <Button onPress={Actions.companyAdd} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
                 <Icon active style={{ color: 'white' }} name="add" />
-                <Text style={{ color: 'white' }} >{I18n.t('company')}</Text>
+                <Text style={{ color: 'white' }} >{i18n.t('company')}</Text>
               </Button>
             </FooterTab>
           }

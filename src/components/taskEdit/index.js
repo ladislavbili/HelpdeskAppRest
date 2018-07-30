@@ -8,7 +8,7 @@ import TabAttributesLoader from './tabAttributesLoader';
 import TabCommentsLoader from './tabCommentsLoader';
 import TabItemsLoader from './tabItemsLoader';
 import TabSubtasksLoader from './tabSubtasksLoader';
-import I18n from '../../translations/';
+import i18n from 'i18next';
 
 /**
  * This component creates a main menu for the task editting
@@ -53,11 +53,11 @@ export default class TaskEdit extends Component {
     */
     leaveTask(){
       Alert.alert(
-        I18n.t('discardChanges'),
-        I18n.t('discardChangesMessage'),
+        i18n.t('discardChanges'),
+        i18n.t('discardChangesMessage'),
         [
-          {text: I18n.t('cancel'), style: 'cancel'},
-          {text: I18n.t('ok'), onPress: () =>{
+          {text: i18n.t('cancel'), style: 'cancel'},
+          {text: i18n.t('ok'), onPress: () =>{
             Actions.pop();
           }},
         ],
@@ -76,7 +76,7 @@ export default class TaskEdit extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{I18n.t('editTask')}</Title>
+            <Title>{i18n.t('editTask')}</Title>
           </Body>
           {
             this.state.canSave && this.state.changed && (<Right>
@@ -87,16 +87,16 @@ export default class TaskEdit extends Component {
           }
         </Header>
         <Tabs>
-          <Tab heading={I18n.t('attributes')}>
+          <Tab heading={i18n.t('attributes')}>
             <TabAttributesLoader id={this.props.id} saveFunction={this.setFunction.bind(this)} inputChanged={this.inputChanged.bind(this)} />
           </Tab>
-          <Tab heading={I18n.t('comments')}>
+          <Tab heading={i18n.t('comments')}>
             <TabCommentsLoader id={this.props.id} />
           </Tab>
-          <Tab heading={I18n.t('items')}>
+          <Tab heading={i18n.t('items')}>
             <TabItemsLoader id={this.props.id} />
           </Tab>
-          <Tab heading={I18n.t('subtasks')}>
+          <Tab heading={i18n.t('subtasks')}>
             <TabSubtasksLoader id={this.props.id} />
           </Tab>
         </Tabs>

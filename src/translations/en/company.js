@@ -17,6 +17,7 @@ export default {
   enterDic : 'Enter DIC here...',
   zipCode : 'Zip code',
   enterZipCode : 'Enter zip code here...',
+  companyNameError : 'You must enter company\'s name',
   //edit company
   editCompany : 'Edit company',
   //list

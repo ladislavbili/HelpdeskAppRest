@@ -5,7 +5,7 @@ import { Footer, FooterTab, Container, Content, Button, Icon, Text, List } from 
 import { Actions } from 'react-native-router-flux';
 import { startLoading,getMoreTasks } from '../../redux/actions';
 import TaskListRow from './taskListRow';
-import I18n from '../../translations/';
+import i18n from 'i18next';
 
 /**
  * Displays all of the loaded tasks
@@ -22,7 +22,7 @@ class TaskList extends Component {
             }
           </List>
           {
-            this.props.tasks.length==0 && <Text style={{padding:20}}>{I18n.t('emptyTaskList')}</Text>
+            this.props.tasks.length==0 && <Text style={{padding:20}}>{i18n.t('emptyTaskList')}</Text>
         }
         {
           this.props.nextTasks &&
@@ -31,7 +31,7 @@ class TaskList extends Component {
             primary
             onPress={()=>this.props.getMoreTasks(this.props.nextTasks,this.props.token)}
             style={{margin:15}}>
-            <Text>{I18n.t('loadMoreTasks')}</Text>
+            <Text>{i18n.t('loadMoreTasks')}</Text>
           </Button>
         }
       </Content>
@@ -40,7 +40,7 @@ class TaskList extends Component {
           <FooterTab>
             <Button vertical onPress={()=>{this.props.startLoading();Actions.taskAdd({projectID:this.props.projectID});}}>
               <Icon name="md-add" style={{ color: 'white' }} />
-              <Text style={{ color: 'white' }} >{I18n.t('task')}</Text>
+              <Text style={{ color: 'white' }} >{i18n.t('task')}</Text>
             </Button>
           </FooterTab>
         </Footer>

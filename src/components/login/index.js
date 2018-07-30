@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
 import { View, Text } from 'native-base';
 import { checkToken } from '../../redux/actions';
-
+import i18n from 'i18next';
 class TokenChecker extends Component {
   constructor(props){
     super(props);

@@ -7,7 +7,7 @@ import { ActivityIndicator } from 'react-native';
 
 import TaskList from './taskList';
 import { openDrawer, getTasks, setTasksLoading, getFilterTasks, setOpenedID } from '../../redux/actions';
-import I18n from '../../translations/';
+import i18n from 'i18next';
 
 /**
  * Loads all of the tasks for the task list
@@ -54,7 +54,7 @@ class TaskListLoader extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{this.props.listName?this.props.listName:I18n.t('taskList')}</Title>
+            <Title>{this.props.listName?this.props.listName:i18n.t('taskList')}</Title>
           </Body>
           <Right>
             <Button transparent style={{ marginTop: 8 }} onPress={Actions.taskAdd}>

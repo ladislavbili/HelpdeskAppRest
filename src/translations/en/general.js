@@ -7,4 +7,5 @@ export default {
   ok: 'OK',
   delete:'Delete',
   edit:'Edit',
+  change:'Change',
 };

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Input, Item, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, View, Label, CheckBox } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
-import I18n from '../../translations/';
+import i18n from 'i18next';
 import {editCompany} from '../../redux/actions';
 import {processInteger} from '../../helperFunctions';
 
@@ -66,7 +66,7 @@ class CompanyEdit extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{I18n.t('addCompany')}</Title>
+            <Title>{i18n.t('addCompany')}</Title>
           </Body>
           <Right>
             {this.state.title.length!=0 &&
@@ -78,79 +78,79 @@ class CompanyEdit extends Component {
         </Header>
         <Content style={{ padding: 15 }}>
 
-          <Text note>{I18n.t('companyName')}</Text>
+          <Text note>{i18n.t('companyName')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
-              placeholder={I18n.t('enterCompanyName')}
+              placeholder={i18n.t('enterCompanyName')}
               value={this.state.title}
               onChangeText={(value)=>this.setState({title:value})}
               />
             {
-              this.state.title.length==0 && <Text note style={{color:'red'}}>You must set name of the company</Text>
+              this.state.title.length==0 && <Text note style={{color:'red'}}>{i18n.t('companyNameError')}</Text>
           }
         </View>
 
-        <Text note>{I18n.t('ico')}</Text>
+        <Text note>{i18n.t('ico')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
             keyboardType='numeric'
-            placeholder={I18n.t('enterIco')}
+            placeholder={i18n.t('enterIco')}
             value={this.state.ico}
             onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ico:(result?value:this.state.ico)})} }
             />
         </View>
 
-        <Text note>{I18n.t('dic')}</Text>
+        <Text note>{i18n.t('dic')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-            placeholder={I18n.t('enterDic')}
+            placeholder={i18n.t('enterDic')}
             value={this.state.dic}
             onChangeText={(value)=>this.setState({dic:value})}
             />
         </View>
 
-        <Text note>{I18n.t('icDph')}</Text>
+        <Text note>{i18n.t('icDph')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
             keyboardType='numeric'
-            placeholder={I18n.t('enterIcDph')}
+            placeholder={i18n.t('enterIcDph')}
             value={this.state.ic_dph}
             onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({ic_dph:(result?value:this.state.ic_dph)})}}
             />
         </View>
 
-        <Text note>{I18n.t('street')}</Text>
+        <Text note>{i18n.t('street')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-            placeholder={I18n.t('enterStreet')}
+            placeholder={i18n.t('enterStreet')}
             value={this.state.street}
             onChangeText={(value)=>this.setState({street:value})}
             />
         </View>
 
-        <Text note>{I18n.t('city')}</Text>
+        <Text note>{i18n.t('city')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-            placeholder={I18n.t('enterCity')}
+            placeholder={i18n.t('enterCity')}
             value={this.state.city}
             onChangeText={(value)=>this.setState({city:value})}
             />
         </View>
 
-        <Text note>{I18n.t('zipCode')}</Text>
+        <Text note>{i18n.t('zipCode')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-            placeholder={I18n.t('enterZipCode')}
+            placeholder={i18n.t('enterZipCode')}
             keyboardType='numeric'
             value={this.state.zip}
             onChangeText={ value => {let result = this.checkIfNumber(value); this.setState({zip:(result?value:this.state.zip)})}}
             />
         </View>
 
-        <Text note>{I18n.t('country')}</Text>
+        <Text note>{i18n.t('country')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Input
-            placeholder={I18n.t('enterCountry')}
+            placeholder={i18n.t('enterCountry')}
             value={this.state.country}
             onChangeText={(value)=>this.setState({country:value})}
             />

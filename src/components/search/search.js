@@ -4,8 +4,7 @@ import { Modal } from 'react-native';
 import { Input, Picker, Item, Container, Header, Title, Content, Button, Icon, Text, Left, Body, View, List, ListItem, Footer, FooterTab, CheckBox } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 
-import I18n from '../../translations/';
-import { } from '../../redux/actions';
+import i18n from 'i18next';
 
 import {compactUserForSearch} from '../../helperFunctions';
 
@@ -91,21 +90,21 @@ class Search extends Component {
               </Button>
             </Left>
             <Body>
-              <Title>{I18n.t('search')}</Title>
+              <Title>{i18n.t('search')}</Title>
             </Body>
           </Header>
           <Content style={{ padding: 15 }}>
             <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
               <Input
-                placeholder={I18n.t('filterTaskTitle')}
+                placeholder={i18n.t('filterTaskTitle')}
                 value={ this.state.title }
                 onChangeText={ value => this.setState({title:value}) }
                 />
             </View>
 
-            <Text note>{I18n.t('filterCreatedBy')}</Text>
+            <Text note>{i18n.t('filterCreatedBy')}</Text>
             <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-              <Button block onPress={()=>{this.setState({modalCreatedBy:true})}}><Text>{I18n.t('filterByCreatedBy')}</Text></Button>
+              <Button block onPress={()=>{this.setState({modalCreatedBy:true})}}><Text>{i18n.t('filterByCreatedBy')}</Text></Button>
               <List
                 dataArray={this.state.createdBy}
                 renderRow={item =>
@@ -130,7 +129,7 @@ class Search extends Component {
               <Content style={{ padding: 15 }}>
                 <Header>
                   <Body>
-                    <Title>{I18n.t('selectFilterCreatedBy')}</Title>
+                    <Title>{i18n.t('selectFilterCreatedBy')}</Title>
                   </Body>
                 </Header>
 
@@ -138,7 +137,7 @@ class Search extends Component {
                   <ListItem>
                     <Item rounded>
                       <Icon name="ios-search" />
-                      <Input placeholder={I18n.t('search')} value={this.state.createdBySearch} onChangeText={(value)=>this.setState({createdBySearch:value})} />
+                      <Input placeholder={i18n.t('search')} value={this.state.createdBySearch} onChangeText={(value)=>this.setState({createdBySearch:value})} />
                     </Item>
                   </ListItem>
                   <List>
@@ -177,15 +176,15 @@ class Search extends Component {
                 <FooterTab>
                   <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
                     onPress={()=>this.setState({modalCreatedBy:false})}>
-                    <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                    <Text style={{ color: 'white' }}>{i18n.t('done')}</Text>
                   </Button>
                 </FooterTab>
               </Footer>
             </Modal>
 
-            <Text note>{I18n.t('filterRequestedBy')}</Text>
+            <Text note>{i18n.t('filterRequestedBy')}</Text>
             <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-              <Button block onPress={()=>{this.setState({modalRequestedBy:true})}}><Text>{I18n.t('filterByRequestedBy')}</Text></Button>
+              <Button block onPress={()=>{this.setState({modalRequestedBy:true})}}><Text>{i18n.t('filterByRequestedBy')}</Text></Button>
               <List
                 dataArray={this.state.requestedBy}
                 renderRow={item =>
@@ -210,7 +209,7 @@ class Search extends Component {
               <Content style={{ padding: 15 }}>
                 <Header>
                   <Body>
-                    <Title>{I18n.t('selectFilterRequestedBy')}</Title>
+                    <Title>{i18n.t('selectFilterRequestedBy')}</Title>
                   </Body>
                 </Header>
 
@@ -218,7 +217,7 @@ class Search extends Component {
                   <ListItem>
                     <Item rounded>
                       <Icon name="ios-search" />
-                      <Input placeholder={I18n.t('search')} value={this.state.requestedBySearch} onChangeText={(value)=>this.setState({requestedBySearch:value})} />
+                      <Input placeholder={i18n.t('search')} value={this.state.requestedBySearch} onChangeText={(value)=>this.setState({requestedBySearch:value})} />
                     </Item>
                   </ListItem>
                   <List>
@@ -258,15 +257,15 @@ class Search extends Component {
                 <FooterTab>
                   <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
                     onPress={()=>this.setState({modalRequestedBy:false})}>
-                    <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                    <Text style={{ color: 'white' }}>{i18n.t('done')}</Text>
                   </Button>
                 </FooterTab>
               </Footer>
             </Modal>
 
-            <Text note>{I18n.t('filterAssignedTo')}</Text>
+            <Text note>{i18n.t('filterAssignedTo')}</Text>
             <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-              <Button block onPress={()=>{this.setState({modalAssignedTo:true})}}><Text>{I18n.t('filterByAssignedTo')}</Text></Button>
+              <Button block onPress={()=>{this.setState({modalAssignedTo:true})}}><Text>{i18n.t('filterByAssignedTo')}</Text></Button>
               <List
                 dataArray={this.state.assignedTo}
                 renderRow={item =>
@@ -291,7 +290,7 @@ class Search extends Component {
               <Content style={{ padding: 15 }}>
                 <Header>
                   <Body>
-                    <Title>{I18n.t('selectFilterAssignedTo')}</Title>
+                    <Title>{i18n.t('selectFilterAssignedTo')}</Title>
                   </Body>
                 </Header>
 
@@ -299,7 +298,7 @@ class Search extends Component {
                   <ListItem>
                     <Item rounded>
                       <Icon name="ios-search" />
-                      <Input placeholder={I18n.t('search')} value={this.state.assignedToSearch} onChangeText={(value)=>this.setState({assignedToSearch:value})} />
+                      <Input placeholder={i18n.t('search')} value={this.state.assignedToSearch} onChangeText={(value)=>this.setState({assignedToSearch:value})} />
                     </Item>
                   </ListItem>
                   <List>
@@ -338,15 +337,15 @@ class Search extends Component {
                 <FooterTab>
                   <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
                     onPress={()=>this.setState({modalAssignedTo:false})}>
-                    <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                    <Text style={{ color: 'white' }}>{i18n.t('done')}</Text>
                   </Button>
                 </FooterTab>
               </Footer>
             </Modal>
 
-            <Text note>{I18n.t('filterStatus')}</Text>
+            <Text note>{i18n.t('filterStatus')}</Text>
             <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-              <Button block onPress={()=>{this.setState({modalStatuses:true})}}><Text>{I18n.t('filterByStatus')}</Text></Button>
+              <Button block onPress={()=>{this.setState({modalStatuses:true})}}><Text>{i18n.t('filterByStatus')}</Text></Button>
               <List
                 dataArray={this.state.statuses}
                 renderRow={status =>
@@ -368,7 +367,7 @@ class Search extends Component {
               <Content style={{ padding: 15 }}>
                 <Header>
                   <Body>
-                    <Title>{I18n.t('selectFilterStatus')}</Title>
+                    <Title>{i18n.t('selectFilterStatus')}</Title>
                   </Body>
                 </Header>
 
@@ -376,7 +375,7 @@ class Search extends Component {
                   <ListItem>
                     <Item rounded>
                       <Icon name="ios-search" />
-                      <Input placeholder={I18n.t('search')} value={this.state.statusesSearch} onChangeText={(value)=>this.setState({statusesSearch:value})} />
+                      <Input placeholder={i18n.t('search')} value={this.state.statusesSearch} onChangeText={(value)=>this.setState({statusesSearch:value})} />
                     </Item>
                   </ListItem>
 
@@ -417,15 +416,15 @@ class Search extends Component {
               <FooterTab>
                 <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
                   onPress={()=>this.setState({modalStatuses:false})}>
-                  <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                  <Text style={{ color: 'white' }}>{i18n.t('done')}</Text>
                 </Button>
               </FooterTab>
             </Footer>
           </Modal>
 
-          <Text note>{I18n.t('filterProject')}</Text>
+          <Text note>{i18n.t('filterProject')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Button block onPress={()=>{this.setState({modalProjects:true})}}><Text>{I18n.t('filterByProject')}</Text></Button>
+            <Button block onPress={()=>{this.setState({modalProjects:true})}}><Text>{i18n.t('filterByProject')}</Text></Button>
             <List
               dataArray={this.state.projects}
               renderRow={project =>
@@ -445,7 +444,7 @@ class Search extends Component {
             <Content style={{ padding: 15 }}>
               <Header>
                 <Body>
-                  <Title>{I18n.t('selectFilterProject')}</Title>
+                  <Title>{i18n.t('selectFilterProject')}</Title>
                 </Body>
               </Header>
 
@@ -453,7 +452,7 @@ class Search extends Component {
                 <ListItem>
                   <Item rounded>
                     <Icon name="ios-search" />
-                    <Input placeholder={I18n.t('search')} value={this.state.projectsSearch} onChangeText={(value)=>this.setState({projectsSearch:value})} />
+                    <Input placeholder={i18n.t('search')} value={this.state.projectsSearch} onChangeText={(value)=>this.setState({projectsSearch:value})} />
                   </Item>
                 </ListItem>
                 <List>
@@ -491,15 +490,15 @@ class Search extends Component {
                 <FooterTab>
                   <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
                     onPress={()=>this.setState({modalProjects:false})}>
-                    <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                    <Text style={{ color: 'white' }}>{i18n.t('done')}</Text>
                   </Button>
                 </FooterTab>
               </Footer>
             </Modal>
 
-            <Text note>{I18n.t('filterCompany')}</Text>
+            <Text note>{i18n.t('filterCompany')}</Text>
             <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-              <Button block onPress={()=>{this.setState({modalCompanies:true})}}><Text>{I18n.t('filterByCompany')}</Text></Button>
+              <Button block onPress={()=>{this.setState({modalCompanies:true})}}><Text>{i18n.t('filterByCompany')}</Text></Button>
               <List
                 dataArray={this.state.companies}
                 renderRow={company =>
@@ -519,7 +518,7 @@ class Search extends Component {
               <Content style={{ padding: 15 }}>
                 <Header>
                   <Body>
-                    <Title>{I18n.t('selectFilterCompany')}</Title>
+                    <Title>{i18n.t('selectFilterCompany')}</Title>
                   </Body>
                 </Header>
 
@@ -527,7 +526,7 @@ class Search extends Component {
                   <ListItem>
                     <Item rounded>
                       <Icon name="ios-search" />
-                      <Input placeholder={I18n.t('search')} value={this.state.companiesSearch} onChangeText={(value)=>this.setState({companiesSearch:value})} />
+                      <Input placeholder={i18n.t('search')} value={this.state.companiesSearch} onChangeText={(value)=>this.setState({companiesSearch:value})} />
                     </Item>
                   </ListItem>
                   <List>
@@ -565,15 +564,15 @@ class Search extends Component {
                   <FooterTab>
                     <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
                       onPress={()=>this.setState({modalCompanies:false})}>
-                      <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                      <Text style={{ color: 'white' }}>{i18n.t('done')}</Text>
                     </Button>
                   </FooterTab>
                 </Footer>
               </Modal>
 
-              <Text note>{I18n.t('filterLabel')}</Text>
+              <Text note>{i18n.t('filterLabel')}</Text>
               <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-                <Button block onPress={()=>{this.setState({modalLabel:true})}}><Text>{I18n.t('filterByLabel')}</Text></Button>
+                <Button block onPress={()=>{this.setState({modalLabel:true})}}><Text>{i18n.t('filterByLabel')}</Text></Button>
                 <List
                   dataArray={this.state.tags}
                   renderRow={label =>
@@ -595,7 +594,7 @@ class Search extends Component {
                 <Content style={{ padding: 15 }}>
                   <Header>
                     <Body>
-                      <Title>{I18n.t('selectFilterLabel')}</Title>
+                      <Title>{i18n.t('selectFilterLabel')}</Title>
                     </Body>
                   </Header>
 
@@ -604,7 +603,7 @@ class Search extends Component {
                     <ListItem>
                       <Item rounded>
                         <Icon name="ios-search" />
-                        <Input placeholder={I18n.t('search')} value={this.state.tagsSearch} onChangeText={(value)=>this.setState({tagsSearch:value})} />
+                        <Input placeholder={i18n.t('search')} value={this.state.tagsSearch} onChangeText={(value)=>this.setState({tagsSearch:value})} />
                       </Item>
                     </ListItem>
                     <List>
@@ -644,14 +643,14 @@ class Search extends Component {
                 <FooterTab>
                   <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
                     onPress={()=>this.setState({modalLabel:false})}>
-                    <Text style={{ color: 'white' }}>{I18n.t('done')}</Text>
+                    <Text style={{ color: 'white' }}>{i18n.t('done')}</Text>
                   </Button>
                 </FooterTab>
               </Footer>
             </Modal>
 
             <Button onPress={this.submit.bind(this)} primary block style={{ margin: 15 }}>
-              <Text>{I18n.t('search')}</Text>
+              <Text>{i18n.t('search')}</Text>
             </Button>
           </Content>
         </Container>

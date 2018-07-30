@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Input, Item, Footer, FooterTab, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import I18n from '../../translations/';
+import i18n from 'i18next';
 
 /**
 * Show list containing all of the available companies
@@ -32,13 +32,13 @@ class CompanyList extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{I18n.t('companyList')}</Title>
+            <Title>{i18n.t('companyList')}</Title>
           </Body>
         </Header>
         <Content>
           <Item rounded style={{marginTop:15,marginBottom:15,marginLeft: 20, marginRight: 20,}}>
             <Icon name="ios-search" />
-            <Input placeholder={I18n.t('search')}
+            <Input placeholder={i18n.t('search')}
               value={this.state.seached}
               onChangeText={((value)=>this.setState({seached:value}))} />
           </Item>
@@ -62,7 +62,7 @@ class CompanyList extends Component {
           <FooterTab>
             <Button onPress={Actions.companyAdd} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
               <Icon active style={{ color: 'white' }} name="add" />
-              <Text style={{ color: 'white' }} >{I18n.t('company')}</Text>
+              <Text style={{ color: 'white' }} >{i18n.t('company')}</Text>
             </Button>
           </FooterTab>
         </Footer>
