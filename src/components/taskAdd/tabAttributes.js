@@ -3,11 +3,11 @@ import { Modal } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { View, Body, Container, Content, Icon, Input, Item, Label, Text, Footer, FooterTab, Button, Picker,  ListItem, Header,Title , Left, Right, List , CheckBox } from 'native-base';
+import MultiPicker from '../multiPicker';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-
 import i18n from 'i18next';
 import {addTask,getTaskSolvers} from '../../redux/actions';
-import {formatDate,processInteger} from '../../helperFunctions';
+import {formatDate,processInteger, initialiseCustomAttributes,containsNullRequiredAttribute, processCustomAttributes} from '../../helperFunctions';
 import TaskTag from './tag';
 import TaskFollower from './follower';
 
@@ -49,6 +49,7 @@ class TabAtributes extends Component {
       followersFilter:'',
       followersOpen:false,
       submitError:false,
+      task_data:initialiseCustomAttributes(this.props.taskAttributes),
     }
     this.props.getTaskSolvers(this.state.project,this.props.token);
     this.props.saveFunction(this.submitForm.bind(this));
@@ -109,7 +110,8 @@ class TabAtributes extends Component {
 		if (
 			this.state.title === '' ||
 			this.state.project === 'null' ||
-			this.state.company === 'null'
+			this.state.company === 'null' ||
+      containsNullRequiredAttribute(processCustomAttributes(this.state.task_data,this.props.taskAttributes),[...this.props.taskAttributes])
 		) {
 			return;
 		}
@@ -131,7 +133,8 @@ class TabAtributes extends Component {
 				workType: this.state.workType,
 				workTime: this.state.workTime.length === 0 ? undefined : this.state.workTime,
 				tag: JSON.stringify(tags),
-				assigned: this.state.assigned.id !== null ? JSON.stringify([{ userId: parseInt(this.state.assigned.id) }]) : null
+				assigned: this.state.assigned.id !== null ? JSON.stringify([{ userId: parseInt(this.state.assigned.id) }]) : null,
+        taskData: JSON.stringify(processCustomAttributes({...this.state.task_data},[...this.props.taskAttributes]))
 			},
 			this.state.followers,
 			this.state.project,
@@ -327,6 +330,170 @@ class TabAtributes extends Component {
                 </Text>)
                 }
               </View>
+
+              {this.props.taskAttributes.map(attribute => {
+                switch (attribute.type) {
+                  case "input":{
+                    return (
+                      <View key={attribute.id}>
+                        <Text note>{attribute.title}</Text>
+                        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                          <Input
+                            placeholder={attribute.title}
+                            value={this.state.task_data[attribute.id]}
+                            onChangeText={ value => {
+                              let newData = { ...this.state.task_data };
+                              newData[attribute.id] = value;
+                              this.setState({ task_data: newData });
+                            }}
+                            />
+                        </View>
+                      </View>
+                    );
+                  }
+                  case "text_area":{
+                    return (
+                      <View key={attribute.id}>
+                        <Text note>{attribute.title}</Text>
+                        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                          <Input
+                            multiline={true}
+                            style={{height:60}}
+                            placeholder={attribute.title}
+                            value={this.state.task_data[attribute.id]}
+                            onChangeText={ value => {
+                              let newData = { ...this.state.task_data };
+                              newData[attribute.id] = value;
+                              this.setState({ task_data: newData });
+                            }}
+                            />
+                        </View>
+                      </View>
+                    );
+                  }
+                  case "simple_select":{
+                    return(
+                      <Picker
+                       key={attribute.id}
+                        supportedOrientations={['portrait', 'landscape']}
+                        iosHeader={i18n.t('selectOne')}
+                        mode="dropdown"
+                        selectedValue={this.state.task_data[attribute.id]}
+                        onValueChange={(value)=>{
+                          let newData = { ...this.state.task_data };
+                          newData[attribute.id] = value;
+                          this.setState({ task_data: newData });
+                        }}>
+                        {
+                          attribute.options.map((item)=>
+                          (<Item label={item} key={item} value={item} />)
+                        )
+                      }
+                    </Picker>
+                    );
+                  }
+                  case "multi_select":{
+                    //selected title selectTitle options onChange
+                    return <MultiPicker
+                      selected={[]}
+                      title={attribute.title}
+                      key={attribute.id}
+                      selectTitle={i18n.t('select')+' '+attribute.title}
+                      options={attribute.options.map((item)=>{return {id:item, title:item};})}
+                      onChange={(value)=>{
+                        let newData = { ...this.state.task_data };
+                        newData[attribute.id] = value;
+                        this.setState({ task_data: newData });
+                      }}
+                      />;
+                  }
+                  case "date":{
+                    return <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }} key={attribute.id}>
+                    <Button block style={{backgroundColor:'white'}} onPress={()=>this.setState({open:attribute.id})}>
+                      <Left>
+                        <Text style={{textAlign:'left',color:'black'}}>{this.state.task_data[attribute.id]===null ? i18n.t('selectDate') : formatDate(this.state.task_data[attribute.id])}</Text>
+                      </Left>
+                    </Button>
+                    <DateTimePicker
+                      mode="datetime"
+                      isVisible={this.state.open===attribute.id}
+                      onConfirm={(date)=>{
+                        let value = (new Date(date)).getTime();
+                        let newData = { ...this.state.task_data };
+                        newData[attribute.id] = value;
+                        this.setState({ task_data: newData, open:null });
+                      }}
+                      onCancel={()=>this.setState({open:null})}
+                      />
+                    </View>
+                  }
+                  case "decimal_number":{
+                    return (
+                      <View key={attribute.id}>
+                        <Text note>{attribute.title}</Text>
+                        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                          <Input
+                            keyboardType='numeric'
+                            placeholder={attribute.title}
+                            value={this.state.task_data[attribute.id]}
+                            onChangeText={ value => {
+                              let newData = { ...this.state.task_data };
+                              newData[attribute.id] = value;
+                              this.setState({ task_data: newData });
+                            }}
+                            />
+                        </View>
+                      </View>
+                    );
+                  }
+                  case "integer_number":{
+                    return (
+                      <View key={attribute.id}>
+                        <Text note>{attribute.title}</Text>
+                        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+                          <Input
+                            keyboardType='numeric'
+                            placeholder={attribute.title}
+                            value={this.state.task_data[attribute.id]}
+                            onChangeText={ value => {
+                              let newData = { ...this.state.task_data };
+                              newData[attribute.id] = value;
+                              this.setState({ task_data: newData });
+                            }}
+                            />
+                        </View>
+                      </View>
+                    );
+                  }
+                  case "checkbox":{
+                    return <Item
+                      inlineLabel
+                      key={attribute.id}
+                      style={{marginBottom:20, borderBottomWidth:0,marginTop:10,paddingBottom:5}}
+                      onPress={ value => {
+                        let newData = { ...this.state.task_data };
+                        newData[attribute.id] = !this.state.task_data[attribute.id];
+                        this.setState({ task_data: newData });
+                      }}>
+                      <CheckBox
+                        checked={this.state.task_data[attribute.id]}
+                        color='#3F51B5'
+                        onPress={ value => {
+                          let newData = { ...this.state.task_data };
+                          newData[attribute.id] = !this.state.task_data[attribute.id];
+                          this.setState({ task_data: newData });
+                        }}/>
+                      <Label style={{marginLeft:15}}>{attribute.title}</Label>
+                    </Item>
+
+                  }
+                    return <Text key={attribute.id}>{attribute.title}</Text>;
+
+                      default:
+                      return <Text key={attribute.id}>{attribute.title}</Text>;
+                      }
+                    })}
+
               <Modal
                 animationType={"fade"}
                 transparent={false}
@@ -523,8 +690,8 @@ class TabAtributes extends Component {
 const mapStateToProps = ({ taskReducer, loginReducer, userReducer }) => {
   const {users} = userReducer;
   const {token, user} = loginReducer;
-  const { companies ,statuses, projects,tags, taskSolvers} = taskReducer;
-  return { users,user, token, companies,statuses, projects,tags, taskSolvers};
+  const { companies ,statuses, projects,tags, taskSolvers, taskAttributes} = taskReducer;
+  return { users,user, token, companies,statuses, projects,tags, taskSolvers, taskAttributes};
 };
 
 //exports created Component connected to the redux store and redux actions

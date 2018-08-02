@@ -4,7 +4,8 @@ import { ActivityIndicator } from 'react-native';
 
 import TabAttributes from './tabAttributes';
 import {setTaskProjectsLoading,setTaskStatusesLoading,setTaskCompaniesLoading,setTaskTagsLoading,
-  deleteTaskSolvers,setUsersLoading,getTaskStatuses,getTaskProjects,getTaskCompanies,getTaskTags,getUsers} from '../../redux/actions';
+  deleteTaskSolvers,setUsersLoading,getTaskStatuses,getTaskProjects,getTaskCompanies,getTaskTags,getUsers,
+  setTaskAttributesLoading, getTaskAttributes} from '../../redux/actions';
 
 /**
  * Loads all of the data needed for user to seach for tasks
@@ -18,6 +19,7 @@ class SearchLoader extends Component {
     this.props.setTaskCompaniesLoading(false);
     this.props.setTaskTagsLoading(false);
     this.props.setUsersLoading(false);
+    this.props.setTaskAttributesLoading(false);
 
     this.props.deleteTaskSolvers();
     this.props.getTaskStatuses(null,this.props.token);
@@ -25,9 +27,11 @@ class SearchLoader extends Component {
     this.props.getTaskCompanies(null,this.props.token);
     this.props.getTaskTags(this.props.token);
     this.props.getUsers(null,this.props.token);
+    this.props.getTaskAttributes(this.props.token);
   }
   render() {
-    if(!this.props.usersLoaded||!this.props.statusesLoaded||!this.props.projectsLoaded||!this.props.companiesLoaded||!this.props.tagsLoaded){
+    if(!this.props.usersLoaded||!this.props.statusesLoaded||!this.props.projectsLoaded||!this.props.companiesLoaded||
+      !this.props.tagsLoaded||!this.props.taskAttributesLoaded){
       return (
         <ActivityIndicator
         animating size={ 'large' }
@@ -45,10 +49,11 @@ const mapStateToProps = ({loginReducer,userReducer, taskReducer}) => {
   const {token} = loginReducer;
   const {usersLoaded} = userReducer;
   const {statusesUpdateDate, companiesUpdateDate,
-    statusesLoaded,  projectsLoaded,  companiesLoaded,  tagsLoaded} = taskReducer;
-  return {token, usersLoaded, statusesUpdateDate,statusesLoaded,  projectsLoaded,  companiesLoaded,  tagsLoaded, companiesUpdateDate };
+    statusesLoaded,  projectsLoaded,  companiesLoaded,  tagsLoaded, taskAttributesLoaded } = taskReducer;
+  return {token, usersLoaded, statusesUpdateDate,statusesLoaded,  projectsLoaded,  companiesLoaded,  tagsLoaded,taskAttributesLoaded, companiesUpdateDate };
 };
 
 //exports created Component connected to the redux store and redux actions
 export default connect(mapStateToProps,{setTaskProjectsLoading,setTaskStatusesLoading,setTaskCompaniesLoading,setTaskTagsLoading,
-  deleteTaskSolvers,setUsersLoading,getTaskStatuses,getTaskProjects,getTaskCompanies,getTaskTags,getUsers})(SearchLoader);
+  deleteTaskSolvers,setUsersLoading,getTaskStatuses,getTaskProjects,getTaskCompanies,getTaskTags,getUsers,
+  setTaskAttributesLoading, getTaskAttributes})(SearchLoader);

@@ -1,6 +1,7 @@
 import { SET_LOADING_TASKS,SET_TASKS,ADD_TASKS,SET_OPENED_ID,SET_TASK_STATUSES_LOADING, SET_TASK_STATUSES,
   SET_TASK_PROJECTS_LOADING, SET_TASK_PROJECTS, SET_TASK_COMPANIES_LOADING, SET_TASK_COMPANIES, SET_TASK_UNITS_LOADING,
-  SET_TASK_UNITS, SET_TASK_TAGS_LOADING, SET_TASK_TAGS,SET_TASK_SOLVERS,SET_TASK_LOADING,SET_TASK
+  SET_TASK_UNITS, SET_TASK_TAGS_LOADING, SET_TASK_TAGS,SET_TASK_SOLVERS,SET_TASK_LOADING,SET_TASK,
+  SET_TASK_ATTRIBUTES_LOADING,SET_TASK_ATTRIBUTES
 } from '../types';
 
   const initialState = {
@@ -23,6 +24,8 @@ import { SET_LOADING_TASKS,SET_TASKS,ADD_TASKS,SET_OPENED_ID,SET_TASK_STATUSES_L
     taskSolvers:[],
     task:null,
     taskLoaded:false,
+    taskAttributesLoaded:false,
+    taskAttributes:[]
   };
 
   export default function taskReducer (state = initialState, action) {
@@ -133,9 +136,17 @@ import { SET_LOADING_TASKS,SET_TASKS,ADD_TASKS,SET_OPENED_ID,SET_TASK_STATUSES_L
           taskLoaded: true,
         };
       }
-
-      //////
-      //////
+      case SET_TASK_ATTRIBUTES_LOADING:
+      return {
+        ...state,
+        taskAttributesLoaded: action.taskAttributesLoaded,
+      };
+      case SET_TASK_ATTRIBUTES:
+      return {
+        ...state,
+        taskAttributes: action.taskAttributes,
+        taskAttributesLoaded: true
+      };
       default:
       return state;
     }

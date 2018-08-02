@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Input, Item, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, View, Label, CheckBox } from 'native-base';
+import { Input, Item, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, View, Label, CheckBox, Picker } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import i18n from 'i18next';
-import {editCompany} from '../../redux/actions';
-import {processInteger,initialiseCustomAttributes, formatDate, containsNullRequiredAttribute, processCustomAttributes, importExistingCustomAttributesForCompany} from '../../helperFunctions';
+import {addCompany} from '../../redux/actions';
+import {processInteger,initialiseCustomAttributes, formatDate, containsNullRequiredAttribute, processCustomAttributes} from '../../helperFunctions';
 import MultiPicker from '../multiPicker';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
@@ -12,26 +12,22 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 * Allows user to add a new company
 * @extends Component
 */
-class CompanyEdit extends Component {
+class CompanyAdd extends Component {
 
   constructor(props) {
     super(props);
-    let company_data=initialiseCustomAttributes(this.props.companyAttributes);
-    company_data= importExistingCustomAttributesForCompany(company_data,[...this.props.company.companyData],[...this.props.companyAttributes]);
     this.state = {
-      is_active: this.props.company.is_active,
-      title: this.props.company.title ? this.props.company.title : "",
-      ico: this.props.company.ico ? this.props.company.ico : "",
-      dic: this.props.company.dic ? this.props.company.dic : "",
-      ic_dph: this.props.company.ic_dph ? this.props.company.ic_dph : "",
-      street: this.props.company.street ? this.props.company.street : "",
-      city: this.props.company.city ? this.props.company.city : "",
-      zip: this.props.company.zip ? this.props.company.zip : "",
-      country: this.props.company.country ? this.props.company.country : "",
+      title:'',
+      ico:'',
+      dic:'',
+      ic_dph:'',
+      street:'',
+      city:'',
+      zip:'',
+      country:'',
       opened:null,
-      company_data,
+      company_data:initialiseCustomAttributes(this.props.companyAttributes),
     };
-    this.submit.bind(this);
   }
 
   /**
@@ -49,7 +45,7 @@ class CompanyEdit extends Component {
       zip: this.state.zip === "" ? "null" : this.state.zip,
       company_data: JSON.stringify(processCustomAttributes({...this.state.company_data},[...this.props.companyAttributes]))
     };
-    this.props.editCompany(company,this.state.is_active,this.props.company.id,this.props.token);
+    this.props.addCompany(company,this.props.token);
     Actions.pop();
   }
 
@@ -85,8 +81,8 @@ class CompanyEdit extends Component {
         </Header>
         <Content style={{ padding: 15 }}>
 
-          <Text note>{i18n.t('companyName')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+        <Text note>{i18n.t('companyName')}</Text>
+        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
             <Input
               placeholder={i18n.t('enterCompanyName')}
               value={this.state.title}
@@ -334,10 +330,10 @@ class CompanyEdit extends Component {
 
 //creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({loginReducer, companyReducer}) => {
+  const {companyAttributes} = companyReducer;
   const {token} = loginReducer;
-  const {company, companyAttributes} = companyReducer;
-  return {token, company, companyAttributes};
+  return {companyAttributes,token};
 };
 
 //exports created Component connected to the redux store and redux actions
-export default connect(mapStateToProps, {editCompany})(CompanyEdit);
+export default connect(mapStateToProps, {addCompany})(CompanyAdd);

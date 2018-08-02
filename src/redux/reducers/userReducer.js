@@ -22,7 +22,7 @@ export default function reducer (state = initialState, action) {
     };
     case SET_USERS:{
       if(!state.updateDate){
-        return { ...state, users:action.users, updateDate:action.updateDate };
+        return { ...state, users:action.users, updateDate:action.updateDate, usersLoaded:true };
       }
       let newUsers=[...state.users];
       action.users.map((user)=>{
@@ -40,7 +40,7 @@ export default function reducer (state = initialState, action) {
           newUsers.push(user);
         }
       });
-      return { ...state, users:newUsers, updateDate:action.updateDate };
+      return { ...state, users:newUsers, updateDate:action.updateDate, usersLoaded:true };
     }
     case SET_LOADING_USER_ROLES:
     return {
@@ -88,35 +88,6 @@ export default function reducer (state = initialState, action) {
       }
       return { ...state, users:newUsers };
     }
-    //
-    case SET_ASSIGNERS:
-    return {
-      ...state,
-      assigners: action.assigners,
-    };
-    case START_LOADING_USER:
-    return {
-      ...state,
-      loadingUser: true,
-    };
-    case EDIT_USER_LIST:{
-      let newUsers= [...state.users];
-      newUsers.splice(newUsers.findIndex((user)=>user.id==action.user.id),1,action.user);
-      return {
-        ...state,
-        users:newUsers
-      };
-    }
-    case SET_TASK_ATTRIBUTES:
-    return {
-      ...state,
-      users:action.users,
-    };
-    case SET_SEARCH_ATTRIBUTES:
-    return {
-      ...state,
-      users:action.users,
-    };
     default:
     return state;
   }

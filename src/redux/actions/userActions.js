@@ -41,7 +41,6 @@ export const getUsers= (updateDate,token) => {
       }
       response.json().then((data) => {
         dispatch({type: SET_USERS, users:data.data,updateDate:data.date.toString()});
-        dispatch({ type: SET_LOADING_USERS, usersLoaded:true });
       });
     }
   ).catch(function (error) {

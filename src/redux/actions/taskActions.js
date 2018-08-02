@@ -1,7 +1,7 @@
 import { SET_TASKS, SET_LOADING_TASKS,ADD_TASKS,SET_OPENED_ID, SET_TASK_STATUSES_LOADING,SET_TASK_STATUSES,SET_TASK_PROJECTS_LOADING,SET_TASK_PROJECTS,
   SET_TASK_COMPANIES_LOADING,SET_TASK_COMPANIES,SET_TASK_UNITS_LOADING,SET_TASK_UNITS,SET_TASK_TAGS_LOADING,SET_TASK_TAGS,SET_TASK_SOLVERS,SET_TASK_LOADING,
-  SET_TASK,EDIT_TASK } from '../types';
-import { PROJECTS_LIST, COMPANIES_LIST, STATUSES_LIST, TASKS_LIST, HOST_URL , UNITS_LIST, TAGS_LIST, PROJECT_URL} from '../urls';
+  SET_TASK,EDIT_TASK, SET_TASK_ATTRIBUTES_LOADING,SET_TASK_ATTRIBUTES } from '../types';
+import { PROJECTS_LIST, COMPANIES_LIST, STATUSES_LIST, TASKS_LIST, HOST_URL , UNITS_LIST, TAGS_LIST, PROJECT_URL, TASK_ATTRIBUTES_LIST} from '../urls';
 import {processRESTinput} from '../../helperFunctions';
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
 
@@ -286,6 +286,9 @@ export const addTask = (body,followers,projectID,statusID,requesterID,companyID,
     })
     .then((response)=>{
       if(!response.ok){
+        response.text().then((data)=>{
+          console.log(JSON.parse(data).message);
+        });
         return;
       }
       response.json().then((response)=>{
@@ -395,3 +398,35 @@ export const editTask = (data,taskID,projectID,statusID,requesterID,companyID,to
     });
   };
 };
+
+export const setTaskAttributesLoading = (taskAttributesLoaded) => {
+  return (dispatch) => {
+    dispatch({ type: SET_TASK_ATTRIBUTES_LOADING, taskAttributesLoaded });
+  }
+};
+
+/**
+ * Gets all active taskAttributes available with no pagination
+ * @param {string} token universal token for API comunication
+ */
+ export const getTaskAttributes= (token) => {
+   return (dispatch) => {
+       fetch(TASK_ATTRIBUTES_LIST+'?limit=999&isActive=true', {
+         method: 'get',
+         headers: {
+           'Authorization': 'Bearer ' + token,
+           'Content-Type': 'application/json'
+         }
+       }).then((response) =>{
+         if(!response.ok){
+           return;
+         }
+       response.json().then((data) => {
+         dispatch({type: SET_TASK_ATTRIBUTES, taskAttributes:data.data});
+       });
+     }
+   ).catch(function (error) {
+     console.log(error);
+   });
+ }
+ }

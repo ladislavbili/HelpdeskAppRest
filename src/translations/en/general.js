@@ -8,4 +8,6 @@ export default {
   delete:'Delete',
   edit:'Edit',
   change:'Change',
+  selectDate:'Select date',
+  select:'Select',
 };

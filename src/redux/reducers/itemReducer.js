@@ -26,12 +26,12 @@ export default function itemsReducer(state = initialState, action) {
       newItems.splice(newItems.findIndex((item)=>item.id===action.id),1);
       return { ...state, items:[...newItems] };
     }
-    case LOGIN_LOGOUT:
-      return { ...initialState };
     case SET_UNITS_LOADING:
       return { ...state, unitsLoaded:action.unitsLoaded };
     case SET_UNITS:
       return { ...state, units:action.units, unitsLoaded:true };
+    case LOGIN_LOGOUT:
+      return { ...initialState };
     default:
       return state;
     }

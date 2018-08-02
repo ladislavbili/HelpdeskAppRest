@@ -1,5 +1,6 @@
-import { EDIT_COMPANY_LIST, SET_LOADING_COMPANIES, SET_COMPANIES, ADD_COMPANY, SET_LOADING_COMPANY, SET_COMPANY, EDIT_COMPANY } from '../types';
-import { COMPANIES_LIST } from '../urls';
+import { EDIT_COMPANY_LIST, SET_LOADING_COMPANIES, SET_COMPANIES, ADD_COMPANY, SET_LOADING_COMPANY, SET_COMPANY, EDIT_COMPANY,
+  SET_COMPANY_ATTRIBUTES_LOADING,SET_COMPANY_ATTRIBUTES } from '../types';
+import { COMPANIES_LIST, COMPANY_ATTRIBUTES_LIST } from '../urls';
 import {processRESTinput} from '../../helperFunctions';
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
 
@@ -132,6 +133,10 @@ export const setCompaniesLoading = (companiesLoaded) => {
             }
           })]).then(([response1,response2])=>{
             if(!response1.ok){
+              response1.text().then((data)=>{
+                console.log(body.company_data);
+                console.log(data.message);
+              });
               return;
             }
             if(!response2.ok){
@@ -146,3 +151,31 @@ export const setCompaniesLoading = (companiesLoaded) => {
 
     };
   };
+
+  export const setCompanyAttributesLoading = (companyAttributeLoaded) => {
+    return (dispatch) => {
+      dispatch({ type: SET_COMPANY_ATTRIBUTES_LOADING, companyAttributeLoaded });
+    }
+  };
+
+  export const getCompanyAttributes= (token) => {
+    return (dispatch) => {
+        fetch(COMPANY_ATTRIBUTES_LIST+'?limit=999&isActive=true', {
+          method: 'get',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          }
+        }).then((response) =>{
+          if(!response.ok){
+            return;
+          }
+        response.json().then((data) => {
+          dispatch({type: SET_COMPANY_ATTRIBUTES, companyAttributes:data.data});
+        });
+      }
+    ).catch(function (error) {
+      console.log(error);
+    });
+  }
+  }

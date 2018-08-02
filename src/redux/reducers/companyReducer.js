@@ -1,14 +1,16 @@
 import { SET_LOADING_COMPANIES,SET_COMPANIES,ADD_COMPANY,SET_LOADING_COMPANY,SET_COMPANY,EDIT_COMPANY,
-  EDIT_COMPANY_LIST,   SET_USER_ATTRIBUTES, SET_TASK_ATTRIBUTES, SET_SEARCH_ATTRIBUTES} from '../types';
+  EDIT_COMPANY_LIST,   SET_USER_ATTRIBUTES, SET_TASK_ATTRIBUTES, SET_SEARCH_ATTRIBUTES,
+SET_COMPANY_ATTRIBUTES_LOADING,SET_COMPANY_ATTRIBUTES} from '../types';
 
 const initialState = {
   companies:[],
   companiesLoaded:false,
   updateDate:null,
   pagination:null,
-
   company:null,
   loadingCompany:false,
+  companyAttributesLoaded:false,
+  companyAttributes:[],
 };
 
 export default function reducer (state = initialState, action) {
@@ -69,6 +71,15 @@ export default function reducer (state = initialState, action) {
       }
       return { ...state, companies:newCompanies };
     }
+    case SET_COMPANY_ATTRIBUTES_LOADING:
+    return {
+      ...state,
+      companyAttributesLoaded: action.companyAttributesLoaded,
+    };
+    case SET_COMPANY_ATTRIBUTES:{
+        return { ...state, companyAttributes:action.companyAttributes, companyAttributesLoaded:true };
+    }
+
     default:
     return state;
   }

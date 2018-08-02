@@ -8,4 +8,6 @@ export default {
   delete:'Zmazať',
   edit:'Upraviť',
   change:'Zmeniť',
+  selectDate:'Vyberte dátum',
+  select:'Vyberte',
 };
