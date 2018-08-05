@@ -14,6 +14,7 @@ import {formatDate} from '../../helperFunctions';
 class TaskListRow extends Component {
   render() {
     let project=this.props.task.project;
+    let status=this.props.task.status;
     let assigned=this.props.task.taskHasAssignedUsers?this.props.task.taskHasAssignedUsers[Object.keys(this.props.task.taskHasAssignedUsers)[0]]:false;
     let deadline=this.props.task.deadline?this.props.task.deadline:false;
     return (
@@ -25,11 +26,9 @@ class TaskListRow extends Component {
           </Text>
           <Text numberOfLines={1} note>{i18n.t('assignedTo')}: {assigned?assigned.user.username:i18n.t('noUser')}</Text>
           <Text numberOfLines={1} note>{i18n.t('deadline')}: {deadline?formatDate(deadline*1000):i18n.t('noDeadline')}</Text>
-          { assigned &&
-            <Item style={{backgroundColor:assigned.status.color,flex:1,flexDirection:'column'}}>
-              <Text style={{color:'white',paddingLeft:10,paddingRight:10,flex:1,flexDirection:'column'}}>{assigned.status.title}</Text>
-            </Item>
-          }
+          <Item style={{backgroundColor:status.color,flex:1,flexDirection:'column'}}>
+            <Text style={{color:'white',paddingLeft:10,paddingRight:10,flex:1,flexDirection:'column'}}>{status.title}</Text>
+          </Item>
         </Body>
         <Right>
           <Icon name="arrow-forward" />

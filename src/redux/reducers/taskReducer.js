@@ -1,7 +1,7 @@
 import { SET_LOADING_TASKS,SET_TASKS,ADD_TASKS,SET_OPENED_ID,SET_TASK_STATUSES_LOADING, SET_TASK_STATUSES,
   SET_TASK_PROJECTS_LOADING, SET_TASK_PROJECTS, SET_TASK_COMPANIES_LOADING, SET_TASK_COMPANIES, SET_TASK_UNITS_LOADING,
   SET_TASK_UNITS, SET_TASK_TAGS_LOADING, SET_TASK_TAGS,SET_TASK_SOLVERS,SET_TASK_LOADING,SET_TASK,
-  SET_TASK_ATTRIBUTES_LOADING,SET_TASK_ATTRIBUTES
+  SET_TASK_ATTRIBUTES_LOADING,SET_TASK_ATTRIBUTES, EDIT_TASK
 } from '../types';
 
   const initialState = {
@@ -147,6 +147,18 @@ import { SET_LOADING_TASKS,SET_TASKS,ADD_TASKS,SET_OPENED_ID,SET_TASK_STATUSES_L
         taskAttributes: action.taskAttributes,
         taskAttributesLoaded: true
       };
+      case EDIT_TASK:{
+        let newTasks=state.tasks;
+        let index = newTasks.findIndex((item)=>item.id===action.task.id);
+        if(index===-1){
+          return state;
+        }
+        newTasks[index]=action.task;
+        return {
+          ...state,
+          tasks:[...newTasks]
+        };
+        }
       default:
       return state;
     }

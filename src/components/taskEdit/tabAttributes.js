@@ -129,8 +129,9 @@ class TabAtributes extends Component {
 		//as a tags we send titles not ids
 		let tags = [];
 		this.state.tag.map(addTag => tags.push(this.props.tags.find(tag => tag.id === addTag.id).title));
-    let closedAt = this.props.task.closedAt?this.props.task.closedAt*1000:(new Date()).getTime();
-    if(this.props.statuses.find((item)=>item.id.toString()===this.state.status.id.toString()).title!=='Closed'){
+    let closedAt = this.props.task.closedAt?this.props.task.closedAt:(new Date()).getTime()/1000;
+    let fullStatus=this.props.statuses.find((item)=>item.id.toString()===this.state.status.id.toString());
+    if(fullStatus.title!=='Closed'||!fullStatus.default){
       closedAt = 'null';
     }
 		this.props.editTask(
@@ -211,7 +212,7 @@ class TabAtributes extends Component {
             {
               this.state.statusOpened && this.props.statuses.map((status)=>
               !(this.state.status.id===status.id) &&
-              <Button style={{backgroundColor:status.color,flex:1}} onPress={()=>this.setState({status:status,statusOpened:false})} key={status.id} >
+              <Button style={{backgroundColor:status.color,flex:1}} onPress={()=>{this.setState({status:status,statusOpened:false});this.props.inputChanged(true);}} key={status.id} >
                 <Text style={{color:'white',flex:1,textAlign:'center'}}>{status.title}</Text>
               </Button>)
             }

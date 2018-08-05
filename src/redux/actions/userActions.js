@@ -50,6 +50,32 @@ export const getUsers= (updateDate,token) => {
 }
 
 /**
+* Get's all of the visible users
+* @param  {[type]} token Token for the REST API
+*/
+export const getAllUsers= (token) => {
+  return (dispatch) => {
+    fetch(USERS_LIST+'?limit=999', {
+      method: 'get',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+    }).then((response) =>{
+      if(!response.ok){
+        return;
+      }
+      response.json().then((data) => {
+        dispatch({type: SET_USERS, users:data.data,updateDate:null});
+      });
+    }
+  ).catch(function (error) {
+    console.log(error);
+  });
+}
+}
+
+/**
  * Set's user loading to true
  */
 export const setUserRolesLoading = (userRolesLoaded) => {

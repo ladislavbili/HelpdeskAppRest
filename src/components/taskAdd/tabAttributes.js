@@ -118,8 +118,9 @@ class TabAtributes extends Component {
 		//as a tags we send titles not ids
 		let tags = [];
 		this.state.tag.map(addTag => tags.push(this.props.tags.find(tag => tag.id === addTag.id).title));
-    let closedAt = (new Date()).getTime();
-    if(this.props.statuses.find((item)=>item.id.toString()===this.state.status.id.toString()).title!=='Closed'){
+    let closedAt = (new Date()).getTime()/1000;
+    let fullStatus=this.props.statuses.find((item)=>item.id.toString()===this.state.status.id.toString());
+    if(fullStatus.title!=='Closed'||!fullStatus.default){
       closedAt = 'null';
     }
 		this.props.addTask(
