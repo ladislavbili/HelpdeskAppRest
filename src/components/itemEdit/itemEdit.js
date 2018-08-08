@@ -12,7 +12,6 @@ import {editItem} from '../../redux/actions';
 class ItemEdit extends Component {
   constructor(props){
     super(props);
-    console.log(this.props.data);
     this.state = {
       unit:this.props.data.unit.id,
       itemQuantity:this.props.data.amount.toString(),

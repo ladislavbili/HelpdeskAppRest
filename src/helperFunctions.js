@@ -240,7 +240,6 @@ export const importExistingCustomAttributesForCompany=(currentAttributes,existin
       ];
       if(original.type==="date"){
         let date = new Date(attribute.dateValue * 1000);
-        console.log(attribute.dateValue);
         if (isNaN(date)||attribute.dateValue===null) {
           newAttributes[attribute.companyAttribute.id] = null;
         } else {
@@ -290,7 +289,6 @@ export const importExistingCustomAttributesForTask=(currentAttributes,existingCu
       ];
       if(original.type==="date"){
         let date = new Date(attribute.dateValue * 1000);
-        console.log(attribute.dateValue);
         if (isNaN(date)||attribute.dateValue===null) {
           newAttributes[attribute.taskAttribute.id] = null;
         } else {
