@@ -1,5 +1,6 @@
 import {SET_SIDEBAR_LOADING,SET_SIDEBAR } from '../types';
 import {SIDEBAR_DATA } from '../urls';
+import {processError} from '../../helperFunctions';
 
 /**
  * Log's out user and returns user to the login page
@@ -25,7 +26,7 @@ import {SIDEBAR_DATA } from '../urls';
        })
        .then(response => {
          if(!response.ok){
-           //processError(response,dispatch);
+           processError(response,dispatch);
            return;
          }
          response.json().then(data => {

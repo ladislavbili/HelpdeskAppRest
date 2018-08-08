@@ -25,6 +25,7 @@ export const getSubtasks= (taskID,token) => {
         }
       }).then((response) =>{
         if(!response.ok){
+          processError(response,dispatch);
           return;
         }
       response.json().then((data) => {
@@ -54,6 +55,7 @@ export const addSubtask = (body,taskID,token) => {
       })
     .then((response)=>{
       if(!response.ok){
+        processError(response,dispatch);
         return;
       }
     response.json().then((response)=>{
@@ -77,6 +79,7 @@ export const editSubtask = (body,id,taskID,token) => {
           body:JSON.stringify(body)
         }).then((response)=>{
           if(!response.ok){
+            processError(response,dispatch);
             return;
           }
           response.json().then((response)=>{
@@ -98,6 +101,7 @@ export const deleteSubtask = (id,taskID,token) => {
         }
       }).then((response) =>{
         if(!response.ok){
+          processError(response,dispatch);
           return;
         }
         dispatch({type: DELETE_SUBTASK, id});

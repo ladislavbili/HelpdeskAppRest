@@ -1,8 +1,8 @@
 import { SET_LOADING_TASKS,SET_TASKS,ADD_TASKS,SET_OPENED_ID,SET_TASK_STATUSES_LOADING, SET_TASK_STATUSES,
   SET_TASK_PROJECTS_LOADING, SET_TASK_PROJECTS, SET_TASK_COMPANIES_LOADING, SET_TASK_COMPANIES, SET_TASK_UNITS_LOADING,
   SET_TASK_UNITS, SET_TASK_TAGS_LOADING, SET_TASK_TAGS,SET_TASK_SOLVERS,SET_TASK_LOADING,SET_TASK,
-  SET_TASK_ATTRIBUTES_LOADING,SET_TASK_ATTRIBUTES, EDIT_TASK
-} from '../types';
+  SET_TASK_ATTRIBUTES_LOADING,SET_TASK_ATTRIBUTES, EDIT_TASK,
+  ADD_ATTACHMENT,LOGIN_LOGOUT,EDIT_ATTACHMENT,DELETE_ATTACHMENT,CLEAR_ATTACHMENTS} from '../types';
 
   const initialState = {
     tasks:[],
@@ -25,11 +25,31 @@ import { SET_LOADING_TASKS,SET_TASKS,ADD_TASKS,SET_OPENED_ID,SET_TASK_STATUSES_L
     task:null,
     taskLoaded:false,
     taskAttributesLoaded:false,
-    taskAttributes:[]
+    taskAttributes:[],
+    attachments:[],
+    attachmentsError:''
   };
 
   export default function taskReducer (state = initialState, action) {
     switch (action.type) {
+      case ADD_ATTACHMENT:
+        return { ...state, attachments:[action.attachment,...state.attachments],attachmentsError:state.attachmentsError+action.error };
+      case LOGIN_LOGOUT:
+        return { ...initialState };
+      case EDIT_ATTACHMENT:{
+        let newAttachments=[...state.attachments];
+          newAttachments[newAttachments.findIndex((attachment)=>attachment.id==action.attachment.id)]=action.attachment;
+        return { ...state, attachments:newAttachments };
+      }
+      case DELETE_ATTACHMENT:{
+        let newAttachments=state.attachments;
+        newAttachments.splice(newAttachments.findIndex((attachment)=>attachment.id===action.id),1);
+        return { ...state, attachments:[...newAttachments] };
+      }
+      case CLEAR_ATTACHMENTS:{
+        return {...state,attachments:[],attachmentsError:''};
+      }
+
       case SET_LOADING_TASKS:
       return {
         ...state,

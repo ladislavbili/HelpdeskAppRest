@@ -10,8 +10,10 @@ import { SET_USERS,
   SET_USER_ATTRIBUTES, EDIT_USER_LIST, START_LOADING_USER, SET_ASSIGNERS } from '../types';
 
 import { IMAGE_UPLOAD, COMPANIES_LIST,USER_ROLES_LIST, USERS_LIST, ASSIGNERS_LIST,GET_LOC ,GET_FILE } from '../urls';
-import {processRESTinput,processDataWithPrefix} from '../../helperFunctions';
+import {processRESTinput,processDataWithPrefix, processError} from '../../helperFunctions';
 import queryString from 'query-string';
+import i18n from 'i18next';
+
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
 
 /**
@@ -37,6 +39,7 @@ export const getUsers= (updateDate,token) => {
       }
     }).then((response) =>{
       if(!response.ok){
+        processError(response,dispatch);
         return;
       }
       response.json().then((data) => {
@@ -63,6 +66,7 @@ export const getAllUsers= (token) => {
       }
     }).then((response) =>{
       if(!response.ok){
+        processError(response,dispatch);
         return;
       }
       response.json().then((data) => {
@@ -98,6 +102,7 @@ export const getUserRoles= (token) => {
       }
     }).then((response) =>{
       if(!response.ok){
+        processError(response,dispatch);
         return;
       }
       response.json().then((data) => {
@@ -116,7 +121,7 @@ export const getUserRoles= (token) => {
 * @param {object} body  All parameters in an object of the new user
 * @param {string} token universal token for API comunication
 */
-export const addUser = (body,company,role,image,afterSuccess,token) => {
+export const addUser = (body,company,role,image,token) => {
   return (dispatch) => {
     if(image!==null){
       let formData = new FormData();
@@ -130,6 +135,7 @@ export const addUser = (body,company,role,image,afterSuccess,token) => {
       })
       .then((response)=>{
         if(!response.ok){
+          processError(response, dispatch);
           return;
         }
         response.json().then((response)=>{
@@ -147,12 +153,12 @@ export const addUser = (body,company,role,image,afterSuccess,token) => {
                 dispatch({type: SET_USER_EMAIL_ERROR, nameError:true});
               }
               else{
+                processError(response,dispatch);
               }
               return;
             }
             response.json().then((response)=>{
               dispatch({type: ADD_USER, user:response.data});
-              afterSuccess();
             })})
             .catch(function (error) {
               console.log(error);
@@ -177,12 +183,12 @@ export const addUser = (body,company,role,image,afterSuccess,token) => {
                 dispatch({type: SET_USER_EMAIL_ERROR, nameError:true});
               }
               else{
+                processError(response,dispatch);
               }
               return;
             }
             response.json().then((response)=>{
               dispatch({type: ADD_USER, user:response.data});
-              afterSuccess();
             })})
             .catch(function (error) {
               console.log(error);
@@ -216,6 +222,7 @@ export const getUser = (id,token) => {
       }
     }).then((response) =>{
       if(!response.ok){
+        processError(response,dispatch);
         return;
       }
       response.json().then((data) => {
@@ -276,7 +283,7 @@ export const getUser = (id,token) => {
 export const editUser = (body,company,role,id,isActive,image,changeLanguage,token) => {
   return (dispatch) => {
     if(changeLanguage){
-      //i18n.changeLanguage(body.language);
+      i18n.changeLanguage(body.language);
     }
     if(image===null){
       Promise.all([
@@ -296,9 +303,11 @@ export const editUser = (body,company,role,id,isActive,image,changeLanguage,toke
           }
         })]).then(([response1,response2])=>{
           if(!response1.ok){
+            processError(response1,dispatch);
             return;
           }
           if(!response2.ok){
+            processError(response2,dispatch);
             return;
           }
           Promise.all([response1.json(),response2.json()]).then(([response1,response2])=>{
@@ -320,6 +329,7 @@ export const editUser = (body,company,role,id,isActive,image,changeLanguage,toke
         })
         .then((response)=>{
           if(!response.ok){
+            processError(response,dispatch);
             return;
           }
           response.json().then((response)=>{
@@ -342,9 +352,11 @@ export const editUser = (body,company,role,id,isActive,image,changeLanguage,toke
                 }
               })]).then(([response1,response2])=>{
                 if(!response2.ok){
+                  processError(response2,dispatch);
                   return;
                 }
                 if(!response1.ok){
+                  processError(response1,dispatch);
                   return;
                 }
                 Promise.all([response1.json(),response2.json()]).then(([response1,response2])=>{
@@ -381,9 +393,14 @@ export const getAssigners = (token,projectID) => {
       headers: {
           'Authorization': 'Bearer ' + token
       }
-    }).then((response)=> response.json().then(response => {
+    }).then((response)=> {
+      if(!response.ok){
+        processError(response,dispatch);
+        return;
+      }
+      response.json().then(response => {
       dispatch({type: SET_ASSIGNERS, payload:{assigners:response.assigner}});
-    }))
+    })})
     .catch(function (error) {
       console.log(error);
     });
@@ -410,9 +427,18 @@ export const getAssigners = (token,projectID) => {
             'Authorization': 'Bearer ' + token
         }
       })
-    ]).then(([response1,response2])=>Promise.all([response1.json(),response2.json()]).then(([response1,response2])=>{
+    ]).then(([response1,response2])=>{
+    if(!response1.ok){
+      processError(response1,dispatch);
+      return;
+    }
+    if(!response2.ok){
+      processError(response2,dispatch);
+      return;
+    }
+    Promise.all([response1.json(),response2.json()]).then(([response1,response2])=>{
       dispatch({type: SET_USER_ATTRIBUTES, payload:{companies:response1.data,user_roles:response2.data,user:null}});
-    }))
+    })})
     .catch(function (error) {
       console.log(error);
     });

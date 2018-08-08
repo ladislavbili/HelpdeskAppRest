@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
-import { Modal } from 'react-native';
+import { Modal, Linking } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { View, Body, Container, Content, Icon, Input, Item, Label, Text, Footer, FooterTab, Button, Picker,  ListItem, Header,Title , Left, Right, List , CheckBox } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
 import i18n from 'i18next';
-import {editTask,getTaskSolvers,deleteFollower,addFollower} from '../../redux/actions';
+import {editTask,getTaskSolvers,deleteFollower,addFollower, removeFile, uploadFile} from '../../redux/actions';
 import {formatDate,processInteger, initialiseCustomAttributes, importExistingCustomAttributesForTask, containsNullRequiredAttribute, processCustomAttributes} from '../../helperFunctions';
 import TaskTag from './tag';
 import TaskFollower from './follower';
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
+var RNGRP = require('react-native-get-real-path');
 
 const workTypes=['vzdialena podpora','servis IT','servis serverov','programovanie www','instalacie klientskeho os','bug reklamacia','navrh','material','cenova ponuka','administrativa','konzultacia','refakturacia','testovanie'];
 
@@ -146,7 +148,11 @@ class TabAtributes extends Component {
 				workTime: this.state.workTime.length === 0 ? undefined : this.state.workTime,
 				tag: JSON.stringify(tags),
 				assigned: this.state.assigned.id !== null ? JSON.stringify([{ userId: parseInt(this.state.assigned.id) }]) : null,
-        taskData: JSON.stringify(processCustomAttributes({...this.state.task_data},[...this.props.taskAttributes]))
+        taskData: JSON.stringify(processCustomAttributes({...this.state.task_data},[...this.props.taskAttributes])),
+        attachment:
+					this.props.attachments.length === 0
+          ? undefined
+						: JSON.stringify(this.props.attachments.map(attachment => attachment.id)),
 			},
       this.props.task.id,
 			this.state.project,
@@ -701,6 +707,49 @@ class TabAtributes extends Component {
             </FooterTab>
           </Footer>
         </Modal>
+        <Button
+          block
+          primary
+          onPress={()=>
+            DocumentPicker.show({
+                filetype: [DocumentPickerUtil.allFiles()],
+              },(error,res) => {
+                RNGRP.getRealPathFromURI(res.uri).then(filePath =>{
+                  let file = {...res};
+                  file.filePath=filePath;
+                  file.name=file.fileName;
+                  file.size=file.fileSize;
+                  this.props.upadFile(file,this.props.token);
+                });
+                return;
+              })}>
+          <Text>{i18n.t('addAttachement')}</Text>
+        </Button>
+        <List style={{marginBottom:40}}>
+          {this.props.attachments.length>0 &&
+            <ListItem button key="def">
+                <Left>
+                  <Text>File name (size)</Text>
+              </Left>
+              <Right>
+                <Icon name="md-trash" style={{ color: 'white' }} />
+              </Right>
+            </ListItem>}
+        {this.props.attachments.map((item,index)=>
+        <ListItem key={item.id} style={{padding:0,margin:0}}>
+          <Left>
+            <Text style={{color: 'blue'}}
+              onPress={() => Linking.openURL(item.url)}>
+              {item.file.name+'('+Math.ceil(parseInt(item.file.size)/1000)+'kb)'}</Text>
+          </Left>
+          <Right>
+          <Button transparent onPress={()=>this.props.removeFile(item.id)}>
+            <Icon name="md-trash" style={{ color: 'black' }} />
+          </Button>
+        </Right>
+        </ListItem>
+        )}
+      </List>
       </Content>
     </Container>
   );
@@ -711,9 +760,9 @@ class TabAtributes extends Component {
 const mapStateToProps = ({ taskReducer, loginReducer, userReducer }) => {
   const {users} = userReducer;
   const {token, user} = loginReducer;
-  const { companies ,statuses, projects,tags, taskSolvers, task, taskAttributes} = taskReducer;
-  return { users,user, token, companies,statuses, projects,tags, taskSolvers, task, taskAttributes};
+  const { companies ,statuses, projects,tags, taskSolvers, task, taskAttributes, attachments} = taskReducer;
+  return { users,user, token, companies,statuses, projects,tags, taskSolvers, task, taskAttributes, attachments};
 };
 
 //exports created Component connected to the redux store and redux actions
-export default connect(mapStateToProps,{editTask,getTaskSolvers, deleteFollower,addFollower})(TabAtributes);
+export default connect(mapStateToProps,{editTask,getTaskSolvers, deleteFollower,addFollower,removeFile, uploadFile})(TabAtributes);

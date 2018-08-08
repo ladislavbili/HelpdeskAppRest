@@ -1,3 +1,18 @@
+import {LOGIN_LOGOUT} from './redux/types';
+
+/**
+ * Processes errors in actions
+ * @param  {function} dispatch dispatches error actions
+ */
+export const processError= (response,dispatch)=>{
+  if(response.status===401){
+    dispatch({ type: LOGIN_LOGOUT });
+  }
+  response.text().then((data)=>{
+    console.log(JSON.parse(data).message);
+  });
+}
+
 /**
   * Format's javascript timestamp to slovak format of the datetime
   * @param  {int} time Timestamp/javascript format

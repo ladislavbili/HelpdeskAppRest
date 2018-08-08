@@ -1,13 +1,13 @@
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Input, Item, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, View, CheckBox, Picker,Label } from 'native-base';
+import { Input, Item, Container, Header, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, View, CheckBox, Picker,Label} from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import {Modal} from 'react-native';
+import {Modal, Image } from 'react-native';
 import i18n from 'i18next';
 import {addUser} from '../../redux/actions';
 import {isEmail} from '../../helperFunctions';
-
+import PhotoUpload from 'react-native-photo-upload';
+var RNGRP = require('react-native-get-real-path');
 const languages = [{ id: 'en', name: 'English' }, { id: 'sk', name: 'Slovensky' }];
 
 /**
@@ -48,12 +48,13 @@ class UserAdd extends Component {
 			detail_data: {
 				name: this.state.name,
 				surname: this.state.surname,
-				function: this.state.func,
+				'function': this.state.func,
 				mobile: this.state.mobile,
 				tel: this.state.tel
 			},
 		};
-		this.props.addUser(body, this.state.company.id, this.state.userRole.id, this.state.image, Actions.pop, this.props.token);
+		this.props.addUser(body, this.state.company.id, this.state.userRole.id, this.state.image, this.props.token);
+    Actions.pop();
   }
 
   checkValues(){
@@ -82,6 +83,37 @@ class UserAdd extends Component {
           </Right>
         </Header>
         <Content style={{ padding: 15 }}>
+
+          <PhotoUpload
+            height={50}
+            width={50}
+            quality={100}
+            noData={true}
+            onResizedImageUri={(file)=>{
+              RNGRP.getRealPathFromURI(file.uri).then(filePath =>{
+                let image = {...file};
+                image.filepath=filePath;
+                image.fileSize=image.size;
+                image.fileName=image.name;
+                image.type='image/jpeg';
+                image.fileSize=image.size;-
+                this.setState({image});
+              });
+            }}
+          >
+            <Image
+              style={{
+                paddingVertical: 30,
+                width: 75,
+                height: 75,
+                borderRadius: 75
+              }}
+              resizeMode='cover'
+              source={{
+                uri: 'https://www.sparklabs.com/forum/styles/comboot/theme/images/default_avatar.jpg'
+              }}
+            />
+          </PhotoUpload>
 
           <Text note>{i18n.t('email')+'/'+i18n.t('username')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
@@ -147,7 +179,7 @@ class UserAdd extends Component {
         </Button>
       </View>
 
-      <Text note>Select users language</Text>
+      <Text note>{i18n.t('selectLanguage')}</Text>
       <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
         <Picker
           supportedOrientations={['portrait', 'landscape']}

@@ -1,7 +1,7 @@
 import { EDIT_COMPANY_LIST, SET_LOADING_COMPANIES, SET_COMPANIES, ADD_COMPANY, SET_LOADING_COMPANY, SET_COMPANY, EDIT_COMPANY,
   SET_COMPANY_ATTRIBUTES_LOADING,SET_COMPANY_ATTRIBUTES } from '../types';
 import { COMPANIES_LIST, COMPANY_ATTRIBUTES_LIST } from '../urls';
-import {processRESTinput} from '../../helperFunctions';
+import {processRESTinput, processError} from '../../helperFunctions';
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
 
 
@@ -29,6 +29,7 @@ export const setCompaniesLoading = (companiesLoaded) => {
        }
      }).then((response) =>{
        if(!response.ok){
+         processError(response,dispatch);
          return;
        }
        response.json().then((data) => {
@@ -59,6 +60,7 @@ export const setCompaniesLoading = (companiesLoaded) => {
        })
      .then((response)=>{
        if(!response.ok){
+         processError(response,dispatch);
          return;
        }
      response.json().then((response)=>{
@@ -95,6 +97,7 @@ export const setCompaniesLoading = (companiesLoaded) => {
          }
        }).then((response) =>{
          if(!response.ok){
+           processError(response,dispatch);
            return;
          }
        response.json().then((data) => {
@@ -133,13 +136,11 @@ export const setCompaniesLoading = (companiesLoaded) => {
             }
           })]).then(([response1,response2])=>{
             if(!response1.ok){
-              response1.text().then((data)=>{
-                console.log(body.company_data);
-                console.log(data.message);
-              });
+              processError(response1,dispatch);
               return;
             }
             if(!response2.ok){
+              processError(response2,dispatch);
               return;
             }
             Promise.all([response1.json(),response2.json()]).then(([response1,response2])=>{
@@ -168,6 +169,7 @@ export const setCompaniesLoading = (companiesLoaded) => {
           }
         }).then((response) =>{
           if(!response.ok){
+            processError(response,dispatch);
             return;
           }
         response.json().then((data) => {

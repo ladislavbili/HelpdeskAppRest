@@ -1,5 +1,6 @@
 import { SET_COMMENTS,SET_COMMENTS_LOADING, ADD_COMMENT, ADD_COMMENT_AVATAR_URL,DELETE_COMMENT, SET_COMMENT_ATTACHMENT } from '../types';
 import { TASKS_LIST, GET_LOC, GET_FILE, COMMENT_COMMENTS } from '../urls';
+import {processError} from '../../helperFunctions';
 
 /**
 * Sets status if comments are loaded to false
@@ -24,6 +25,7 @@ export const getComments= (taskID,token) => {
       }
     }).then((response) =>{
       if(!response.ok){
+        processError(response,dispatch);
         return;
       }
       response.json().then((data) => {
@@ -37,7 +39,12 @@ export const getComments= (taskID,token) => {
                 'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json'
               }
-            }).then((response2)=>response2.json().then((data2)=>{
+            }).then((response2)=>{
+              if(!response2.ok){
+                processError(response2,dispatch);
+                return;
+              }
+              response2.json().then((data2)=>{
               fetch(GET_FILE+data2.data.fileDir+'/'+data2.data.fileName, {
                 method: 'get',
                 headers: {
@@ -45,6 +52,7 @@ export const getComments= (taskID,token) => {
                 }
               }).then((response3) =>{
                 if(!response3.ok){
+                  processError(response3,dispatch);
                   return;
                 }
 
@@ -54,7 +62,7 @@ export const getComments= (taskID,token) => {
               });
             }).catch(function (error) {
               console.log(error);
-            })
+            })}
           ).catch(function (error) {
             console.log(error);
           });
@@ -66,7 +74,12 @@ export const getComments= (taskID,token) => {
               'Authorization': 'Bearer ' + token,
               'Content-Type': 'application/json'
             }
-          }).then((response2)=>response2.json().then((data2)=>{
+          }).then((response2)=>{
+            if(!response2.ok){
+              processError(response2,dispatch);
+              return;
+            }
+            response2.json().then((data2)=>{
             fetch(GET_FILE+data2.data.fileDir+'/'+data2.data.fileName, {
               method: 'get',
               headers: {
@@ -74,6 +87,7 @@ export const getComments= (taskID,token) => {
               }
             }).then((response3) =>{
               if(!response3.ok){
+                processError(response3,dispatch);
                 return;
               }
 
@@ -83,7 +97,7 @@ export const getComments= (taskID,token) => {
             });
           }).catch(function (error) {
             console.log(error);
-          })
+          })}
         ).catch(function (error) {
           console.log(error);
         });
@@ -114,6 +128,7 @@ export const addComment = (body,taskID,token) => {
     })
     .then((response)=>{
       if(!response.ok){
+        processError(response,dispatch);
         return;
       }
       response.json().then((response)=>{
@@ -125,7 +140,13 @@ export const addComment = (body,taskID,token) => {
               'Authorization': 'Bearer ' + token,
               'Content-Type': 'application/json'
             }
-          }).then((response2)=>response2.json().then((data2)=>{
+          }).then((response2)=>{
+            if(!response2.ok){
+              processError(response2,dispatch);
+              return;
+            }
+
+            response2.json().then((data2)=>{
             fetch(GET_FILE+data2.data.fileDir+'/'+data2.data.fileName, {
               method: 'get',
               headers: {
@@ -133,6 +154,7 @@ export const addComment = (body,taskID,token) => {
               }
             }).then((response3) =>{
               if(!response3.ok){
+                processError(response3,dispatch);
                 return;
               }
               newComment['avatar']=response3.url;
@@ -142,7 +164,7 @@ export const addComment = (body,taskID,token) => {
             });
           }).catch(function (error) {
             console.log(error);
-          })
+          })}
         ).catch(function (error) {
           console.log(error);
         });
@@ -169,6 +191,7 @@ export const addCommentsComment = (body,commentID,token) => {
     })
     .then((response)=>{
         if(!response.ok){
+          processError(response,dispatch);
         return;
         }
 
@@ -181,7 +204,12 @@ export const addCommentsComment = (body,commentID,token) => {
               'Authorization': 'Bearer ' + token,
               'Content-Type': 'application/json'
             }
-          }).then((response2)=>response2.json().then((data2)=>{
+          }).then((response2)=>{
+            if(!response2.ok){
+              processError(response2,dispatch);
+              return;
+            }
+            response2.json().then((data2)=>{
             fetch(GET_FILE+data2.data.fileDir+'/'+data2.data.fileName, {
               method: 'get',
               headers: {
@@ -189,6 +217,7 @@ export const addCommentsComment = (body,commentID,token) => {
               }
             }).then((response3) =>{
               if(!response3.ok){
+                processError(response3,dispatch);
                 return;
               }
 
@@ -199,7 +228,7 @@ export const addCommentsComment = (body,commentID,token) => {
             });
           }).catch(function (error) {
             console.log(error);
-          })
+          })}
         ).catch(function (error) {
           console.log(error);
         });
@@ -213,48 +242,3 @@ export const addCommentsComment = (body,commentID,token) => {
 
   };
 };
-
-
-
-export const editComment = (body,commentID,unitID,taskID,token) => {
-  return (dispatch) => {
-    fetch(TASKS_LIST+'/'+taskID+'/comments/'+commentID+'/unit/'+unitID, {
-      method: 'put',
-      headers: {
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
-      },
-      body:JSON.stringify(body)
-    }).then((response)=>{
-      if(!response.ok){
-      }
-
-      response.json().then((response)=>{
-        dispatch({type: EDIT_COMMENT, comment:response.data});
-      })})
-      .catch(function (error) {
-        console.log(error);
-      });
-    };
-  };
-
-  export const deleteComment = (id,taskID,token) => {
-    return (dispatch) => {
-      fetch(TASKS_LIST+'/'+taskID+'/comments/'+id, {
-        method: 'delete',
-        headers: {
-          'Authorization': 'Bearer ' + token,
-          'Content-Type': 'application/json'
-        }
-      }).then((response) =>{
-        if(!response.ok){
-          return;
-        }
-
-        dispatch({type: DELETE_COMMENT, id});
-      }
-    ).catch(function (error) {
-      console.log(error);
-    });
-  }
-}

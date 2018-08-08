@@ -1,5 +1,6 @@
 import { SET_ITEMS,SET_ITEMS_LOADING, ADD_ITEM, EDIT_ITEM,DELETE_ITEM, SET_UNITS_LOADING, SET_UNITS } from '../types';
 import { TASKS_LIST, UNITS_LIST } from '../urls';
+import {processError} from '../../helperFunctions';
 
 /**
  * Sets status if items are loaded to false
@@ -24,6 +25,7 @@ export const getItems= (taskID,token) => {
         }
       }).then((response) =>{
         if(!response.ok){
+          processError(response,dispatch);
           return;
         }
       response.json().then((data) => {
@@ -53,6 +55,7 @@ export const addItem = (body,taskID,unitID,token) => {
       })
     .then((response)=>{
       if(!response.ok){
+        processError(response,dispatch);
         return;
       }
     response.json().then((response)=>{
@@ -76,6 +79,7 @@ export const editItem = (body,itemID,unitID,taskID,token) => {
           body:JSON.stringify(body)
         }).then((response)=>{
           if(!response.ok){
+            processError(response,dispatch);
             return;
           }
           response.json().then((response)=>{
@@ -97,6 +101,7 @@ export const deleteItem = (id,taskID,token) => {
         }
       }).then((response) =>{
         if(!response.ok){
+          processError(response,dispatch);
           return;
         }
         dispatch({type: DELETE_ITEM, id});
@@ -130,6 +135,7 @@ export const getUnits= (token) => {
         }
       }).then((response) =>{
         if(!response.ok){
+          processError(response,dispatch);
           return;
         }
       response.json().then((data) => {

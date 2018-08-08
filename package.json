@@ -1,5 +1,5 @@
 {
-  "name": "HelpdeskAppRest",
+  "name": "Helpdesk",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
   "dependencies": {
     "@shoutem/theme": "^0.9.0",
     "babel-preset-react-native": "^2.1.0",
+    "base-64": "^0.1.0",
     "color": "1.0.3",
     "i18next": "^11.5.0",
     "jwt-decode": "^2.2.0",
@@ -20,9 +21,12 @@
     "react": "16.3.1",
     "react-i18next": "^7.9.1",
     "react-native": "0.55.4",
+    "react-native-document-picker": "^2.1.0",
+    "react-native-get-real-path": "git+https://github.com/Wraptime/react-native-get-real-path.git",
     "react-native-i18n": "^2.0.4",
     "react-native-modal-datetime-picker": "^4.9.0",
     "react-native-navigation-redux-helpers": "^0.5.0",
+    "react-native-photo-upload": "^1.2.0",
     "react-native-router-flux": "^4.0.0-beta.18",
     "react-native-vector-icons": "^4.3.0",
     "react-navigation": "1.5.0",

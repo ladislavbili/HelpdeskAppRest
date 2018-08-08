@@ -7,9 +7,7 @@ import './src/translations';
 import i18n from 'i18next';
 // C:\Users\Therian\AppData\Local\Android\sdk\tools\emulator -avd Nexus_5X_API_23
 
-
 const store=createStore();
-t=i18n.t;
 class App extends Component<Props> {
   render() {
     return (

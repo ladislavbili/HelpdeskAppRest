@@ -17,6 +17,7 @@ export const TASKS_LIST = BASE_URL + '/task-bundle/tasks';
 export const UNITS_LIST = BASE_URL + '/task-bundle/units';
 export const PROJECT_URL = BASE_URL + '/task-bundle/project';
 export const TASK_ATTRIBUTES_LIST = BASE_URL + '/task-bundle/task-attributes';
+export const UPLOAD_FILE =  BASE_URL + '/core-bundle/cdn/upload';
 
 export const FILTER_LIST = BASE_URL + '/task-bundle/filters';
 export const ASSIGNERS_LIST = BASE_URL + '/task-bundle/project/assigners';

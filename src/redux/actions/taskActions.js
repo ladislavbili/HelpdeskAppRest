@@ -1,8 +1,9 @@
 import { SET_TASKS, SET_LOADING_TASKS,ADD_TASKS,SET_OPENED_ID, SET_TASK_STATUSES_LOADING,SET_TASK_STATUSES,SET_TASK_PROJECTS_LOADING,SET_TASK_PROJECTS,
   SET_TASK_COMPANIES_LOADING,SET_TASK_COMPANIES,SET_TASK_UNITS_LOADING,SET_TASK_UNITS,SET_TASK_TAGS_LOADING,SET_TASK_TAGS,SET_TASK_SOLVERS,SET_TASK_LOADING,
-  SET_TASK,EDIT_TASK, SET_TASK_ATTRIBUTES_LOADING,SET_TASK_ATTRIBUTES } from '../types';
-import { PROJECTS_LIST, COMPANIES_LIST, STATUSES_LIST, TASKS_LIST, HOST_URL , UNITS_LIST, TAGS_LIST, PROJECT_URL, TASK_ATTRIBUTES_LIST} from '../urls';
-import {processRESTinput} from '../../helperFunctions';
+  SET_TASK,EDIT_TASK, SET_TASK_ATTRIBUTES_LOADING,SET_TASK_ATTRIBUTES, ADD_ATTACHMENT } from '../types';
+import { PROJECTS_LIST, COMPANIES_LIST, STATUSES_LIST, TASKS_LIST, HOST_URL , UNITS_LIST, TAGS_LIST, PROJECT_URL, TASK_ATTRIBUTES_LIST, GET_LOC,GET_FILE} from '../urls';
+import {processRESTinput, processError} from '../../helperFunctions';
+import {clearAttachments} from './attachmentActions';
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
 
 /**
@@ -28,6 +29,10 @@ export const getTasks = (filter,token) => {
         'Authorization': 'Bearer ' + token
       }
     }).then((response) =>{
+      if(!response.ok){
+        processError(response,dispatch);
+        return;
+      }
       response.json().then((data) => {
         dispatch({type: SET_TASKS, tasks:data.data,nextTasks:data._links.next?data._links.next+'&order=status=%3Easc':false});
       });
@@ -52,6 +57,10 @@ export const getMoreTasks = (url,token) => {
         'Authorization': 'Bearer ' + token
       }
     }).then((response) =>{
+      if(!response.ok){
+        processError(response,dispatch);
+        return;
+      }
       response.json().then((data) => {
         dispatch({type: ADD_TASKS, tasks:data.data,nextTasks:data._links.next?data._links.next+'&order=status=%3Easc':false,url});
       });
@@ -76,6 +85,7 @@ export const getMoreTasks = (url,token) => {
          }
        }).then((response) =>{
          if(!response.ok){
+           processError(response,dispatch);
            return;
          }
        response.json().then((data) => {
@@ -114,6 +124,7 @@ export const getMoreTasks = (url,token) => {
          }
        }).then((response) =>{
          if(!response.ok){
+           processError(response,dispatch);
            return;
          }
        response.json().then((data) => {
@@ -141,6 +152,7 @@ export const getMoreTasks = (url,token) => {
          }
        }).then((response) =>{
          if(!response.ok){
+           processError(response,dispatch);
            return;
          }
        response.json().then((data) => {
@@ -172,6 +184,7 @@ export const getMoreTasks = (url,token) => {
         }
       }).then((response) =>{
         if(!response.ok){
+          processError(response,dispatch);
           return;
         }
         response.json().then((data) => {
@@ -203,6 +216,7 @@ export const getMoreTasks = (url,token) => {
          }
        }).then((response) =>{
          if(!response.ok){
+           processError(response,dispatch);
            return;
          }
        response.json().then((data) => {
@@ -234,6 +248,7 @@ export const getMoreTasks = (url,token) => {
          }
        }).then((response) =>{
          if(!response.ok){
+           processError(response,dispatch);
            return;
          }
        response.json().then((data) => {
@@ -262,6 +277,7 @@ export const getTaskSolvers = (projectID,token) => {
         }
       }).then((response) =>{
         if(!response.ok){
+          processError(response,dispatch);
           return;
         }
       response.json().then((data) => {
@@ -286,9 +302,7 @@ export const addTask = (body,followers,projectID,statusID,requesterID,companyID,
     })
     .then((response)=>{
       if(!response.ok){
-        response.text().then((data)=>{
-          console.log(JSON.parse(data).message);
-        });
+        processError(response,dispatch);
         return;
       }
       response.json().then((response)=>{
@@ -313,6 +327,7 @@ export const addTask = (body,followers,projectID,statusID,requesterID,companyID,
         })
       .then((response)=>{
         if(!response.ok){
+          processError(response,dispatch);
           return;
         }
       response.json().then((response)=>{
@@ -336,6 +351,7 @@ export const addTask = (body,followers,projectID,statusID,requesterID,companyID,
       })
     .then((response)=>{
       if(!response.ok){
+        processError(response,dispatch);
         return;
       }
     })
@@ -359,6 +375,7 @@ export const setTaskLoading = (taskLoaded) => {
  */
 export const getTask = (id,token) => {
   return (dispatch) => {
+    clearAttachments()(dispatch);
       fetch(TASKS_LIST+'/'+id, {
         method: 'get',
         headers: {
@@ -367,10 +384,43 @@ export const getTask = (id,token) => {
         }
       }).then((response) =>{
         if(!response.ok){
+          processError(response,dispatch);
           return;
         }
       response.json().then((data) => {
         dispatch({type: SET_TASK, task:data.data});
+        //nacitavanie attachementov
+        data.data.taskHasAttachments.map((attachment)=>{
+          fetch(GET_LOC+attachment.slug+'/download-location', {
+            method: 'get',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            }
+          }).then((response2)=>
+          response2.json().then((data2)=>{
+            fetch(GET_FILE+data2.data.fileDir+'/'+data2.data.fileName, {
+              method: 'get',
+              headers: {
+                'Authorization': 'Bearer ' + token,
+              }
+            }).then((response3) =>{
+              if(!response3.ok){
+                processError(response3,dispatch);
+                return;
+              }
+              dispatch({type: ADD_ATTACHMENT, attachment:{url:response3.url,id:attachment.slug,file:{name:attachment.name,size:response3._bodyBlob._data.size}}});
+            }).catch(function (error) {
+              console.log(error);
+            });
+          }).catch(function (error) {
+            console.log(error);
+          })
+        ).catch(function (error) {
+          console.log(error);
+        })
+      });
+        //koniec nacitavania
       });
     }
   ).catch(function (error) {
@@ -391,9 +441,14 @@ export const editTask = (data,taskID,projectID,statusID,requesterID,companyID,to
         'Content-Type': 'application/json'
       },
       body:JSON.stringify(data)
-    }).then((response)=>response.json().then((data)=>{
+    }).then((response)=>{
+      if(!response.ok){
+        processError(response,dispatch);
+        return;
+      }
+      response.json().then((data)=>{
       dispatch({ type: EDIT_TASK, task:data.data });
-    })).catch(function (error) {
+    })}).catch(function (error) {
       console.log(error);
     });
   };
@@ -419,6 +474,7 @@ export const setTaskAttributesLoading = (taskAttributesLoaded) => {
          }
        }).then((response) =>{
          if(!response.ok){
+           processError(response,dispatch);
            return;
          }
        response.json().then((data) => {

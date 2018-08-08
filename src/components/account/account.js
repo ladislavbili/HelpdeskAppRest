@@ -125,7 +125,7 @@ class Account extends Component {
           }
         </View>
 
-        <Text note>Select users language</Text>
+        <Text note>{i18n.t('selectLanguage')}</Text>
         <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Picker
             supportedOrientations={['portrait', 'landscape']}

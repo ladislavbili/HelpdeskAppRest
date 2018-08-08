@@ -56,4 +56,5 @@ export default {
   emptyTaskList:'Zoznam úloh je prázdny',
   task:'Úloha',
   loadMoreTasks:'Načítať ďaľšie úlohy..',
-  };
+  addAttachement:'Pridať prílohu'
+};

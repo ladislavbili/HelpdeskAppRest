@@ -1,8 +1,9 @@
 import {LOGIN_START,LOGIN_FAIL,TOKEN_CHECKED,LOGIN_SUCCESS,LOGIN_LOGOUT } from '../types';
-
 import {LOGIN_URL, USERS_LIST } from '../urls';
+import {processError} from '../../helperFunctions';
 import { AsyncStorage } from 'react-native';
 import jwt_decode from 'jwt-decode';
+import i18n from 'i18next';
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
 
 /**
@@ -42,6 +43,7 @@ import jwt_decode from 'jwt-decode';
 
   export const checkToken = () => {
      return (dispatch) => {
+       //dispatch({ type: TOKEN_CHECKED });
        AsyncStorage.getItem('lansystems').then((token)=>{
        if(token){
          fetch(USERS_LIST+'/'+jwt_decode(token).id, {
@@ -62,7 +64,7 @@ import jwt_decode from 'jwt-decode';
                return;
              }
              let user=data.data;
-             //i18n.changeLanguage(user.language);
+             i18n.changeLanguage(user.language);
              dispatch({
                type: LOGIN_SUCCESS,token,user
              });
