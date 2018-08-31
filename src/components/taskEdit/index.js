@@ -80,7 +80,7 @@ export default class TaskEdit extends Component {
           </Body>
           {
             this.state.canSave && this.state.changed && (<Right>
-              <Button transparent onPress={()=>this.state.saveFunction?this.state.saveFunction():()=>{}}>
+              <Button transparent style={{borderColor: '#FFF', borderWidth: 1, borderRadius:0}} onPress={()=>this.state.saveFunction?this.state.saveFunction():()=>{}}>
                 <Icon active style={{ color: 'white', padding:10 }} name="ios-checkmark-circle-outline" />
               </Button>
             </Right>)

@@ -11,6 +11,12 @@ export const setItemsLoading = (itemsLoaded) => {
   }
 };
 
+export const clearItems= () => {
+  return (dispatch) => {
+        dispatch({type: SET_ITEMS, items:[]});
+  }
+}
+
 /**
  * Gets all items available with no pagination
  * @param {string} token universal token for API comunication
@@ -68,6 +74,12 @@ export const addItem = (body,taskID,unitID,token) => {
   };
 };
 
+export const addFakeItem = (body) => {
+  return (dispatch) => {
+    dispatch({type: ADD_ITEM, item:body});
+  };
+};
+
 export const editItem = (body,itemID,unitID,taskID,token) => {
   return (dispatch) => {
         fetch(TASKS_LIST+'/'+taskID+'/invoiceable-items/'+itemID+'/unit/'+unitID, {
@@ -91,6 +103,12 @@ export const editItem = (body,itemID,unitID,taskID,token) => {
   };
 };
 
+export const editFakeItem = (body) => {
+  return (dispatch) => {
+    dispatch({type: EDIT_ITEM, item:body});
+  };
+};
+
 export const deleteItem = (id,taskID,token) => {
   return (dispatch) => {
       fetch(TASKS_LIST+'/'+taskID+'/invoiceable-items/'+id, {
@@ -110,6 +128,12 @@ export const deleteItem = (id,taskID,token) => {
       console.log(error);
   });
 }
+}
+
+export const deleteFakeItem = (id) => {
+  return (dispatch) => {
+        dispatch({type: DELETE_ITEM, id});
+  }
 }
 
 /**

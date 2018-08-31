@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
 
 import TabAttributesLoader from './tabAttributesLoader';
+import TabItemsLoader from './tabItemsLoader';
+import TabSubtasks from './tabSubtasks';
 import i18n from 'i18next';
 
 /**
@@ -46,6 +48,12 @@ export default class TaskAdd extends Component {
         <Tabs>
           <Tab heading={i18n.t('attributes')}>
             <TabAttributesLoader saveFunction={this.setFunction.bind(this)} />
+          </Tab>
+          <Tab heading={i18n.t('items')}>
+            <TabItemsLoader />
+          </Tab>
+          <Tab heading={i18n.t('subtasks')}>
+            <TabSubtasks />
           </Tab>
         </Tabs>
       </Container>

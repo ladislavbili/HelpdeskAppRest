@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
 
 import TabSubtasks from './tabSubtasks';
-import {setSubtasksLoading,getSubtasks} from '../../redux/actions';
+import {setSubtasksLoading,getSubtasks,setSubtasksCount} from '../../redux/actions';
 
 /**
  * Loads all of the data needed for user to seach for tasks
@@ -13,6 +13,7 @@ class TabSubtasksLoader extends Component {
   constructor(props){
     super(props);
     this.props.setSubtasksLoading(false);
+    this.props.setSubtasksCount(0);
     this.props.getSubtasks(this.props.id,this.props.token);
   }
   render() {
@@ -37,4 +38,4 @@ const mapStateToProps = ({loginReducer, subtaskReducer}) => {
 };
 
 //exports created Component connected to the redux store and redux actions
-export default connect(mapStateToProps,{setSubtasksLoading,getSubtasks})(TabSubtasksLoader);
+export default connect(mapStateToProps,{setSubtasksLoading,getSubtasks,setSubtasksCount})(TabSubtasksLoader);

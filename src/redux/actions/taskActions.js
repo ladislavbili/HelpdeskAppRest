@@ -4,6 +4,8 @@ import { SET_TASKS, SET_LOADING_TASKS,ADD_TASKS,SET_OPENED_ID, SET_TASK_STATUSES
 import { PROJECTS_LIST, COMPANIES_LIST, STATUSES_LIST, TASKS_LIST, HOST_URL , UNITS_LIST, TAGS_LIST, PROJECT_URL, TASK_ATTRIBUTES_LIST, GET_LOC,GET_FILE} from '../urls';
 import {processRESTinput, processError} from '../../helperFunctions';
 import {clearAttachments} from './attachmentActions';
+import {addSubtask} from './subtaskActions';
+import {addItem} from './itemActions';
 //All of these are actions, they return redux triggered functions, that have no return, just manipulate with the store
 
 /**
@@ -23,7 +25,7 @@ export const setTasksLoading = (tasksLoaded) => {
  */
 export const getTasks = (filter,token) => {
   return (dispatch) => {
-    fetch(TASKS_LIST+'?'+processRESTinput(filter)+'&order=status=%3Easc', {
+    fetch(TASKS_LIST+'?'+processRESTinput(filter)+'&order=status=>asc,title=>asc', {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + token
@@ -34,7 +36,7 @@ export const getTasks = (filter,token) => {
         return;
       }
       response.json().then((data) => {
-        dispatch({type: SET_TASKS, tasks:data.data,nextTasks:data._links.next?data._links.next+'&order=status=%3Easc':false});
+        dispatch({type: SET_TASKS, tasks:data.data,nextTasks:data._links.next?data._links.next+'&order=status=>asc,title=>asc':false});
       });
     }
   ).catch(function (error) {
@@ -62,7 +64,7 @@ export const getMoreTasks = (url,token) => {
         return;
       }
       response.json().then((data) => {
-        dispatch({type: ADD_TASKS, tasks:data.data,nextTasks:data._links.next?data._links.next+'&order=status=%3Easc':false,url});
+        dispatch({type: ADD_TASKS, tasks:data.data,nextTasks:data._links.next?data._links.next+'&order=status=>asc,title=>asc':false,url});
       });
     }
   ).catch(function (error) {
@@ -77,7 +79,7 @@ export const getMoreTasks = (url,token) => {
  */
  export const getFilterTasks= (id,token) => {
    return (dispatch) => {
-       fetch(TASKS_LIST+'/filter/'+id+'?order=status=%3Easc', {
+       fetch(TASKS_LIST+'/filter/'+id+'?order=status=>asc,title=>asc', {
          method: 'get',
          headers: {
            'Authorization': 'Bearer ' + token,
@@ -89,7 +91,7 @@ export const getMoreTasks = (url,token) => {
            return;
          }
        response.json().then((data) => {
-         dispatch({type: SET_TASKS, tasks:data.data,nextTasks:data._links.next?data._links.next+'&order=status=%3Easc':false});
+         dispatch({type: SET_TASKS, tasks:data.data,nextTasks:data._links.next?data._links.next+'&order=status=>asc,title=>asc':false});
        });
      }
    ).catch(function (error) {
@@ -290,7 +292,7 @@ export const getTaskSolvers = (projectID,token) => {
 }
 }
 
-export const addTask = (body,followers,projectID,statusID,requesterID,companyID,token) => {
+export const addTask = (body,followers,projectID,statusID,requesterID,companyID,items,subtasks,token) => {
   return (dispatch) => {
     fetch(TASKS_LIST+'/project/'+projectID+'/status/'+statusID+'/requester/'+requesterID+'/company/'+companyID,{
       headers: {
@@ -309,6 +311,13 @@ export const addTask = (body,followers,projectID,statusID,requesterID,companyID,
         followers.map((follower)=>{
           addFollower(follower.id,response.data.id,token)(dispatch);
         });
+        items.map((item)=>{
+          addItem({title:item.title,amount:item.amount,unit_price:item.unit_price},response.data.id,item.unit.id,token)(dispatch);
+        });
+        subtasks.map((subtask)=>{
+          addSubtask({done:subtask.done,title:subtask.title},response.data.id,token)(dispatch);
+        });
+
       })})
       .catch(function (error) {
         console.log(error);

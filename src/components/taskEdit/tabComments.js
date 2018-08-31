@@ -35,8 +35,8 @@ class TabComments extends Component {
              {data.email_to &&
                <Text>{i18n.t('mailedTo')} <Text note>{data.email_to.join(', ')}</Text></Text>
              }
-              {data.title &&
-                <Text style={{color:'#007299'}}> {data.title}</Text>
+              {data.email && data.title !=='' &&
+                <Text style={{color:'#007299'}}>{data.title}</Text>
               }
              <Text style={{textAlign:'left'}}>{data.body}</Text>
              </View>

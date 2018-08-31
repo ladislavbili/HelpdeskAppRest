@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 
 import i18n from 'i18next';
-import {addSubtask,deleteSubtask,editSubtask} from '../../redux/actions';
+import {clearSubtasks,addFakeSubtask,editFakeSubtask,deleteFakeSubtask} from '../../redux/actions';
 
 /**
 * Display's all of the items used in this task
@@ -21,8 +21,10 @@ class TabSubtasks extends Component{
       editedTitle:'',
       editedID:null,
     }
+    this.props.clearSubtasks();
     this.deleteSubtask.bind(this);
   }
+
   /**
   * Delete's a single item
   * @param  {int} id    ID of an item that is meant to be deleted
@@ -35,11 +37,7 @@ class TabSubtasks extends Component{
       [
         {text: i18n.t('cancel'), style: 'cancel'},
         {text: i18n.t('ok'), onPress: () =>{
-          this.props.deleteSubtask(
-            id,
-            this.props.id,
-            this.props.token
-          );
+          this.props.deleteFakeSubtask(id);
         }},
       ],
       { cancelable: false }
@@ -58,24 +56,13 @@ class TabSubtasks extends Component{
                   <Button
                     transparent
                     style={{ padding:5, margin:0}}
-                    onPress={()=>{
-                      this.props.editSubtask(
-                        { done: !item.done, title: item.title },
-                        item.id,
-                        this.props.id,
-                        this.props.token
-                      )}}>
+                    onPress={()=>{this.props.editFakeSubtask({...item,done: !item.done})}}>
                     <CheckBox
                       style={{padding:0, marginRight:5}}
                       checked={item.done}
                       color='#3F51B5'
-                      onPress={()=>{
-                        this.props.editSubtask(
-                          { done: !item.done, title: item.title },
-                          item.id,
-                          this.props.id,
-                          this.props.token
-                        )}}/>
+                      onPress={()=>{this.props.editFakeSubtask({...item,done: !item.done})}}
+                      />
                   </Button>
                 </Left>
                 <Left>
@@ -84,24 +71,14 @@ class TabSubtasks extends Component{
                     onFocus={()=>this.setState({editedID:item.id,editedTitle:item.title})}
                     onChange={ event => this.setState({editedTitle:event.nativeEvent.text}) }
                     onSubmitEditing={()=>{
-                      this.props.editSubtask(
-                        { done: item.done, title: this.state.editedTitle },
-                        item.id,
-                        this.props.id,
-                        this.props.token
-                      );
+                      this.props.editFakeSubtask({ ...item, title: this.state.editedTitle });
                       this.setState({editedID:null})
                     }}
                     onBlur={()=>{
                       if(this.state.editedID===null){
                         return;
                       }
-                      this.props.editSubtask(
-                        { done: item.done, title: this.state.editedTitle },
-                        item.id,
-                        this.props.id,
-                        this.props.token
-                      );
+                      this.props.editFakeSubtask({ ...item, title: this.state.editedTitle });
                       this.setState({editedID:null})
                     }}
                     value={this.state.editedID===item.id?this.state.editedTitle:item.title}
@@ -117,17 +94,6 @@ class TabSubtasks extends Component{
                 </Right>
               </CardItem>
             </Card>)}
-            {
-              this.props.subtasksCount>0 &&
-              <Card>
-              <View style={{flexDirection:'row'}}>
-                <ActivityIndicator
-                animating size={ 'large' }
-                color='#007299' />
-              <Text style={{marginTop:6, marginLeft:5}}>Adding subtasks...</Text>
-              </View>
-            </Card>
-            }
 
             <Card>
               <CardItem style={{paddingLeft:0, paddingRight:0}}>
@@ -152,7 +118,7 @@ class TabSubtasks extends Component{
                     style={{ paddingLeft:15,paddingRight:15}}
                     onPress={()=>{
                       if(this.state.newTitle==='')return;
-                      this.props.addSubtask({ done: this.state.newDone, title: this.state.newTitle },this.props.id,this.props.token);
+                      this.props.addFakeSubtask({id:this.props.subtasks.length, done: this.state.newDone, title: this.state.newTitle });
                       this.setState({newDone:false,newTitle:''});
                     }}>
                     <Icon name="md-add" style={{ color: this.state.newTitle!==''?'black':'grey' }} />
@@ -168,11 +134,10 @@ class TabSubtasks extends Component{
 
 //md-add
   //creates function that maps actions (functions) to the redux store
-  const mapStateToProps = ({ subtaskReducer, loginReducer, taskReducer}) => {
-    const { subtasks, subtasksCount } = subtaskReducer;
-    const { token } = loginReducer;
-    return { subtasks, subtasksCount, token, ACL:taskReducer.task.loggedUserProjectAcl.concat(taskReducer.task.loggedUserRoleAcl) };
+  const mapStateToProps = ({ subtaskReducer }) => {
+    const { subtasks } = subtaskReducer;
+    return { subtasks };
   };
 
   //exports created Component connected to the redux store and redux actions
-  export default connect(mapStateToProps,{addSubtask,deleteSubtask,editSubtask})(TabSubtasks);
+  export default connect(mapStateToProps,{clearSubtasks,addFakeSubtask,editFakeSubtask,deleteFakeSubtask})(TabSubtasks);

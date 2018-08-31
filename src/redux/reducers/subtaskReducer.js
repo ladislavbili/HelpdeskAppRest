@@ -1,12 +1,17 @@
-import { SET_SUBTASKS, SET_SUBTASKS_LOADING, ADD_SUBTASK, EDIT_SUBTASK,DELETE_SUBTASK, LOGIN_LOGOUT } from '../types'
+import { SET_SUBTASKS, SET_SUBTASKS_LOADING, ADD_SUBTASK, EDIT_SUBTASK,DELETE_SUBTASK, LOGIN_LOGOUT, SET_SUBTASKS_COUNT, ADD_TO_SUBTASKS_COUNT } from '../types'
 
 const initialState = {
   subtasks:[],
+  subtasksCount:0,
   subtasksLoaded:false,
 };
 
 export default function subtasksReducer(state = initialState, action) {
   switch (action.type) {
+    case ADD_TO_SUBTASKS_COUNT:
+      return { ...state, subtasksCount:state.subtasksCount+action.subtasksCount };
+    case SET_SUBTASKS_COUNT:
+      return { ...state, subtasksCount:action.subtasksCount };
     case SET_SUBTASKS:
       return { ...state, subtasks:action.subtasks, subtasksLoaded:true };
     case ADD_SUBTASK:

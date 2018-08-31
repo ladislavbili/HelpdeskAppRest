@@ -42,14 +42,6 @@ class TabComment extends Component {
             </Item>
 
           }
-          <Text note>{i18n.t('emailSubject')}</Text>
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15}}>
-            <Input
-              onChange={ event => this.setState({title:event.nativeEvent.text}) }
-              placeholder={i18n.t('enterEmailSubject')}
-              value={this.state.title}
-              />
-          </View>
 
           <Text note>{i18n.t('emailMessage')}</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15}}>

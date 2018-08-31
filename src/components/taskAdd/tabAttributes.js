@@ -147,6 +147,8 @@ class TabAtributes extends Component {
 			this.state.status.id,
 			this.state.requestedBy.id,
 			this.state.company.id,
+      this.props.items,
+      this.props.subtasks,
 			this.props.token
 		);
     Actions.pop();
@@ -733,11 +735,13 @@ class TabAtributes extends Component {
 }
 
 //creates function that maps actions (functions) to the redux store
-const mapStateToProps = ({ taskReducer, loginReducer, userReducer }) => {
+const mapStateToProps = ({ taskReducer, loginReducer, userReducer, subtaskReducer, itemReducer}) => {
   const {users} = userReducer;
   const {token, user} = loginReducer;
   const { companies ,statuses, projects,tags, taskSolvers, taskAttributes, attachments} = taskReducer;
-  return { users,user, token, companies,statuses, projects,tags, taskSolvers, taskAttributes, attachments};
+  const { subtasks } = subtaskReducer;
+  const { items } = itemReducer;
+  return { users,user, token, companies,statuses, projects,tags, taskSolvers, taskAttributes, attachments, subtasks, items};
 };
 
 //exports created Component connected to the redux store and redux actions
