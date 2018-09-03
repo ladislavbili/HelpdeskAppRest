@@ -22,7 +22,7 @@ class UserAdd extends Component {
       name:'',
       surname:'',
       password:'',
-      userRole:this.props.userRoles.filter(item => item.order >= this.props.user.user_role.order)[0],
+      userRole:this.props.userRoles.sort((item,item2) => item.order < item2.order?1:-1)[0],
       company:this.props.companies[0],
       language:'sk',
       func:'',

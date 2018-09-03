@@ -6,7 +6,7 @@ import { Actions } from 'react-native-router-flux';
 import { ActivityIndicator } from 'react-native';
 
 import TaskList from './taskList';
-import { openDrawer, getTasks, setTasksLoading, getFilterTasks, setOpenedID } from '../../redux/actions';
+import { openDrawer, getTasks, setTasksLoading, getFilterTasks, setOpenedID, setGeneralOrder } from '../../redux/actions';
 import i18n from 'i18next';
 
 /**
@@ -19,17 +19,20 @@ class TaskListLoader extends Component {
     this.getOpenedID.bind(this);
 
     if(this.props.drawerState==='closed'){
-      if(!this.props.filter && !this.props.filterID){
+      if(!this.props.filter && !this.props.filterID || this.props.openedID===this.getOpenedID()||this.props.order !== this.props.generalOrder){
         this.props.setTasksLoading(true);
       }
-      else if(this.props.filter && this.props.openedID!==this.getOpenedID()){
+      else{
         this.props.setOpenedID(this.getOpenedID());
+        this.props.setGeneralOrder(this.props.generalOrder+1);
         this.props.setTasksLoading(false);
-        this.props.getTasks(this.props.filter,this.props.token);
-      }else if(this.props.filterID && this.props.openedID!==this.getOpenedID()){
-        this.props.setOpenedID(this.getOpenedID());
-        this.props.setTasksLoading(false);
-        this.props.getFilterTasks(this.props.filterID,this.props.token);
+        if(this.props.filter){
+          this.props.getTasks(this.props.filter,this.props.token);
+        }else if(this.props.filterID==='none'){
+          this.props.getTasks(this.props.projectID!=='all'?{project:this.props.projectID}:{},this.props.token);
+        }else{
+          this.props.getFilterTasks(this.props.filterID,this.props.projectID,this.props.token);
+        }
       }
     }
   }
@@ -37,11 +40,8 @@ class TaskListLoader extends Component {
   getOpenedID(){
     if(this.props.filter){
       return JSON.stringify(this.props.filter);
-    }else if(this.props.filterID){
-      return this.props.filterID;
-    }else{
-      return null;
     }
+    return JSON.stringify({projectID:this.props.projectID,filterID:this.props.filterID});
   }
 
   render() {
@@ -90,11 +90,11 @@ class TaskListLoader extends Component {
 
 //creates function that maps actions (functions) to the redux store
 const mapStateToProps = ({taskReducer,loginReducer, drawerReducer}) => {
-  const {tasksLoaded,tasks, openedID} = taskReducer;
+  const {tasksLoaded,tasks, openedID, generalOrder} = taskReducer;
   const {drawerState} = drawerReducer;
   const {token} = loginReducer;
-  return {tasksLoaded,tasks,openedID,drawerState, token};
+  return {tasksLoaded,tasks,openedID,generalOrder,drawerState, token};
 };
 
 //exports created Component connected to the redux store and redux actions
-export default connect(mapStateToProps,{ openDrawer, getTasks, setTasksLoading, getFilterTasks, setOpenedID })(TaskListLoader);
+export default connect(mapStateToProps,{ openDrawer, getTasks, setTasksLoading, getFilterTasks, setOpenedID, setGeneralOrder })(TaskListLoader);

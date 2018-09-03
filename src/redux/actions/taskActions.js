@@ -1,7 +1,7 @@
 import { SET_TASKS, SET_LOADING_TASKS,ADD_TASKS,SET_OPENED_ID, SET_TASK_STATUSES_LOADING,SET_TASK_STATUSES,SET_TASK_PROJECTS_LOADING,SET_TASK_PROJECTS,
   SET_TASK_COMPANIES_LOADING,SET_TASK_COMPANIES,SET_TASK_UNITS_LOADING,SET_TASK_UNITS,SET_TASK_TAGS_LOADING,SET_TASK_TAGS,SET_TASK_SOLVERS,SET_TASK_LOADING,
-  SET_TASK,EDIT_TASK, SET_TASK_ATTRIBUTES_LOADING,SET_TASK_ATTRIBUTES, ADD_ATTACHMENT } from '../types';
-import { PROJECTS_LIST, COMPANIES_LIST, STATUSES_LIST, TASKS_LIST, HOST_URL , UNITS_LIST, TAGS_LIST, PROJECT_URL, TASK_ATTRIBUTES_LIST, GET_LOC,GET_FILE} from '../urls';
+  SET_TASK,EDIT_TASK, SET_TASK_ATTRIBUTES_LOADING,SET_TASK_ATTRIBUTES, ADD_ATTACHMENT, SET_GENERAL_ORDER } from '../types';
+import { PROJECTS_LIST, COMPANIES_LIST, STATUSES_LIST,FILTER_LIST, TASKS_LIST, HOST_URL , UNITS_LIST, TAGS_LIST, PROJECT_URL, TASK_ATTRIBUTES_LIST, GET_LOC,GET_FILE} from '../urls';
 import {processRESTinput, processError} from '../../helperFunctions';
 import {clearAttachments} from './attachmentActions';
 import {addSubtask} from './subtaskActions';
@@ -77,9 +77,9 @@ export const getMoreTasks = (url,token) => {
  * Gets all tasks available with no pagination
  * @param {string} token universal token for API comunication
  */
- export const getFilterTasks= (id,token) => {
+ export const getFilterTasks= (id,projectID,token) => {
    return (dispatch) => {
-       fetch(TASKS_LIST+'/filter/'+id+'?order=status=>asc,title=>asc', {
+       fetch(FILTER_LIST+'/'+id, {
          method: 'get',
          headers: {
            'Authorization': 'Bearer ' + token,
@@ -91,7 +91,13 @@ export const getMoreTasks = (url,token) => {
            return;
          }
        response.json().then((data) => {
-         dispatch({type: SET_TASKS, tasks:data.data,nextTasks:data._links.next?data._links.next+'&order=status=>asc,title=>asc':false});
+         let filter = {...data.data.filter};
+         if(projectID!=='all'){
+           filter.project=[projectID];
+         }else{
+           filter.project=undefined;
+         }
+         getTasks(filter,token)(dispatch);
        });
      }
    ).catch(function (error) {
@@ -99,6 +105,12 @@ export const getMoreTasks = (url,token) => {
    });
  }
  }
+ export const setGeneralOrder = (generalOrder) => {
+   return (dispatch) => {
+     dispatch({type: SET_GENERAL_ORDER,generalOrder });
+   };
+ };
+
 
  export const setOpenedID = (openedID) => {
    return (dispatch) => {
