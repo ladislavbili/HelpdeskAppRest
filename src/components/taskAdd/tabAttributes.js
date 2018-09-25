@@ -124,6 +124,7 @@ class TabAtributes extends Component {
     if(fullStatus.title!=='Closed'||!fullStatus.default){
       closedAt = 'null';
     }
+
 		this.props.addTask(
 			{
 				title: this.state.title,

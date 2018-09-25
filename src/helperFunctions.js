@@ -166,40 +166,42 @@ export const processCustomAttributes = (savedAttributes,originalAttributes) => {
         returnAttributes[key] = savedAttributes[key]?"true":"false";
         break;
       }
-      case "input":
+      case "input":{
         if (savedAttributes[key] === "") {
           returnAttributes[key] = "null";
         }
         else{
           returnAttributes[key] = savedAttributes[key];
         }
-        break;
-      case "text_area":
+        break;}
+      case "text_area":{
         if (savedAttributes[key] === "") {
           returnAttributes[key] = "null";
         }
         else{
           returnAttributes[key] = savedAttributes[key];
         }
-        break;
-      case "decimal_number":
+        break;}
+      case "decimal_number":{
         if (isNaN(parseFloat(savedAttributes[key]))) {
           returnAttributes[key] = "null";
         }
         else{
           returnAttributes[key] = savedAttributes[key];
         }
-        break;
-      case "integer_number":
+        break;}
+      case "integer_number":{
         if (isNaN(parseFloat(savedAttributes[key]))) {
           returnAttributes[key] = "null";
         }
         else{
           returnAttributes[key] = savedAttributes[key];
         }
+        break;}
+      default:{
+        returnAttributes[key] = savedAttributes[key];
         break;
-      default:
-        break;
+      }
     }
   }
   return returnAttributes;

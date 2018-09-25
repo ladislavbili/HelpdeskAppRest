@@ -327,7 +327,7 @@ export const addTask = (body,followers,projectID,statusID,requesterID,companyID,
           addItem({title:item.title,amount:item.amount,unit_price:item.unit_price},response.data.id,item.unit.id,token)(dispatch);
         });
         subtasks.map((subtask)=>{
-          addSubtask({done:subtask.done,title:subtask.title},response.data.id,token)(dispatch);
+          addSubtask({title:subtask.title,from:subtask.from, to:subtask.to, hours:subtask.hours},response.data.id,token)(dispatch);
         });
 
       })})

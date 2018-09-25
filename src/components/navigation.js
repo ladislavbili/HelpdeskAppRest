@@ -12,9 +12,11 @@ import TaskList from '../components/taskList';
 import TaskEdit from '../components/taskEdit';
 import TaskAdd from '../components/taskAdd';
 import CommentAdd from '../components/commentAdd';
-import ItemAdd from '../components/itemAdd';
 import Account from '../components/account';
+import ItemAdd from '../components/itemAdd';
 import ItemEdit from '../components/itemEdit';
+import SubtaskAdd from '../components/subtaskAdd';
+import SubtaskEdit from '../components/subtaskEdit';
 import UserList from '../components/userList';
 import UserAdd from '../components/userAdd';
 import UserEdit from '../components/userEdit';
@@ -52,6 +54,8 @@ class AppNavigator extends Component {
               <Scene key="commentAdd" component={CommentAdd} />
               <Scene key="itemAdd" component={ItemAdd} />
               <Scene key="itemEdit" component={ItemEdit} />
+              <Scene key="subtaskAdd" component={SubtaskAdd} />
+              <Scene key="subtaskEdit" component={SubtaskEdit} />
               <Scene key="userList" component={UserList} />
               <Scene key="userAdd" component={UserAdd} />
               <Scene key="userEdit" component={UserEdit} />

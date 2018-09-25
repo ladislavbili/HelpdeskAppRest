@@ -1,33 +1,23 @@
 import React, { Component } from 'react';
-import { Right, Left, Container, Content, Card, CardItem, Text, Footer, FooterTab, Button, Icon, CheckBox, Input, View } from 'native-base';
+import { Right, Left, Container, Content, Card, CardItem, Text, Footer, FooterTab, Button, Icon } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import { ActivityIndicator, Alert } from 'react-native';
 import { connect } from 'react-redux';
 
-
+import {formatDate} from '../../helperFunctions';
 import i18n from 'i18next';
-import {addSubtask,deleteSubtask,editSubtask} from '../../redux/actions';
+import {deleteSubtask} from '../../redux/actions';
 
 /**
-* Display's all of the items used in this task
-* @extends Component
-*/
+ * Display's all of the items used in this task
+ * @extends Component
+ */
 class TabSubtasks extends Component{
-  constructor(props){
-    super(props);
-    this.state={
-      newDone:false,
-      newTitle:'',
-      editedTitle:'',
-      editedID:null,
-    }
-    this.deleteSubtask.bind(this);
-  }
-  /**
-  * Delete's a single item
-  * @param  {int} id    ID of an item that is meant to be deleted
-  * @param  {string} title Title of the item
-  */
+/**
+ * Delete's a single item
+ * @param  {int} id    ID of an item that is meant to be deleted
+ * @param  {string} title Title of the item
+ */
   deleteSubtask(id,title){
     Alert.alert(
       i18n.t('deletingSubtask'),
@@ -35,11 +25,7 @@ class TabSubtasks extends Component{
       [
         {text: i18n.t('cancel'), style: 'cancel'},
         {text: i18n.t('ok'), onPress: () =>{
-          this.props.deleteSubtask(
-            id,
-            this.props.id,
-            this.props.token
-          );
+          this.props.deleteSubtask(id,this.props.id,this.props.token);
         }},
       ],
       { cancelable: false }
@@ -47,132 +33,109 @@ class TabSubtasks extends Component{
   }
 
   render() {
+    let total=0;
+    this.props.subtasks.map((item)=>total+=parseFloat(item.hours?item.hours:0));
     return (
       <Container>
         <Content padder style={{ marginTop: 0 }}>
           {
             this.props.subtasks.map((item)=>
             <Card key={item.id}>
-              <CardItem style={{paddingLeft:0, paddingRight:0}}>
-                <Left style={{maxWidth:50}}>
-                  <Button
-                    transparent
-                    style={{ padding:5, margin:0}}
-                    onPress={()=>{
-                      this.props.editSubtask(
-                        { done: !item.done, title: item.title },
-                        item.id,
-                        this.props.id,
-                        this.props.token
-                      )}}>
-                    <CheckBox
-                      style={{padding:0, marginRight:5}}
-                      checked={item.done}
-                      color='#3F51B5'
-                      onPress={()=>{
-                        this.props.editSubtask(
-                          { done: !item.done, title: item.title },
-                          item.id,
-                          this.props.id,
-                          this.props.token
-                        )}}/>
-                  </Button>
-                </Left>
+              {console.log(item)}
+              <CardItem>
                 <Left>
-                  <Input
-                    placeholder={"Subtask name"}
-                    onFocus={()=>this.setState({editedID:item.id,editedTitle:item.title})}
-                    onChange={ event => this.setState({editedTitle:event.nativeEvent.text}) }
-                    onSubmitEditing={()=>{
-                      this.props.editSubtask(
-                        { done: item.done, title: this.state.editedTitle },
-                        item.id,
-                        this.props.id,
-                        this.props.token
-                      );
-                      this.setState({editedID:null})
-                    }}
-                    onBlur={()=>{
-                      if(this.state.editedID===null){
-                        return;
-                      }
-                      this.props.editSubtask(
-                        { done: item.done, title: this.state.editedTitle },
-                        item.id,
-                        this.props.id,
-                        this.props.token
-                      );
-                      this.setState({editedID:null})
-                    }}
-                    value={this.state.editedID===item.id?this.state.editedTitle:item.title}
-                    />
+                  <Text note>{i18n.t('title')}</Text>
                 </Left>
-                <Right style={{maxWidth:45}}>
-                  <Button
-                    transparent
-                    style={{ paddingLeft:15,paddingRight:15}}
-                    onPress={()=>this.deleteSubtask(item.id,item.title)}>
-                    <Icon name="md-trash" style={{ color: 'black' }} />
-                  </Button>
+                <Right>
+                  <Text>{item.title}</Text>
                 </Right>
               </CardItem>
-            </Card>)}
-            {
-              this.props.subtasksCount>0 &&
-              <Card>
-              <View style={{flexDirection:'row'}}>
-                <ActivityIndicator
-                animating size={ 'large' }
-                color='#007299' />
-              <Text style={{marginTop:6, marginLeft:5}}>Adding subtasks...</Text>
-              </View>
-            </Card>
-            }
-
-            <Card>
-              <CardItem style={{paddingLeft:0, paddingRight:0}}>
-                <Left style={{maxWidth:50}}>
-                  <Button
-                    transparent
-                    style={{ padding:5, margin:0}}
-                    onPress={()=>this.setState({newDone:!this.state.newDone})}>
-                    <CheckBox checked={this.state.newDone} color='#3F51B5' style={{padding:0, marginRight:5}} onPress={()=>this.setState({newDone:!this.state.newDone})}/>
-                  </Button>
-                </Left>
+              <CardItem>
                 <Left>
-                  <Input
-                    onChange={ event => this.setState({newTitle:event.nativeEvent.text}) }
-                    placeholder={i18n.t('enterNewSubtask')}
-                    value={this.state.newTitle}
-                    />
+                  <Text note>{i18n.t('done2')}</Text>
                 </Left>
-                <Right style={{maxWidth:45}}>
-                  <Button
-                    transparent
-                    style={{ paddingLeft:15,paddingRight:15}}
-                    onPress={()=>{
-                      if(this.state.newTitle==='')return;
-                      this.props.addSubtask({ done: this.state.newDone, title: this.state.newTitle },this.props.id,this.props.token);
-                      this.setState({newDone:false,newTitle:''});
-                    }}>
-                    <Icon name="md-add" style={{ color: this.state.newTitle!==''?'black':'grey' }} />
-                  </Button>
+                <Right>
+                  <Text>{item.done?i18n.t('yes'):i18n.t('no')}</Text>
                 </Right>
               </CardItem>
+              <CardItem>
+                <Left>
+                  <Text note>{i18n.t('from')}</Text>
+                </Left>
+                <Right>
+                  <Text>{item.from?formatDate(item.from*1000):i18n.t('noFrom')}</Text>
+                </Right>
+              </CardItem>
+              <CardItem>
+                <Left>
+                  <Text note>{i18n.t('to')}</Text>
+                </Left>
+                <Right>
+                  <Text>{item.to?formatDate(item.to*1000):i18n.t('noTo')}</Text>
+                </Right>
+              </CardItem>
+              <CardItem>
+                <Left>
+                  <Text note>{i18n.t('hours')}</Text>
+                </Left>
+                <Right>
+                  <Text>{item.hours?(item.hours).toString():i18n.t('noHours')}</Text>
+                </Right>
+              </CardItem>
+              {
+                (this.props.ACL.includes('resolve_task') || this.props.ACL.includes('update_all_tasks')) &&
+                <CardItem>
+                  <Left>
+                    <Button active block onPress={()=>this.deleteSubtask(item.id,item.title)}>
+                      <Icon name="trash" />
+                      <Text>{i18n.t('delete')}</Text>
+                    </Button>
+                  </Left>
+                  <Right>
+                    <Button active block onPress={()=>{Actions.subtaskEdit({data:item,id:this.props.id});}}>
+                      <Icon name="open" />
+                      <Text>{i18n.t('edit')}</Text>
+                    </Button>
+                  </Right>
+                </CardItem>
+              }
             </Card>
-          </Content>
-        </Container>
-      );
-    }
-  }
+          )
+        }
+        <Card>
+          <CardItem>
+            <Left>
+              <Text note>{i18n.t('totalTime')}</Text>
+            </Left>
+            <Right>
+              <Text>{total}</Text>
+            </Right>
+          </CardItem>
+        </Card>
 
-//md-add
-  //creates function that maps actions (functions) to the redux store
-  const mapStateToProps = ({ subtaskReducer, loginReducer, taskReducer}) => {
-    const { subtasks, subtasksCount } = subtaskReducer;
-    const { token } = loginReducer;
-    return { subtasks, subtasksCount, token, ACL:taskReducer.task.loggedUserProjectAcl.concat(taskReducer.task.loggedUserRoleAcl) };
-  };
 
-  //exports created Component connected to the redux store and redux actions
-  export default connect(mapStateToProps,{addSubtask,deleteSubtask,editSubtask})(TabSubtasks);
+      </Content>
+      { (this.props.ACL.includes('resolve_task') || this.props.ACL.includes('update_all_tasks')) &&
+        <Footer>
+          <FooterTab>
+            <Button onPress={()=>Actions.subtaskAdd({id:this.props.id}) } iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
+              <Icon active style={{ color: 'white' }} name="md-add" />
+              <Text style={{ color: 'white' }}>{i18n.t('subtask')}</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
+      }
+    </Container>
+  );
+}
+}
+
+//creates function that maps actions (functions) to the redux store
+const mapStateToProps = ({ subtaskReducer, loginReducer, taskReducer}) => {
+  const { subtasks } = subtaskReducer;
+  const { token } = loginReducer;
+  return { subtasks ,token, ACL:taskReducer.task.loggedUserProjectAcl.concat(taskReducer.task.loggedUserRoleAcl) };
+};
+
+//exports created Component connected to the redux store and redux actions
+export default connect(mapStateToProps,{deleteSubtask})(TabSubtasks);
