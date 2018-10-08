@@ -7,15 +7,15 @@ export default (variables = variable) => {
   const radioTheme = {
       '.selected': {
         'NativeBase.IconNB': {
-          color: (Platform.OS === 'ios') ? variables.brandPrimary : variables.radioSelectedColorAndroid,
-          lineHeight: (Platform.OS === 'ios') ? 25 : variables.radioBtnLineHeight,
-          height: (Platform.OS === 'ios') ? 20 : undefined,
+          color: variables.radioSelectedColorAndroid,
+          lineHeight: variables.radioBtnLineHeight,
+          height: undefined,
         },
       },
       'NativeBase.IconNB': {
-        color: (Platform.OS ===  'ios') ? 'transparent' : undefined,
-        lineHeight: (Platform.OS ===  'ios') ? undefined : variables.radioBtnLineHeight,
-        fontSize: (Platform.OS ===  'ios') ? undefined : variables.radioBtnSize,
+        color: undefined,
+        lineHeight: variables.radioBtnLineHeight,
+        fontSize: variables.radioBtnSize,
       },
   };
 

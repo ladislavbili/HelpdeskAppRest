@@ -32,7 +32,7 @@ export default (variables = variable) => {
       },
       'NativeBase.Input': {
         paddingLeft: null,
-        marginLeft: (platform === 'ios') ? undefined : -5,
+        marginLeft: -5,
       },
       marginLeft: 15,
     },
@@ -40,7 +40,7 @@ export default (variables = variable) => {
       'NativeBase.Input': {
         paddingLeft: null,
         top: 10,
-        marginLeft: (platform === 'ios') ? undefined : -5,
+        marginLeft: -5,
       },
       'NativeBase.Label': {
         left: 0,

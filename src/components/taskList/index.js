@@ -50,7 +50,7 @@ class TaskListLoader extends Component {
         <Header>
           <Left>
             <Button transparent onPress={()=>this.props.openDrawer(this.props.token)}>
-              <Icon name="menu" />
+              <Icon name="menu"/>
             </Button>
           </Left>
           <Body>

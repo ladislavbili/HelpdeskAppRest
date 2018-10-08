@@ -11,6 +11,7 @@ import {formatDate,processInteger, initialiseCustomAttributes, importExistingCus
 import TaskTag from './tag';
 import TaskFollower from './follower';
 import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
+import MultiPicker from '../multiPicker';
 var RNGRP = require('react-native-get-real-path');
 
 const workTypes=['vzdialena podpora','servis IT','servis serverov','programovanie www','instalacie klientskeho os','bug reklamacia','navrh','material','cenova ponuka','administrativa','konzultacia','refakturacia','testovanie'];

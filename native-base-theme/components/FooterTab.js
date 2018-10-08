@@ -39,7 +39,7 @@ export default (variables = variable) => {
           'NativeBase.Badge': {
             'NativeBase.Text': {
               fontSize: 11,
-              fontWeight: (platform === 'ios') ? '600' : undefined,
+              fontWeight: undefined,
               lineHeight: 14,
             },
             top: -3,

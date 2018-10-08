@@ -18,7 +18,7 @@ export default (variables = variable) => {
         'NativeBase.IconNB': {
           alignSelf: 'center',
           fontSize: 20,
-          lineHeight: (platform === 'ios') ? 24 : undefined,
+          lineHeight: undefined,
         },
     },
   };

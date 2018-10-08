@@ -24,7 +24,7 @@ export default (variables = variable) => {
     },
     'NativeBase.Icon': {
       color: variables.topTabBarTextColor,
-      fontSize: (platform==='ios') ? 26 : undefined
+      fontSize: undefined
     },
     '.active': {
       'NativeBase.Text': {

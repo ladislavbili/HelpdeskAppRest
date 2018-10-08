@@ -19,10 +19,10 @@ export default {
   badgeBg: '#ED1727',
   badgeColor: '#fff',
     // New Variable
-  badgePadding: (platform === 'ios') ? 3 : 0,
+  badgePadding: 0,
 
     // Button
-  btnFontFamily: (platform === 'ios') ? 'Roboto' : 'Roboto_medium',
+  btnFontFamily:(platform === 'ios') ? 'Roboto' : 'Roboto_medium',
   btnDisabledBg: '#b5b5b5',
   btnDisabledClr: '#f1f1f1',
 
@@ -30,10 +30,10 @@ export default {
   CheckboxRadius: 0,
   CheckboxBorderWidth: 2,
   CheckboxPaddingLeft: 2,
-  CheckboxPaddingBottom: (platform === 'ios') ? 0 : 5,
-  CheckboxIconSize: (platform === 'ios') ? 18 : 14,
-  CheckboxIconMarginTop: (platform === 'ios') ? undefined : 1,
-  CheckboxFontSize: (platform === 'ios') ? 21 : 18,
+  CheckboxPaddingBottom: 5,
+  CheckboxIconSize: 14,
+  CheckboxIconMarginTop: 1,
+  CheckboxFontSize: 18,
   DefaultFontSize: 17,
   checkboxBgColor: '#039BE5',
   checkboxSize: 20,
@@ -84,8 +84,7 @@ export default {
     return this.inverseTextColor;
   },
   get btnTextSize() {
-    return (platform === 'ios') ? this.fontSizeBase * 1.1 :
-        this.fontSizeBase - 1;
+    return this.fontSizeBase - 1;
   },
   get btnTextSizeLarge() {
     return this.fontSizeBase * 1.5;
@@ -142,7 +141,7 @@ export default {
 
     // FooterTab
   tabBarTextColor: '#b3c7f9',
-  tabBarTextSize: (platform === 'ios') ? 14 : 11,
+  tabBarTextSize: 11,
   activeTab: '#fff',
   sTabBarActiveTextColor: '#007aff',
   tabBarActiveTextColor: '#fff',
@@ -160,11 +159,11 @@ export default {
     // Header
   toolbarBtnColor: '#fff',
   toolbarDefaultBg: '#3F51B5',
-  toolbarHeight: (platform === 'ios') ? 76 : 56,
-  toolbarIconSize: (platform === 'ios') ? 20 : 22,
-  toolbarSearchIconSize: (platform === 'ios') ? 20 : 23,
+  toolbarHeight: 56,
+  toolbarIconSize: 22,
+  toolbarSearchIconSize: 23,
   toolbarInputColor: '#fff',
-  searchBarHeight: (platform === 'ios') ? 30 : 40,
+  searchBarHeight: 40,
   toolbarInverseBg: '#222',
   toolbarTextColor: '#fff',
   toolbarDefaultBorder: '#3F51B5',
@@ -176,9 +175,9 @@ export default {
 
     // Icon
   iconFamily: 'Ionicons',
-  iconFontSize: (platform === 'ios') ? 30 : 28,
+  iconFontSize: 28,
   iconMargin: 7,
-  iconHeaderSize: (platform === 'ios') ? 29 : 24,
+  iconHeaderSize: 24,
 
 
     // InputGroup
@@ -208,8 +207,8 @@ export default {
   lineHeightH1: 32,
   lineHeightH2: 27,
   lineHeightH3: 22,
-  iconLineHeight: (platform === 'ios') ? 37 : 30,
-  lineHeight: (platform === 'ios') ? 20 : 24,
+  iconLineHeight: 30,
+  lineHeight: 24,
 
 
     // List
@@ -222,7 +221,7 @@ export default {
   cardBorderColor: '#ccc',
 
     // Changed Variable
-  listItemPadding: (platform === 'ios') ? 10 : 12,
+  listItemPadding: 12,
 
   listNoteColor: '#808080',
   listNoteSize: 13,
@@ -234,11 +233,11 @@ export default {
 
 
     // Radio Button
-  radioBtnSize: (platform === 'ios') ? 25 : 23,
+  radioBtnSize: 23,
   radioSelectedColorAndroid: '#5067FF',
 
     // New Variable
-  radioBtnLineHeight: (platform === 'ios') ? 29 : 24,
+  radioBtnLineHeight: 24,
 
   radioColor: '#7e7e7e',
 
@@ -265,7 +264,7 @@ export default {
 
 
     // Title
-  titleFontfamily: (platform === 'ios') ? 'Roboto' : 'Roboto_medium',
+  titleFontfamily:(platform === 'ios') ? 'Roboto' : 'Roboto_medium',
   titleFontSize: 19,
   subTitleFontSize: 14,
   subtitleColor: '#FFF',

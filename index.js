@@ -19,4 +19,4 @@ class App extends Component<Props> {
 }
 
 
-AppRegistry.registerComponent('HelpdeskAppRest', () => App);
+AppRegistry.registerComponent('Helpdesk', () => App);
