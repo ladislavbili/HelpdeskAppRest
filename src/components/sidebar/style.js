@@ -3,7 +3,7 @@ export default {
     fontWeight: '400',
     fontSize: 16,
     marginLeft: 20,
-    width: '100%'
+    width: '100%' 
   },
   badgeText: {
     fontSize: 11,
